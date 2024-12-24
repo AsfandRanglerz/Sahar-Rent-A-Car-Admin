@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\TeamAController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\SecurityController;
@@ -80,6 +81,7 @@ Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->na
 Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
 Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');
 
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
 
 
 });

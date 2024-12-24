@@ -74,16 +74,21 @@
                             data-feather="truck"></i>Drivers</span></a>
             </li>
 
+            <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">
+                <a href="{{ route('booking.index') }}" class="nav-link"><span><i
+                            data-feather="calendar"></i>Bookings</span></a>
+            </li>
 
 
-            <li class="dropdown {{ request()->is('admin/Privacy-policy') ? 'active' : '' }}">
+            <li class="dropdown {{ request()->is('admin/Privacy-policy*') || request()->is('admin/privacy-policy-edit*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/Privacy-policy') }}" class="nav-link"><i
                         data-feather="monitor"></i><span>Privacy Policy</span></a>
             </li>
-            <li class="dropdown {{ request()->is('admin/term-condition') ? 'active' : '' }}">
+            <li class="dropdown {{ request()->is('admin/term-condition*') || request()->is('admin/term-condition-edit*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/term-condition') }}" class="nav-link"><i
                         data-feather="clipboard"></i><span>Terms & Conditions</span></a>
             </li>
+
         </ul>
     </aside>
 </div>
