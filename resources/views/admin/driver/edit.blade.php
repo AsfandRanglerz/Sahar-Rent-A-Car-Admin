@@ -44,7 +44,21 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Availability</label>
+                                            <select name="availability" class="form-control">
+                                                <option value="">Select Option</option>
+                                                <option value="0" {{ $driver->availability == 0 ? 'selected' : '' }}>
+                                                    Availabile</option>
+                                                <option value="1" {{ $driver->availability == 1 ? 'selected' : '' }}>
+                                                    Not Available</option>
+                                            </select>
+                                            @error('availability')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Image</label>

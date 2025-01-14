@@ -23,6 +23,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Image</th>
+                                            <th>Availability</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Actions</th>
                                         </tr>
@@ -41,6 +42,11 @@
                                                 <td>
                                                     <img src="{{ asset($driver->image) }}" alt="" height="50"
                                                         width="50" class="image">
+                                                </td>
+                                                <td>
+                                                    <div class="badge {{ $driver->availability == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $driver->availability == 0 ? 'Available' : 'Not Available' }}
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-4">

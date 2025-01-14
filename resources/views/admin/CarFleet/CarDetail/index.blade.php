@@ -9,40 +9,87 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Customers</h4>
+                                    <h4>Car Details</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                <a class="btn btn-primary mb-3" href="{{ route('user.create') }}">Create
+                                <a class="btn btn-primary mb-3" href="{{ route('car.create') }}">Create
                                 </a>
 
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>Address</th>
+                                            <th>Car Name</th>
+                                            <th>Availability</th>
+                                            <th>Price Per Hour(AED)</th>
+                                            <th>Price Per Day(AED)</th>
+                                            <th>Price Per Year(AED)</th>
+                                            {{-- <th>Durations</th> --}}
+                                            <th>Call Number</th>
+                                            <th>Whatsapp Number</th>
+                                            <th>Passengers</th>
+                                            <th>Luggage</th>
+                                            <th>Doors</th>
+                                            <th>Car Type</th>
+                                            <th>Features</th>
+                                            {{--<th>Car Feature</th>
+                                            <th>Delivery</th>
+                                            <th>PickUp</th>
+                                            <th>Travel Distance</th> --}}
+                                            <th>Status</th>
                                             <th>Image</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($users as $user)
+                                        @foreach ($CarDetails as $CarDetail)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $user->name }}</td>
+                                                <td>{{ $CarDetail->car_name }}</td>
 
-                                                <td>
-                                                    @if ($user->email)
-                                                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                                {{-- <td>
+                                                    @if ($CarDetail->email)
+                                                        <a href="mailto:{{ $CarDetail->email }}">{{ $CarDetail->email }}</a>
+                                                    @endif
+                                                </td> --}}
+                                                <td>{{ $CarDetail->availability }}</td>
+                                                <td>{{ $CarDetail->pricing }}</td>
+                                                <td>{{ $CarDetail->sanitized }}</td>
+                                                <td>{{ $CarDetail->car_feature }}</td>
+                                                {{-- <td>{{ $CarDetail->durations }}</td> --}}
+                                                <td>{{ $CarDetail->call_number }}</td>
+                                                <td>{{ $CarDetail->whatsapp_number }}</td>
+                                                <td>{{ $CarDetail->passengers }}</td>
+                                                <td>{{ $CarDetail->luggage }}</td>
+                                                <td>{{ $CarDetail->doors }}</td>
+                                                <td>{{ $CarDetail->car_type }}</td>
+                                                 {{-- <td>{!! $CarDetail->car_play !!}</td> --}}
+                                                 <td>
+                                                    @if (!empty($CarDetail->car_play))
+                                                        @php
+                                                            $features = explode("\n", $CarDetail->car_play); // Assuming features are stored as a comma-separated string
+                                                        @endphp
+                                                        <ul>
+                                                            @foreach ($features as $feature)
+                                                                <li>{{ trim($feature) }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        N/A
                                                     @endif
                                                 </td>
-                                                <td>{{ $user->phone }}</td>
-                                                <td>{{ $user->address }}</td>
+                                            
+                                                {{--<td>{{ $CarDetail->delivery }}</td>
+                                                <td>{{ $CarDetail->pickup }}</td>
+                                                <td>{{ $CarDetail->travel_distance }}</td> --}} 
                                                 <td>
-                                                    <img src="{{ asset($user->image) }}" alt="" height="50"
+                                                    <div class="badge {{ $CarDetail->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $CarDetail->status == 0 ? 'Activated' : 'Deactivated' }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <img src="{{ asset($CarDetail->image) }}" alt="" height="50"
                                                         width="50" class="image">
                                                 </td>
 
@@ -53,7 +100,7 @@
 
 
 
-                                                            @if ($user->status == 1)
+                                                            {{-- @if ($user->status == 1)
                                                                 <a href="javascript:void(0);"
                                                                     onclick="showDeactivationModal({{ $user->id }})"
                                                                     class="btn btn-success">
@@ -83,12 +130,12 @@
                                                                         </circle>
                                                                     </svg>
                                                                 </a>
-                                                            @endif
+                                                            @endif --}}
 
 
-                                                            <a href="{{ route('user.edit', $user->id) }}"
+                                                            <a href="{{ route('car.edit', $CarDetail->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
-                                                            <form action="{{ route('user.destroy', $user->id) }}"
+                                                            <form action="{{ route('car.destroy', $CarDetail->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf

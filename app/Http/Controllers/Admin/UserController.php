@@ -55,6 +55,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'address' => $request->address,
             'password' => Hash::make($generatedPassword),
             'image' => $image,
             'status' => $status
@@ -106,6 +107,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'address' => $request->address,
             'image' => $image,
         ]);
 

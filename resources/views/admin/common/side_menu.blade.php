@@ -74,6 +74,29 @@
                             data-feather="truck"></i>Drivers</span></a>
             </li>
 
+            {{-- car fleet --}}
+            {{-- <li class="dropdown">
+                <a href="#" class="menu-toggle nav-link has-dropdown">
+                    <i data-feather="layout"></i> <!-- Changed to 'layout' for header section -->
+                    <span>Car Fleet</span>
+                </a> --}}
+                {{-- <ul class="dropdown-menu {{ request()->is('admin/car*') || request()->is('admin/PlaceOrderTwo*') || request()->is('admin/PlaceOrderThree*') || request()->is('admin/PlaceOrderFour*')  ? 'show' : '' }}"> --}}
+            <li class="dropdown {{ request()->is('admin/car*') ? 'active' : '' }}">
+                <a href="{{ route('car.index') }}" class="nav-link "><span><i
+                            data-feather="truck"></i>Car Details</span></a>
+            </li>
+                {{-- </ul> --}}
+            {{-- </li> {{ request()->is('admin/car*') ? 'text-white' : '' }} --}}
+
+            <li class="dropdown {{ request()->is('admin/license*') ? 'active' : '' }}">
+                <a href="{{ route('license.index') }}" class="nav-link"><span ><i
+                            data-feather="file-text"></i>License Approvals
+                            @if (isset($pendingCount) && $pendingCount > 0)
+                            <span class="badge rounded-pill bg-warning text-dark d-flex justify-content-center align-items-center" style="width: 24px; height: 24px; font-size: 14px;">{{ $pendingCount }}</span>
+                        @endif
+                        </span></a>
+            </li>
+
             <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">
                 <a href="{{ route('booking.index') }}" class="nav-link"><span><i
                             data-feather="calendar"></i>Bookings</span></a>

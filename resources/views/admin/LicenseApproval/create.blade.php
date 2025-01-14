@@ -6,12 +6,12 @@
         <section class="section">
             <div class="section-body">
                 <a class="btn btn-primary mb-3" href="{{ url()->previous() }}">Back</a>
-                <form id="add_department" action="{{ route('driver.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="add_department" action="{{ route('license.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
-                                <h4 class="text-center my-4">Add Driver</h4>
+                                <h4 class="text-center my-4">Add License details</h4>
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
@@ -33,7 +33,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone</label>
                                             <input type="phone" placeholder="Enter Your Phone" name="phone"
@@ -42,7 +42,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Availability</label>

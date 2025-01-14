@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\TeamAController;
 use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubadminController;
+use App\Http\Controllers\Admin\CarDetailsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,6 +79,27 @@ Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->na
     Route::post('/subadmin-update/{id}',  'update')->name('subadmin.update');
     Route::delete('/subadmin-destroy/{id}',  'destroy')->name('subadmin.destroy');
 });
+
+ // ############ Car Details #################
+ Route::controller(CarDetailsController::class)->group(function () {
+    Route::get('/car',  'index')->name('car.index');
+    Route::get('/car-create',  'create')->name('car.create');
+    Route::post('/car-store',  'store')->name('car.store');
+    Route::get('/car-edit/{id}',  'edit')->name('car.edit');
+    Route::post('/car-update/{id}',  'update')->name('car.update');
+    Route::delete('/car-destroy/{id}',  'destroy')->name('car.destroy');
+});
+
+Route::controller(LicenseController::class)->group(function () {
+    Route::get('/license',  'index')->name('license.index');
+    Route::get('/license-create',  'create')->name('license.create');
+    Route::post('/license-store',  'store')->name('license.store');
+    Route::get('/license-edit/{id}',  'edit')->name('license.edit');
+    Route::post('/license-update/{id}',  'update')->name('license.update');
+    Route::delete('/license-destroy/{id}',  'destroy')->name('license.destroy');
+});
+Route::post('/LicenseApprovalActivate/{id}', [LicenseController::class, 'active'])->name('license.activate');
+Route::post('/LicenseApprovalDeactivate/{id}', [LicenseController::class, 'deactive'])->name('license.deactivate');
 
 Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
 Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');

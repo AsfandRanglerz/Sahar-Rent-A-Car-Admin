@@ -44,7 +44,16 @@
                                             @enderror
                                         </div>
                                     </div>
-
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Address</label>
+                                            <input type="text" placeholder="Enter Address" name="address"
+                                                id="address" value="{{ old('address', $user->address) }}" class="form-control">
+                                            @error('address')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Image</label>

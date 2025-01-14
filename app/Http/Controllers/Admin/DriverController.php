@@ -57,6 +57,7 @@ class DriverController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'availability' => $request->availability,
             'password' => Hash::make($generatedPassword),
             'image' => $image,
             'status' => $status
@@ -107,6 +108,7 @@ class DriverController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'availability' => $request->availability,
             'image' => $image,
         ]);
 
