@@ -16,33 +16,24 @@
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Customer Name</label>
-                                            <input type="text" name="full_name" class="form-control" placeholder="full_name"> 
+                                            <input type="text" name="full_name" class="form-control" placeholder="Name"> 
                                             @error('full_name')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+                                    
 
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone Number</label>
-                                            <input type="number" name="phone" class="form-control" placeholder="phone"> 
+                                            <input type="number" name="phone" class="form-control" placeholder="Phone"> 
                                             @error('phone')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label>Phone Number</label>
-                                            <input type="number" name="phone" class="form-control" placeholder="phone"> 
-                                            @error('phone')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
+                                    
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Self Pickup</label>
@@ -57,93 +48,81 @@
                                         </div>
                                     </div>
                                     
-
-                                    {{-- <div class="col-sm-3 pl-sm-0 pr-sm-2 d-none" id="customer_cat">
-                                        <div class="form-group mb-2">
-                                            <label>Customer</label>
-                                            <div>
-                                                <input type="checkbox" id="select_all_customers" class="mr-1">
-                                                <label for="select_all_customers">Select All Customers</label>
-                                            </div>
-                                            <select name="customer_name[]" id="customers" class="form-control select2" multiple>
-                                                @foreach($customers as $customer)
-                                                    <option value="{{ $customer->id }}" {{ old('customer_name') && in_array($customer->id, old('customer_name')) ? 'selected' : '' }}>
-                                                        {{ $customer->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('customer_name')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
-                                    
-                                    {{-- <div class="col-sm-3 pl-sm-0 pr-sm-3 d-none" id="driver">
-                                        <div class="form-group mb-2">
-                                            <label>Driver</label>
-                                            <div>
-                                                <input type="checkbox" id="select_all_drivers" class="mr-1">
-                                                <label for="select_all_drivers">Select All Drivers</label>
-                                            </div>
-                                            <select name="drivers[]" id="drivers" class="form-control select2" multiple>
-                                                @foreach($drivers as $driver)
-                                                    <option value="{{ $driver->id }}" {{ old('drivers') && in_array($driver->id, old('drivers')) ? 'selected' : '' }}>
-                                                        {{ $driver->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('drivers')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
-                                    
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Pickup Address</label>
-                                            <input type="text" name="pickup_address" class="form-control" placeholder="pickup_address"> 
+                                            <input type="text" name="pickup_address" class="form-control" placeholder="Pickup Address"> 
                                             @error('pickup_address')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                    <div class="form-group mb-2">
-                                        <label>Pickup Date</label>
-                                        <input type="date" name="pickup_date" class="form-control" placeholder="pickup_date"> 
-                                        @error('pickup_date')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                <div class="form-group mb-2">
-                                    <label>Pickup Time</label>
-                                    <input type="time" name="pickup_time" class="form-control" placeholder="pickup_time"> 
-                                    @error('pickup_time')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                            <div class="form-group mb-2">
-                                <label>Pickup Time</label>
-                                <input type="time" name="pickup_time" class="form-control" placeholder="pickup_time"> 
-                                @error('pickup_time')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                                <div class="row mx-0 px-4">
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Pickup Date</label>
+                                            <input type="date" name="pickup_date" class="form-control" placeholder="Pickup Date"> 
+                                            @error('pickup_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Pickup Time</label>
+                                            <input type="time" name="pickup_time" class="form-control" placeholder="Pickup Time"> 
+                                            @error('pickup_time')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Drop Off Address</label>
+                                            <input type="text" name="dropoff_address" class="form-control" placeholder="Dropoff Address"> 
+                                            @error('dropoff_address')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Drop Off Date</label>
+                                            <input type="date" name="dropoff_date" class="form-control" placeholder="Dropoff Date"> 
+                                            @error('dropoff_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Drop Off Time</label>
+                                            <input type="time" name="dropoff_time" class="form-control" placeholder="dropoff_time"> 
+                                            @error('dropoff_time')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Additional Notes (Optional)</label>
+                                            <textarea type="description" name="driver_required" class="form-control" placeholder="Enter Message" > </textarea>
+                                            @error('driver_required')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                                <div class="row mx-0 px-4">
+                                    {{-- <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Message</label>
                                             <textarea type="description" name="description" class="form-control" placeholder="Enter Message" > </textarea>
@@ -151,7 +130,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     {{-- <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Price for above</label>
@@ -202,7 +181,84 @@
     </div>
 @endsection
 @section('js')
+{{-- <script>
+    $(document).ready(function () {
+        // When the "user_type" dropdown changes
+        $('#is_dropdown').on('change', function () {
+            let selectedValue = $(this).val();
 
+            // Hide both customer and driver sections by default
+            $('#customer_cat').addClass('d-none');
+            $('#driver').addClass('d-none');
+
+            // Show the appropriate section based on the selected value
+            if (selectedValue === 'Customer') {
+                $('#customer_cat').removeClass('d-none'); // Show the customer dropdown
+            } else if (selectedValue === 'Driver') {
+                $('#driver').removeClass('d-none'); // Show the driver dropdown
+            }
+        });
+    });
+</script> --}}
+
+{{-- <script>
+    $(document).ready(function () {
+        // Handle dropdown visibility based on user type
+        $('#is_dropdown').on('change', function () {
+            let selectedValue = $(this).val();
+
+            // Hide both sections initially
+            $('#customer_cat').addClass('d-none');
+            $('#driver').addClass('d-none');
+
+            // Reset checkboxes and dropdowns
+            $('#select_all_customers, #select_all_drivers').prop('checked', false);
+            $('#customers, #drivers').val([]);
+
+            // Show the appropriate section based on selection
+            if (selectedValue === 'Customer') {
+                $('#customer_cat').removeClass('d-none');
+            } else if (selectedValue === 'Driver') {
+                $('#driver').removeClass('d-none');
+            }
+        });
+
+        // "Select All Customers" checkbox functionality
+        $('#select_all_customers').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#customers option').prop('selected', true);
+            } else {
+                $('#customers option').prop('selected', false);
+            }
+        });
+
+        // "Select All Drivers" checkbox functionality
+        $('#select_all_drivers').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#drivers option').prop('selected', true);
+            } else {
+                $('#drivers option').prop('selected', false);
+            }
+        });
+
+        // Ensure that unchecking any individual option also unchecks the "Select All" checkbox
+        $('#customers').on('change', function () {
+            if ($('#customers option').length === $('#customers option:selected').length) {
+                $('#select_all_customers').prop('checked', true);
+            } else {
+                $('#select_all_customers').prop('checked', false);
+            }
+        });
+
+        $('#drivers').on('change', function () {
+            if ($('#drivers option').length === $('#drivers option:selected').length) {
+                $('#select_all_drivers').prop('checked', true);
+            } else {
+                $('#select_all_drivers').prop('checked', false);
+            }
+        });
+    });
+</script> --}}
 
 <script>
     $(document).ready(function () {
