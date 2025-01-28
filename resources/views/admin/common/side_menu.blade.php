@@ -83,7 +83,7 @@
                 {{-- <ul class="dropdown-menu {{ request()->is('admin/car*') || request()->is('admin/PlaceOrderTwo*') || request()->is('admin/PlaceOrderThree*') || request()->is('admin/PlaceOrderFour*')  ? 'show' : '' }}"> --}}
             <li class="dropdown {{ request()->is('admin/car*') ? 'active' : '' }}">
                 <a href="{{ route('car.index') }}" class="nav-link "><span><i
-                            data-feather="truck"></i>Car Details</span></a>
+                            data-feather="truck"></i>Cars Inventory</span></a>
             </li>
                 {{-- </ul> --}}
             {{-- </li> {{ request()->is('admin/car*') ? 'text-white' : '' }} --}}
@@ -95,6 +95,11 @@
                             <span class="badge rounded-pill bg-warning text-dark d-flex justify-content-center align-items-center" style="width: 24px; height: 24px; font-size: 14px;">{{ $pendingCount }}</span>
                         @endif
                         </span></a>
+            </li>
+
+            <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
+                <a href="{{ route('notification.create') }}" class="nav-link"><span><i
+                            data-feather="bell"></i>Notification</span></a>
             </li>
 
             <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">

@@ -6,18 +6,19 @@ use App\Models\Driver;
 use Illuminate\Http\Request;
 use App\Mail\DriverActivated;
 use App\Mail\DriverCredentials;
+use App\Mail\DriverDeActivated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DriverRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\DriverDeActivated;
 
 
 class DriverController extends Controller
 {
     public function index()
     {
-        $drivers = Driver::latest()->get();
+        $drivers = Driver::with('driverdocument')->get();
 
         return view('admin.driver.index',compact('drivers'));
     }
@@ -27,15 +28,15 @@ class DriverController extends Controller
         return view('admin.driver.create');
     }
 
-    public function store(Request $request)
+    public function store(DriverRequest $request)
     {
         // return $request;
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:drivers,email',
-            'phone' => 'required|string|max:15',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     // 'email' => 'required|email|unique:drivers,email',
+        //     'phone' => 'required|string|max:15',
+        // ]);
 
         $generatedPassword = random_int(10000000, 99999999);
 
@@ -55,7 +56,7 @@ class DriverController extends Controller
         // Create the user
         $driver = Driver::create([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'phone' => $request->phone,
             'availability' => $request->availability,
             'password' => Hash::make($generatedPassword),
@@ -64,7 +65,7 @@ class DriverController extends Controller
 
         ]);
 
-        Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
+        // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
         return redirect()->route('driver.index')->with(['message' => 'Driver Created Successfully']);
     }
@@ -76,15 +77,15 @@ class DriverController extends Controller
         return view('admin.driver.edit', compact('driver'));
     }
 
-    public function update(Request $request, $id)
+    public function update(DriverRequest $request, $id)
     {
 
         // Validate the incoming request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:drivers,email,' . $id,
-            'phone' => 'required|string|max:15',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     // 'email' => 'required|email|unique:drivers,email,' . $id,
+        //     'phone' => 'required|string|max:15',
+        // ]);
 
         $driver = Driver::findOrFail($id);
         // Handle image upload
@@ -106,7 +107,7 @@ class DriverController extends Controller
         // Update user details
         $driver->update([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'phone' => $request->phone,
             'availability' => $request->availability,
             'image' => $image,
@@ -150,7 +151,7 @@ class DriverController extends Controller
         try {
             // Send an email based on `sendCredentials`
 
-            Mail::to($data->email)->send(new DriverActivated($message));
+            // Mail::to($data->email)->send(new DriverActivated($message));
 
 
             return redirect()->route('driver.index')->with([
@@ -183,7 +184,7 @@ class DriverController extends Controller
         $message['name'] = $data->name;
 
         try {
-            Mail::to($data->email)->send(new DriverDeActivated($message));
+            // Mail::to($data->email)->send(new DriverDeActivated($message));
             return redirect()->route('driver.index')->with(['message' => 'Driver Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

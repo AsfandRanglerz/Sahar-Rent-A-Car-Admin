@@ -20,8 +20,9 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
-                                            <th>Email</th>
+                                            {{-- <th>Email</th> --}}
                                             <th>Phone</th>
+                                            <th>Document (License)</th>
                                             <th>Image</th>
                                             <th>Availability</th>
                                             {{-- <th>Status</th> --}}
@@ -33,12 +34,55 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $driver->name }}</td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($driver->email)
                                                         <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>{{ $driver->phone }}</td>
+                                                {{-- <td>
+                                                    @if ($driver->driverdocument)
+                                                        <ul>
+                                                            @if ($driver->driverdocument->license)
+                                                                <li>
+                                                                    <a href="{{ asset('public/storage/' . $driver->driverdocument->license) }}" target="_blank">License</a>
+                                                                </li>
+                                                            @endif
+                                                           
+                                                        </ul>
+                                                    @else
+                                                        <span>No documents uploaded</span>
+                                                    @endif
+                                                </td> --}}
+                                                <td>
+                                                    @if ($driver->driverdocument)
+                                                        @php
+                                                            $documents = [];
+                                                            if ($driver->driverdocument->license) {
+                                                                $documents[] = [
+                                                                    'name' => 'License',
+                                                                    'url' => asset('public/storage/' . $driver->driverdocument->license),
+                                                                ];
+                                                            }
+                                                        @endphp
+                                                
+                                                        @if (count($documents) === 1)
+                                                            <a href="{{ $documents[0]['url'] }}" target="_blank">{{ $documents[0]['name'] }}</a>
+                                                        @elseif (count($documents) > 1)
+                                                            <ul>
+                                                                @foreach ($documents as $document)
+                                                                    <li>
+                                                                        <a href="{{ $document['url'] }}" target="_blank">{{ $document['name'] }}</a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <span>No documents uploaded</span>
+                                                        @endif
+                                                    @else
+                                                        <span>No documents uploaded</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <img src="{{ asset($driver->image) }}" alt="" height="50"
                                                         width="50" class="image">
@@ -125,14 +169,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="reason">Please provide the reason for deactivating this Store Manager:</label>
+                            <label for="reason">Please provide the reason for deactivating this driver:</label>
                             <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 
                         </div>
                     </div>
                     <input type="hidden" id="status" name="status" value="0">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Deactivate</button>
                     </div>
                 </form>
@@ -148,8 +192,7 @@
                 <form id="activationForm" action="" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this Store
-                            Manager?</h5>
+                        <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this driver?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -158,7 +201,7 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Activate</button>
                     </div>
                 </form>

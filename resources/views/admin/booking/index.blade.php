@@ -19,31 +19,38 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
+                                            <th>Car Id</th>
                                             <th>Customer Name</th>
-                                            <th>Vehicle  Name</th>
-                                            <th>Vehicle Type</th>
-                                            <th>Charges</th>
-                                            <th>With/Without Driver</th>
-                                            <th>Drop-off Location</th>
-                                            <th>Booking Date</th>
+                                            <th>Email Address</th>
+                                            <th>Phone Number</th>
+                                            <th>Self Pickup</th>
+                                            <th>Pickup Address</th>
+                                            <th>Pickup Date</th>
+                                            <th>Pickup Time</th>
+                                            <th>Dropoff Address</th>
+                                            <th>Drop Off Date</th>
+                                            <th>Drop Off Time</th>
+                                            <th>Additional Notes</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($drivers as $driver)
+                                        @foreach ($drivers as $driver)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $driver->name }}</td>
-                                                <td>
+                                                <td>{{ $driver->car_id }}</td>
+                                                <td>{{ $driver->full_name }}</td>
+                                                {{-- <td>
                                                     @if ($driver->email)
                                                         <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>{{ $driver->phone }}</td>
-                                                <td>
+                                                <td>{{ $driver->self_pickup }}</td>
+                                                {{-- <td>
                                                     <img src="{{ asset($driver->image) }}" alt="" height="50"
                                                         width="50" class="image">
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3"
@@ -94,7 +101,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

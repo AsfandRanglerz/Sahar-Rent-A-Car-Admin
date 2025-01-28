@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\CarDetails;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\CarRequest;
 use App\Http\Controllers\Controller;
@@ -29,15 +30,15 @@ class CarDetailsController extends Controller
 
         // $request->validate([
         //     'car_name' => 'required|string|max:255',
-        //     'sanitized' => 'required|numeric|max:255',
-        //     'car_feature' => 'required|numeric|max:255',
+        //     'sanitized' => 'required|numeric',
+        //     'car_feature' => 'required|numeric',
         //     'passengers' => 'required|numeric|max:10',
         //     'luggage' => 'required|numeric|max:255',
         //     'doors' => 'required|numeric|max:10',
         //     'car_type' => 'required|string|max:255',
         //     // 'email' => 'required|email|unique:drivers,email',
-        //     'call_number' => 'required|numeric|min:15',
-        //     'whatsapp_number' => 'required|numeric|min:15',
+        //     'call_number' => 'required|numeric|min:11',
+        //     'whatsapp_number' => 'required|numeric|min:11',
         //     'pricing' => ['required','regex:/^\d+(\.\d{1,2})?$/'],
         // ]);
 
@@ -54,16 +55,21 @@ class CarDetailsController extends Controller
             $image = 'public/admin/assets/images/avator.png';
         }
 
+        do {
+            $carId = mt_rand(1000, 9999); //  Can be replaced this with a custom logic for 4-digit IDs
+        } while (CarDetails::where('car_id', $carId)->exists());
+
         $status = 1;
 
         // Create the user
         $CarDetail = CarDetails::create([
+            'car_id' => $carId,
             'car_name' => $request->car_name,
             'availability' => $request->availability,
             'pricing' => $request->pricing,
             'durations' => $request->durations,
-            'call_number' => $request->call_number,
-            'whatsapp_number' => $request->whatsapp_number,
+            // 'call_number' => $request->call_number,
+            // 'whatsapp_number' => $request->whatsapp_number,
             'passengers' => $request->passengers,
             'luggage' => $request->luggage,
             'doors' => $request->doors,
@@ -82,7 +88,7 @@ class CarDetailsController extends Controller
 
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
-        return redirect()->route('car.index')->with(['message' => 'Car Detail Created Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Car Inventory Created Successfully']);
     }
 
     public function edit($id)
@@ -96,18 +102,18 @@ class CarDetailsController extends Controller
     {
         $validatedData = $request->validated();
 
-        // Validate the incoming request
+        // Validate the incoming request    
         // $request->validate([
         //     'car_name' => 'required|string|max:255',
-        //     'sanitized' => 'required|numeric|max:255',
-        //     'car_feature' => 'required|numeric|max:255',
+        //     'sanitized' => 'required|numeric',
+        //     'car_feature' => 'required|numeric',
         //     'passengers' => 'required|numeric|max:10',
         //     'luggage' => 'required|numeric|max:255',
         //     'doors' => 'required|numeric|max:10',
         //     'car_type' => 'required|string|max:255',
         //     // 'email' => 'required|email|unique:drivers,email',
-        //     'call_number' => 'required|numeric|min:15',
-        //     'whatsapp_number' => 'required|numeric|min:15',
+        //     'call_number' => 'required|numeric|min:11',
+        //     'whatsapp_number' => 'required|numeric|min:11',
         //     'pricing' => ['required','regex:/^\d+(\.\d{1,2})?$/'],
         // ]);
 
@@ -134,8 +140,8 @@ class CarDetailsController extends Controller
             'availability' => $request->availability,
             'pricing' => $request->pricing,
             'durations' => $request->durations,
-            'call_number' => $request->call_number,
-            'whatsapp_number' => $request->whatsapp_number,
+            // 'call_number' => $request->call_number,
+            // 'whatsapp_number' => $request->whatsapp_number,
             'passengers' => $request->passengers,
             'luggage' => $request->luggage,
             'doors' => $request->doors,
@@ -152,7 +158,7 @@ class CarDetailsController extends Controller
         ]);
 
         // Redirect back with a success message
-        return redirect()->route('car.index')->with(['message' => 'Car Detail Updated Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Car Inventory Updated Successfully']);
     }
 
 
@@ -160,6 +166,6 @@ class CarDetailsController extends Controller
     public function destroy($id)
     {
         CarDetails::destroy($id);
-        return redirect()->route('car.index')->with(['message' => 'Car Detail Deleted Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Car Inventory Deleted Successfully']);
     }
 }

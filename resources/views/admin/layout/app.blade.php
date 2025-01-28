@@ -22,6 +22,7 @@
     <link rel="stylesheet"
     href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/datatables.min.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 
     <link rel='shortcut icon' type='image/x-icon' href='{{ asset('public/admin/assets/img/Sahar_logo.png') }}' />
@@ -52,6 +53,8 @@
     <script src="{{ asset('public/admin/toastr/toastr.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    
 
       {{-- DataTbales --}}
       <script src="{{ asset('public/admin/assets/bundles/datatables/datatables.min.js') }}"></script>
@@ -114,6 +117,7 @@
     </script>
 
     @yield('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 
 

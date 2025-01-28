@@ -18,6 +18,9 @@ use App\Http\Controllers\API\ContactUsController;
 |
 */
 
+//#################  UserDocument ########################
+Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
+Route::post('/driverdocument',[AuthController::class,'driverdocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
@@ -30,14 +33,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile', [AuthController::class, 'updateProfile']);
 });
 
-//#################Bookings###########################
+//#################  Bookings  ###########################
 Route::post('/bookings',[BookingController::class,'createBooking']);
 
-//#################Payment############################
+//#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit']);
 
-//#################ContactUs##########################
+//#################  ContactUs  ##########################
 Route::post('/contactus',[ContactUsController::class,'contact']);
+
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

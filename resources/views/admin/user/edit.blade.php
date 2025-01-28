@@ -5,7 +5,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ url()->previous() }}">Back</a>
+                <a class="btn btn-primary mb-3" href="{{ route('user.index')}}">Back</a>
                 <form id="edit_subadmin" action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
@@ -24,7 +24,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
                                             <input type="email" placeholder="Enter Your Email" name="email"
@@ -33,18 +33,18 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Phone</label>
-                                            <input type="text" placeholder="Enter Your Phone" name="phone"
+                                            <label>Phone Number</label>
+                                            <input type="number" placeholder="Enter Your Phone" name="phone"
                                                 id="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
                                             @error('phone')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Address</label>
                                             <input type="text" placeholder="Enter Address" name="address"
@@ -53,15 +53,33 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                    </div> --}}
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3 d-none">
+                                        <div class="form-group mb-2">
+                                            <label>Password</label>
+                                            <input type="password" placeholder="Enter Your Password" name="password"
+                                                id="password" value="{{ old('password',$user->password) }}" class="form-control">
+                                            @error('password')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
+
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Image</label>
-                                            <input type="file" name="image" class="form-control">
+                                            <label>Image (Optional)</label>
+                                            <input type="file" name="image" class="form-control" >
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if($user->image)
+                                        <div class="ms-3">
+                                            <img src="{{ asset($user->image) }}" 
+                                                 alt="image" 
+                                                 style="width: 80px; height: 70px;  border: 1px solid #ddd;">
+                                        </div>
+                                    @endif
                                     </div>
                                 </div>
 

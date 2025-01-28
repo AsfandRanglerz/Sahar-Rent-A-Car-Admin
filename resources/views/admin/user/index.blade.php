@@ -21,10 +21,12 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
-                                            <th>Address</th>
+                                            {{-- <th>Email</th> --}}
+                                            <th>Phone Number</th>
+                                            {{-- <th>Address</th> --}}
+                                            <th>Documents</th>
                                             <th>Image</th>
+                                            <th>Status</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
@@ -34,18 +36,93 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $user->name }}</td>
 
-                                                <td>
+                                                {{-- <td>
                                                     @if ($user->email)
                                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>{{ $user->phone }}</td>
-                                                <td>{{ $user->address }}</td>
+                                                {{-- <td>{{ $user->address }}</td> --}}
+                                                {{-- <td>
+                                                    @if ($user->documents)
+                                                        <ul>
+                                                            @if ($user->documents->emirate_id)
+                                                                <li>
+                                                                    <a href="{{ asset('public/storage/' . $user->documents->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->documents->passport)
+                                                                <li>
+                                                                    <a href="{{ asset('public/storage/' . $user->documents->passport) }}" target="_blank">Passport</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->documents->driving_license)
+                                                                <li>
+                                                                    <a href="{{ asset('public/storage/' . $user->documents->driving_license) }}" target="_blank">Driving License</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    @else
+                                                        <span>No documents uploaded</span>
+                                                    @endif
+                                                </td> --}}
                                                 <td>
+                                                    @if ($user->documents)
+                                                        @php
+                                                            $documents = [];
+                                                            if ($user->documents->emirate_id) {
+                                                                $documents[] = [
+                                                                    'name' => 'Emirate Id',
+                                                                    'url' => asset('public/storage/' . $user->documents->emirate_id),
+                                                                ];
+                                                            }
+                                                            if ($user->documents->passport) {
+                                                                $documents[] = [
+                                                                    'name' => 'Passport',
+                                                                    'url' => asset('public/storage/' . $user->documents->passport),
+                                                                ];
+                                                            }
+                                                            if ($user->documents->driving_license) {
+                                                                $documents[] = [
+                                                                    'name' => 'Driving License',
+                                                                    'url' => asset('public/storage/' . $user->documents->driving_license),
+                                                                ];
+                                                            }
+                                                        @endphp
+                                                
+                                                        @if (count($documents) === 1)
+                                                            <a href="{{ $documents[0]['url'] }}" target="_blank">{{ $documents[0]['name'] }}</a>
+                                                        @elseif (count($documents) > 1)
+                                                            <ul>
+                                                                @foreach ($documents as $document)
+                                                                    <li>
+                                                                        <a href="{{ $document['url'] }}" target="_blank">{{ $document['name'] }}</a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <span>No documents uploaded</span>
+                                                        @endif
+                                                    @else
+                                                        <span>No documents uploaded</span>
+                                                    @endif
+                                                </td>
+                                               
+                                                <td>
+                                                    @if($user->image)
                                                     <img src="{{ asset($user->image) }}" alt="" height="50"
                                                         width="50" class="image">
+                        
+                                                    @else
+                                                    <span>No image</span>
+                                                    @endif
                                                 </td>
 
+                                                <td>
+                                                    <div class="badge {{ $user->availability == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $user->availability == 0 ? 'Available' : 'Not Available' }}
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3"
@@ -130,14 +207,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="reason">Please provide the reason for deactivating this Store Manager:</label>
+                            <label for="reason">Please provide the reason for deactivating this customer:</label>
                             <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 
                         </div>
                     </div>
                     <input type="hidden" id="status" name="status" value="0">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Deactivate</button>
                     </div>
                 </form>
@@ -153,8 +230,7 @@
                 <form id="activationForm" action="" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this Store
-                            Manager?</h5>
+                        <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this driver?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -163,7 +239,7 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Activate</button>
                     </div>
                 </form>

@@ -126,22 +126,22 @@
                 <form id="deactivationForm" action="" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deactivationModalLabel">Reason for Deactivation</h5>
+                        <h5 class="modal-title" id="deactivationModalLabel">Reason for Rejection</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="reason">Please provide the reason for deactivating this Store Manager:</label>
+                            <label for="reason">Please provide the reason for rejection:</label>
                             <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 
                         </div>
                     </div>
                     <input type="hidden" id="action" name="action" value="0">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Deactivate</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Reject</button>
                     </div>
                 </form>
             </div>
@@ -156,8 +156,7 @@
                 <form id="activationForm" action="" method="POST">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this Store
-                            Manager?</h5>
+                        <h5 class="modal-title" id="activationModalLabel">Approve this license?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -166,8 +165,8 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Activate</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Approve</button>
                     </div>
                 </form>
             </div>

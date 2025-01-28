@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubadminController;
 use App\Http\Controllers\Admin\CarDetailsController;
+use App\Http\Controllers\Admin\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -90,6 +91,16 @@ Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->na
     Route::delete('/car-destroy/{id}',  'destroy')->name('car.destroy');
 });
 
+// ############ Notification #################
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notification',  'index')->name('notification.index');
+    Route::get('/notification-create',  'create')->name('notification.create');
+    Route::post('/notification-store',  'store')->name('notification.store');
+    Route::get('/notification-edit/{id}',  'edit')->name('notification.edit');
+    Route::post('/notification-update/{id}',  'update')->name('notification.update');
+    Route::delete('/notification-destroy/{id}',  'destroy')->name('notification.destroy');
+});
+
 Route::controller(LicenseController::class)->group(function () {
     Route::get('/license',  'index')->name('license.index');
     Route::get('/license-create',  'create')->name('license.create');
@@ -104,8 +115,14 @@ Route::post('/LicenseApprovalDeactivate/{id}', [LicenseController::class, 'deact
 Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
 Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');
 
-Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
-
+Route::controller(BookingController::class)->group(function () {
+    Route::get('/booking',  'index')->name('booking.index');
+    Route::get('/booking-create',  'create')->name('booking.create');
+    Route::post('/booking-store',  'store')->name('booking.store');
+    Route::get('/booking-edit/{id}',  'edit')->name('booking.edit');
+    Route::post('/booking-update/{id}',  'update')->name('booking.update');
+    Route::delete('/booking-destroy/{id}',  'destroy')->name('booking.destroy');
+});
 
 });
 

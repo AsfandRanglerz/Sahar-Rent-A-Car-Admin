@@ -5,7 +5,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ url()->previous() }}">Back</a>
+                <a class="btn btn-primary mb-3" href="{{ route('license.index') }}">Back</a>
                 <form id="edit_subadmin" action="{{ route('license.update', $LicenseApproval->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')

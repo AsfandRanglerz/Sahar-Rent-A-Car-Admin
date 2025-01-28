@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Customer;
 use Illuminate\Support\Str;
+use App\Models\UserDocument;
 use Illuminate\Http\Request;
+use App\Models\DriverDocument;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -48,6 +50,57 @@ return response()->json([
     'message' => 'User created successfully',
     'errors' => $customer,
 ],200);
+}
+
+public function uploadDocument(Request $request)
+    {
+        // $request->validate([
+        //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        // ]);
+
+        $user = $request->user();
+
+        $document = UserDocument::firstOrCreate(['user_id' => $user->id]);
+
+        if ($request->hasFile('emirate_id')) {
+            $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
+        }
+        if ($request->hasFile('passport')) {
+            $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
+        }
+        if ($request->hasFile('driving_license')) {
+            $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
+        }
+        
+        $document->save();
+        
+
+        return response()->json(['message' => 'Documents uploaded successfully', 'data' => $document], 200);
+    }
+
+    public function driverdocument(Request $request)
+    {
+        // $request->validate([
+        //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        // ]);
+
+        $driver = $request->user();
+
+        $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
+
+        if ($request->hasFile('license')) {
+            $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
+        }
+       
+        
+        $document->save();
+        
+
+        return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
     }
 
     public function login(Request $request){

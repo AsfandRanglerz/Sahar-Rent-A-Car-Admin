@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Car Details</h4>
+                                    <h4>Cars Inventory</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -20,14 +20,15 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
+                                            <th>Car Id </th>
                                             <th>Car Name</th>
-                                            <th>Availability</th>
-                                            <th>Price Per Hour(AED)</th>
-                                            <th>Price Per Day(AED)</th>
-                                            <th>Price Per Year(AED)</th>
+                                            {{-- <th>Availability</th> --}}
+                                            <th>Price Per Hour (AED)</th>
+                                            <th>Price Per Day (AED)</th>
+                                            <th>Price Per Year (AED)</th>
                                             {{-- <th>Durations</th> --}}
-                                            <th>Call Number</th>
-                                            <th>Whatsapp Number</th>
+                                            {{-- <th>Call Number</th>
+                                            <th>Whatsapp Number</th> --}}
                                             <th>Passengers</th>
                                             <th>Luggage</th>
                                             <th>Doors</th>
@@ -46,6 +47,7 @@
                                         @foreach ($CarDetails as $CarDetail)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $CarDetail->car_id }}</td>
                                                 <td>{{ $CarDetail->car_name }}</td>
 
                                                 {{-- <td>
@@ -53,13 +55,13 @@
                                                         <a href="mailto:{{ $CarDetail->email }}">{{ $CarDetail->email }}</a>
                                                     @endif
                                                 </td> --}}
-                                                <td>{{ $CarDetail->availability }}</td>
+                                                {{-- <td>{{ $CarDetail->availability }}</td> --}}
                                                 <td>{{ $CarDetail->pricing }}</td>
                                                 <td>{{ $CarDetail->sanitized }}</td>
                                                 <td>{{ $CarDetail->car_feature }}</td>
                                                 {{-- <td>{{ $CarDetail->durations }}</td> --}}
-                                                <td>{{ $CarDetail->call_number }}</td>
-                                                <td>{{ $CarDetail->whatsapp_number }}</td>
+                                                {{-- <td>{{ $CarDetail->call_number }}</td>
+                                                <td>{{ $CarDetail->whatsapp_number }}</td> --}}
                                                 <td>{{ $CarDetail->passengers }}</td>
                                                 <td>{{ $CarDetail->luggage }}</td>
                                                 <td>{{ $CarDetail->doors }}</td>
@@ -184,7 +186,7 @@
                     </div>
                     <input type="hidden" id="status" name="status" value="0">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Deactivate</button>
                     </div>
                 </form>
@@ -210,7 +212,7 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Activate</button>
                     </div>
                 </form>

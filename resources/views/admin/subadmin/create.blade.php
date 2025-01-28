@@ -5,7 +5,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ url()->previous() }}">Back</a>
+                <a class="btn btn-primary mb-3" href="{{ route('subadmin.index') }}">Back</a>
                 <form id="add_department" action="{{ route('subadmin.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">

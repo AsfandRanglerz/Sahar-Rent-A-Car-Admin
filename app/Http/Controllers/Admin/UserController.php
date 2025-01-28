@@ -7,16 +7,18 @@ use App\Mail\UserActivated;
 use Illuminate\Http\Request;
 use App\Mail\UserCredentials;
 use App\Mail\UserDeActivated;
+use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->get();
+        $users = User::with('documents')->get();
         return view('admin.user.index', compact('users'));
     }
 
@@ -25,17 +27,19 @@ class UserController extends Controller
         return view('admin.user.create');
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         // return $request;
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:15',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     // 'email' => 'required|email|unique:users,email',
+        //     'phone' => 'required|string|max:15',
+        // ]);
 
-        $generatedPassword = random_int(10000000, 99999999);
+        $validatedData = $request->validated();
+
+        // $generatedPassword = random_int(10000000, 99999999);
 
 
         if ($request->hasFile('image')) {
@@ -44,8 +48,10 @@ class UserController extends Controller
             $filename = time() . '.' . $extension;
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
-        } else {
-            $image = 'public/admin/assets/images/avator.png';
+        } 
+        else {
+            // $image = 'public/admin/assets/images/avator.png';
+            $image = null;
         }
 
         $status = 1;
@@ -53,16 +59,16 @@ class UserController extends Controller
         // Create the user
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'phone' => $request->phone,
-            'address' => $request->address,
-            'password' => Hash::make($generatedPassword),
+            // 'address' => $request->address,
+            'password' => Hash::make($request->password),
             'image' => $image,
             'status' => $status
 
         ]);
 
-        Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $generatedPassword));
+        // Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $generatedPassword));
 
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
     }
@@ -75,15 +81,16 @@ class UserController extends Controller
         return view('admin.user.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
 
         // Validate the incoming request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'required|string|max:15',
-        ]);
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     // 'email' => 'required|email|unique:users,email,' . $id,
+        //     'phone' => 'required|string|max:15',
+        // ]);
+        $validatedData = $request->validated();
 
         $user = User::findOrFail($id);
         // Handle image upload
@@ -105,9 +112,9 @@ class UserController extends Controller
         // Update user details
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'phone' => $request->phone,
-            'address' => $request->address,
+            // 'address' => $request->address,
             'image' => $image,
         ]);
 
@@ -143,7 +150,7 @@ class UserController extends Controller
         try {
             // Send an email based on `sendCredentials`
 
-            Mail::to($data->email)->send(new UserActivated($message));
+            // Mail::to($data->email)->send(new UserActivated($message));
 
 
             return redirect()->route('user.index')->with([
@@ -176,7 +183,7 @@ class UserController extends Controller
         $message['name'] = $data->name;
 
         try {
-            Mail::to($data->email)->send(new UserDeActivated($message));
+            // Mail::to($data->email)->send(new UserDeActivated($message));
             return redirect()->route('user.index')->with(['message' => 'Customer Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

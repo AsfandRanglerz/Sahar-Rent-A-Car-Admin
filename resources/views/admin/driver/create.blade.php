@@ -5,7 +5,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ url()->previous() }}">Back</a>
+                <a class="btn btn-primary mb-3" href="{{ route('driver.index') }}">Back</a>
                 <form id="add_department" action="{{ route('driver.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
@@ -16,14 +16,14 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Name</label>
-                                            <input type="name" placeholder="Enter Your Name" name="name"
+                                            <input type="text" placeholder="Enter Your Name" name="name"
                                                 id="name" value="{{ old('name') }}" class="form-control">
                                             @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
                                             <input type="email" placeholder="Enter Your Email" name="email"
@@ -32,11 +32,11 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Phone</label>
-                                            <input type="phone" placeholder="Enter Your Phone" name="phone"
+                                            <label>Phone Number</label>
+                                            <input type="number" placeholder="Enter Your Phone" name="phone"
                                                 id="phone" value="{{ old('phone') }}" class="form-control">
                                             @error('phone')
                                                 <div class="text-danger">{{ $message }}</div>
