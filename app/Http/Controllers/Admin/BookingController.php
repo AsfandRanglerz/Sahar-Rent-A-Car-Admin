@@ -74,6 +74,6 @@ class BookingController extends Controller
 
     public function destroy($id){
     Booking::destroy($id);
-    return redirect()->route('booking.index')->with('message','Booking Deleted Successfully');
+    return redirect()->route('booking.index')->with(['message' => 'Booking Deleted Successfully']);
     }
 }
