@@ -162,7 +162,7 @@
 
 @endsection
 
-@section('js')
+@section('js'
     <script>
         $(document).ready(function() {
             $('#table_id_events').DataTable();
