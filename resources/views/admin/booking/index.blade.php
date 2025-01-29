@@ -13,7 +13,7 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                <a class="btn btn-primary mb-3" href="{{ route('car.create') }}">Create
+                                <a class="btn btn-primary mb-3" href="{{ route('booking.create') }}">Create
                                 </a>
 
                                 <table class="responsive table " id="table-1">
@@ -22,12 +22,13 @@
                                             <th>Sr.</th>
                                             <th>Car Id</th>
                                             <th>Customer Name</th>
-                                            {{-- <th>Email Address</th> --}}
+                                            <th>Email Address</th>
                                             <th>Phone Number</th>
                                             <th>Self Pickup</th>
                                             <th>Pickup Address</th>
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th>
+                                            <th>Self Drop Off</th>
                                             <th>Drop Off Address</th>
                                             <th>Drop Off Date</th>
                                             <th>Drop Off Time</th>
@@ -36,35 +37,60 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($drivers as $driver)
+                                        @foreach ($bookings as $booking)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $driver->car_id }}</td>
-                                                <td>{{ $driver->full_name }}</td>
-                                                <td>{{ $driver->phone }}</td>
-
-                                                {{-- <td>
-                                                    @if ($driver->email)
-                                                        <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
+                                                <td>{{ $booking->car_id }}</td>
+                                                <td>{{ $booking->full_name }}</td>
+                                                <td>
+                                                    @if ($booking->email)
+                                                        <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
                                                     @endif
-                                                </td> --}}
+                                                </td>
+                                                <td>{{ $booking->phone }}</td>
+
                                                 
-                                                <td>{{ $driver->self_pickup }}</td>
-                                                {{-- <td>{{ $driver->durations }}</td> --}}
-                                                {{-- <td>{{ $driver->call_number }}</td>
-                                                <td>{{ $driver->whatsapp_number }}</td> --}}
-                                                <td>{{ $driver->pickup_address }}</td>
-                                                <td>{{ $driver->pickup_date }}</td>
-                                                <td>{{ $driver->pickup_time }}</td>
-                                                <td>{{ $driver->dropoff_address }}</td>
-                                                <td>{{ $driver->dropoff_date }}</td>
-                                                <td>{{ $driver->dropoff_time }}</td>
-                                                <td>{{ $driver->driver_required }}</td>
-                                                 {{-- <td>{!! $driver->car_play !!}</td> --}}
+                                                <td>{{ $booking->self_pickup }}</td>
+                                                {{-- <td>{{ $booking->durations }}</td> --}}
+                                                {{-- <td>{{ $booking->call_number }}</td>
+                                                <td>{{ $booking->whatsapp_number }}</td> --}}
+                                                <td>
+                                                @if($booking->pickup_address)    
+                                                    {{ $booking->pickup_address }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->pickup_date)    
+                                                    {{ $booking->pickup_date }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->pickup_time)    
+                                                    {{ $booking->pickup_time }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>{{ $booking->self_dropoff }}</td>
+                                                <td>{{ $booking->dropoff_address }}</td>
+                                                <td>{{ $booking->dropoff_date }}</td>
+                                                <td>{{ $booking->dropoff_time }}</td>
+                                                <td>
+                                                @if($booking->driver_required) 
+                                                    {{ $booking->driver_required }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                 {{-- <td>{!! $booking->car_play !!}</td> --}}
                                                  {{-- <td>
-                                                    @if (!empty($driver->car_play))
+                                                    @if (!empty($booking->car_play))
                                                         @php
-                                                            $features = explode("\n", $driver->car_play); // Assuming features are stored as a comma-separated string
+                                                            $features = explode("\n", $booking->car_play); // Assuming features are stored as a comma-separated string
                                                         @endphp
                                                         <ul>
                                                             @foreach ($features as $feature)
@@ -76,16 +102,16 @@
                                                     @endif
                                                 </td> --}}
                                             
-                                                {{--<td>{{ $driver->delivery }}</td>
-                                                <td>{{ $driver->pickup }}</td>
-                                                <td>{{ $driver->travel_distance }}</td> --}} 
+                                                {{--<td>{{ $booking->delivery }}</td>
+                                                <td>{{ $booking->pickup }}</td>
+                                                <td>{{ $booking->travel_distance }}</td> --}} 
                                                 {{-- <td>
-                                                    <div class="badge {{ $driver->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
-                                                        {{ $driver->status == 0 ? 'Activated' : 'Deactivated' }}
+                                                    <div class="badge {{ $booking->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $booking->status == 0 ? 'Activated' : 'Deactivated' }}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <img src="{{ asset($driver->image) }}" alt="" height="50"
+                                                    <img src="{{ asset($booking->image) }}" alt="" height="50"
                                                         width="50" class="image">
                                                 </td> --}}
 
@@ -129,9 +155,9 @@
                                                             @endif --}}
 
 
-                                                            {{-- <a href="{{ route('car.edit', $driver->id) }}"
+                                                            {{-- <a href="{{ route('car.edit', $booking->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}
-                                                            <form action="{{ route('car.destroy', $driver->id) }}"
+                                                            <form action="{{ route('booking.destroy', $booking->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 1px">
                                                                 @csrf
@@ -172,33 +198,27 @@
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
 
     <script>
-        $('.show_confirm').click(function(event) {
-            var form = $(this).closest("form");
-            var name = $(this).data("name");
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
+        $(document).ready(function() {
+            $('#table_id_events').DataTable(); // Initialize DataTable
+    
+            // Use event delegation to handle dynamically added elements
+            $(document).on('click', '.show_confirm', function(event) {
+                event.preventDefault();
+                var form = $(this).closest("form");
+    
+                swal({
+                    title: "Are you sure you want to delete this record?",
                     text: "If you delete this, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
-                })
-                .then((willDelete) => {
+                }).then((willDelete) => {
                     if (willDelete) {
                         form.submit();
                     }
                 });
+            });
         });
-
-        function showDeactivationModal(managerId) {
-            $('#deactivationForm').attr('action', '{{ url('admin/deactivate') }}/' + managerId);
-            $('#deactivationModal').modal('show');
-        }
-
-        function showActivationModal(managerId) {
-            $('#activationForm').attr('action', '{{ url('admin/activate') }}/' + managerId);
-            $('#activationModal').modal('show');
-        }
     </script>
 
 

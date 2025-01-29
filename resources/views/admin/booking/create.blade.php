@@ -22,7 +22,17 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Email</label>
+                                            <input type="email" placeholder="Enter Your Email" name="email"
+                                                id="email" value="{{ old('email') }}" class="form-control">
+                                            @error('email')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>  
 
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
@@ -73,6 +83,20 @@
                                             <label>Pickup Time</label>
                                             <input type="time" name="pickup_time" class="form-control" placeholder="Pickup Time"> 
                                             @error('pickup_time')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Self Drop Off</label>
+                                            <select name="self_dropoff" id="is_dropdown" class="form-control">
+                                                <option disabled selected>Select value</option>
+                                                <option value="Yes" {{ old('self_dropoff') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                                                <option value="No" {{ old('self_dropoff') == 'No' ? 'selected' : '' }}>No</option>
+                                            </select>
+                                            @error('self_dropoff')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

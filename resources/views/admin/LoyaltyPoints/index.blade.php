@@ -9,60 +9,61 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>License Approval</h4>
+                                    <h4>Loyalty Points</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                <a class="btn btn-primary mb-3" href="{{ route('license.create') }}">Create</a>
+                                <a class="btn btn-primary mb-3" href="{{ route('loyaltypoints.create') }}">Create</a>
 
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
+                                            <th>Referal Link</th>
+                                            <th>Car Rental</th>
                                             {{-- <th>Phone</th> --}}
-                                            <th>Image</th>
+                                            <th>Discount</th>
                                             {{-- <th>Availability</th> --}}
-                                            <th>Status</th>
+                                            {{-- <th>Status</th> --}}
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($LicenseApprovals as $LicenseApproval)
+                                        @foreach ($loyaltypoints as $loyaltypoint)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $LicenseApproval->name }}</td>
-                                                <td>
-                                                    @if ($LicenseApproval->email)
-                                                        <a href="mailto:{{ $LicenseApproval->email }}">{{ $LicenseApproval->email }}</a>
-                                                    @endif
-                                                </td>
-                                                {{-- <td>{{ $LicenseApproval->phone }}</td> --}}
-                                                <td>
-                                                    <img src="{{ asset($LicenseApproval->image) }}" alt="" height="50"
-                                                        width="50" class="image">
-                                                </td>
+                                                <td>{{ $loyaltypoint->on_referal }}</td>
                                                 {{-- <td>
-                                                    <div class="badge {{ $LicenseApproval->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
-                                                        {{ $LicenseApproval->status == 0 ? 'Accepted' : 'Rejected' }}
+                                                    @if ($loyaltypoint->email)
+                                                        <a href="mailto:{{ $loyaltypoint->email }}">{{ $loyaltypoint->email }}</a>
+                                                    @endif
+                                                </td> --}}
+                                                <td>{{ $loyaltypoint->on_car }}</td>
+                                                <td>{{ $loyaltypoint->discount }}%</td>
+                                                {{-- <td>
+                                                    <img src="{{ asset($loyaltypoint->image) }}" alt="" height="50"
+                                                        width="50" class="image">
+                                                </td> --}}
+                                                {{-- <td>
+                                                    <div class="badge {{ $loyaltypoint->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $loyaltypoint->status == 0 ? 'Accepted' : 'Rejected' }}
                                                     </div>
                                                 </td> --}}
-                                                <td>
+                                                {{-- <td>
                                                     <div class="badge 
-                                                        {{ $LicenseApproval->status == 0 ? 'badge-success' : ($LicenseApproval->status == 1 ? 'badge-danger' : 'badge-warning') }} 
+                                                        {{ $loyaltypoint->status == 0 ? 'badge-success' : ($loyaltypoint->status == 1 ? 'badge-danger' : 'badge-warning') }} 
                                                         badge-shadow">
-                                                        {{ $LicenseApproval->status == 0 ? 'Accepted' : ($LicenseApproval->status == 1 ? 'Rejected' : 'Pending') }}
+                                                        {{ $loyaltypoint->status == 0 ? 'Accepted' : ($loyaltypoint->status == 1 ? 'Rejected' : 'Pending') }}
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                                 
                                                 <td>
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3"
                                                             style="display: flex; align-items: center; justify-content: center; column-gap: 8px">
-                                                            @if ($LicenseApproval->action == 1)
+                                                            {{-- @if ($loyaltypoint->action == 1)
                                                                 <a href="javascript:void(0);"
-                                                                    onclick="showDeactivationModal({{ $LicenseApproval->id }})"
+                                                                    onclick="showDeactivationModal({{ $loyaltypoint->id }})"
                                                                     class="btn btn-success">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                         height="24" viewBox="0 0 24 24" fill="none"
@@ -75,9 +76,9 @@
                                                                         </circle>
                                                                     </svg>
                                                                 </a>
-                                                            @elseif($LicenseApproval->action == 0)
+                                                            @elseif($loyaltypoint->action == 0)
                                                                 <a href="javascript:void(0);"
-                                                                    onclick="showActivationModal({{ $LicenseApproval->id }})"
+                                                                    onclick="showActivationModal({{ $loyaltypoint->id }})"
                                                                     class="btn btn-btn btn-danger">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                         height="24" viewBox="0 0 24 24" fill="none"
@@ -90,10 +91,10 @@
                                                                         </circle>
                                                                     </svg>
                                                                 </a>
-                                                            @endif
-                                                            {{-- <a href="{{ route('license.edit', $LicenseApproval->id) }}"
+                                                            @endif --}}
+                                                            {{-- <a href="{{ route('license.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}
-                                                            <form action="{{ route('license.destroy', $LicenseApproval->id) }}"
+                                                            <form action="{{ route('loyaltypoints.destroy', $loyaltypoint->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf
@@ -119,7 +120,7 @@
     </div>
 
     <!-- Deactivation Modal -->
-    <div class="modal fade" id="deactivationModal" tabindex="-1" role="dialog" aria-labelledby="deactivationModalLabel"
+    {{-- <div class="modal fade" id="deactivationModal" tabindex="-1" role="dialog" aria-labelledby="deactivationModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -171,7 +172,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 

@@ -11,6 +11,7 @@ class UserDeActivated extends Mailable
 {
     use Queueable, SerializesModels;
 
+    
     /**
      * Create a new message instance.
      *

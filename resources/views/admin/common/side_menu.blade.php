@@ -58,7 +58,7 @@
 
             {{-- sub admin --}}
             <li class="dropdown {{ request()->is('admin/subadmin*') ? 'active' : '' }}">
-                <a href="{{ route('subadmin.index') }}" class="nav-link"><span><i
+                <a href="#" class="nav-link"><span><i
                             data-feather="shield"></i>Sub Admins</span></a>
             </li>
 
@@ -98,7 +98,7 @@
             </li>
 
             <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
-                <a href="{{ route('notification.create') }}" class="nav-link"><span><i
+                <a href="{{ route('notification.index') }}" class="nav-link"><span><i
                             data-feather="bell"></i>Notification</span></a>
             </li>
 
@@ -107,6 +107,10 @@
                             data-feather="calendar"></i>Bookings</span></a>
             </li>
 
+            <li class="dropdown {{ request()->is('admin/loyaltypoints*') ? 'active' : '' }}">
+                <a href="{{ route('loyaltypoints.index') }}" class="nav-link"><span><i
+                            data-feather="gift"></i>Loyalty Points</span></a>
+            </li>
 
             <li class="dropdown {{ request()->is('admin/Privacy-policy*') || request()->is('admin/privacy-policy-edit*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/Privacy-policy') }}" class="nav-link"><i

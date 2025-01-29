@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubadminController;
 use App\Http\Controllers\Admin\CarDetailsController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\LoyaltyPointsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -111,6 +112,15 @@ Route::controller(LicenseController::class)->group(function () {
 });
 Route::post('/LicenseApprovalActivate/{id}', [LicenseController::class, 'active'])->name('license.activate');
 Route::post('/LicenseApprovalDeactivate/{id}', [LicenseController::class, 'deactive'])->name('license.deactivate');
+
+Route::controller(LoyaltyPointsController::class)->group(function () {
+    Route::get('/loyaltypoints',  'index')->name('loyaltypoints.index');
+    Route::get('/loyaltypoints-create',  'create')->name('loyaltypoints.create');
+    Route::post('/loyaltypoints-store',  'store')->name('loyaltypoints.store');
+    Route::get('/loyaltypoints-edit/{id}',  'edit')->name('loyaltypoints.edit');
+    Route::post('/loyaltypoints-update/{id}',  'update')->name('loyaltypoints.update');
+    Route::delete('/loyaltypoints-destroy/{id}',  'destroy')->name('loyaltypoints.destroy');
+});
 
 Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
 Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');

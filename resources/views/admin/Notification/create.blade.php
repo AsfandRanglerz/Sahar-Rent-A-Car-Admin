@@ -18,15 +18,10 @@
                                             <label>User Type</label>
                                             <select name="user_type" id="is_dropdown" class="form-control">
                                                 <option disabled selected>Select value</option>
-                                                {{-- <option value="All" {{ old('user_type') == 'All' ? 'selected' : '' }}>All</option> --}}
+                                               
                                                 <option value="Customer" {{ old('user_type') == 'Customer' ? 'selected' : '' }}>Customer</option>
                                                 <option value="Driver" {{ old('user_type') == 'Driver' ? 'selected' : '' }}>Driver</option>
-                                                {{-- <option value="Manuscript Formatting Service" {{ old('user_type') == 'Manuscript Formatting Service' ? 'selected' : '' }}>Manuscript Formatting Service</option>
-                                                <option value="Power Point Presentations" {{ old('user_type') == 'Poster & Presentations' ? 'selected' : '' }}>Power Point Presentations</option>
-                                                <option value="Power Point Poster" {{ old('user_type') == 'Poster & Presentations' ? 'selected' : '' }}>Power Point Poster</option>
-                                                <option value="Assignment Editing Service" {{ old('user_type') == 'Assignment Editing Service' ? 'selected' : '' }}>Assignment Editing Service</option>
-                                                <option value="Thesis Editing Service" {{ old('user_type') == 'Thesis Editing Service' ? 'selected' : '' }}>Thesis Editing Service</option>
-                                                <option value="Data Analysis" {{ old('user_type') == 'Data Analysis' ? 'selected' : '' }}>Data Analysis</option> --}}
+                                                
                                             </select>
                                             @error('user_type')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -95,40 +90,10 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    {{-- <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label>Price for above</label>
-                                            <input type="number" name="above_equal_price" class="form-control" placeholder="enter price" step="0.001">
-                                            @error('words_limit')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label>Delivery Time</label>
-                                            <input type="number" name="delivery_days" class="form-control" placeholder="enter number of days"> 
-                                            @error('words_limit')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>--}}
+                                    
+                                    
                                 </div> 
-                                {{-- <div class="row mx-0 px-4">
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label>Package Category</label>
-                                            <select name="price_category" id="package" class="form-control">
-                                                <option disabled selected>Select value</option>
-                                                <option value="Regular" {{ old('price_category') == 'Basic' ? 'selected' : '' }}>Regular Price</option>
-                                                <option value="Discounted" {{ old('price_category') == 'Advance' ? 'selected' : '' }}>Discounted Price for students and researchers in MENA Region</option>
-                                            </select>
-                                            @error('price_category')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div> --}}
+                                
 
                                 <div class="card-footer text-center">
                                     <div class="col">
@@ -145,84 +110,7 @@
     </div>
 @endsection
 @section('js')
-{{-- <script>
-    $(document).ready(function () {
-        // When the "user_type" dropdown changes
-        $('#is_dropdown').on('change', function () {
-            let selectedValue = $(this).val();
 
-            // Hide both customer and driver sections by default
-            $('#customer_cat').addClass('d-none');
-            $('#driver').addClass('d-none');
-
-            // Show the appropriate section based on the selected value
-            if (selectedValue === 'Customer') {
-                $('#customer_cat').removeClass('d-none'); // Show the customer dropdown
-            } else if (selectedValue === 'Driver') {
-                $('#driver').removeClass('d-none'); // Show the driver dropdown
-            }
-        });
-    });
-</script> --}}
-
-{{-- <script>
-    $(document).ready(function () {
-        // Handle dropdown visibility based on user type
-        $('#is_dropdown').on('change', function () {
-            let selectedValue = $(this).val();
-
-            // Hide both sections initially
-            $('#customer_cat').addClass('d-none');
-            $('#driver').addClass('d-none');
-
-            // Reset checkboxes and dropdowns
-            $('#select_all_customers, #select_all_drivers').prop('checked', false);
-            $('#customers, #drivers').val([]);
-
-            // Show the appropriate section based on selection
-            if (selectedValue === 'Customer') {
-                $('#customer_cat').removeClass('d-none');
-            } else if (selectedValue === 'Driver') {
-                $('#driver').removeClass('d-none');
-            }
-        });
-
-        // "Select All Customers" checkbox functionality
-        $('#select_all_customers').on('change', function () {
-            if ($(this).is(':checked')) {
-                $('#customers option').prop('selected', true);
-            } else {
-                $('#customers option').prop('selected', false);
-            }
-        });
-
-        // "Select All Drivers" checkbox functionality
-        $('#select_all_drivers').on('change', function () {
-            if ($(this).is(':checked')) {
-                $('#drivers option').prop('selected', true);
-            } else {
-                $('#drivers option').prop('selected', false);
-            }
-        });
-
-        // Ensure that unchecking any individual option also unchecks the "Select All" checkbox
-        $('#customers').on('change', function () {
-            if ($('#customers option').length === $('#customers option:selected').length) {
-                $('#select_all_customers').prop('checked', true);
-            } else {
-                $('#select_all_customers').prop('checked', false);
-            }
-        });
-
-        $('#drivers').on('change', function () {
-            if ($('#drivers option').length === $('#drivers option:selected').length) {
-                $('#select_all_drivers').prop('checked', true);
-            } else {
-                $('#select_all_drivers').prop('checked', false);
-            }
-        });
-    });
-</script> --}}
 
 <script>
     $(document).ready(function () {

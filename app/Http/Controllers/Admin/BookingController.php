@@ -10,8 +10,8 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $drivers = Booking::latest()->get();
-        return view('admin.booking.index',compact('drivers'));
+        $bookings = Booking::latest()->get();
+        return view('admin.booking.index',compact('bookings'));
     }
 
     public function create(){
@@ -45,19 +45,19 @@ class BookingController extends Controller
         $CarDetail = Booking::create([
             'car_id' => $carId,
             'full_name' => $request->full_name,
-            // 'email' => $request->email,
+            'email' => $request->email,
             'phone' => $request->phone,
             'self_pickup' => $request->self_pickup,
             'pickup_address' => $request->pickup_address,
             'pickup_date' => $request->pickup_date,
             // 'whatsapp_number' => $request->whatsapp_number,
             'pickup_time' => $request->pickup_time,
+            'self_dropoff' => $request->self_dropoff,
             'dropoff_address' => $request->dropoff_address,
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
             // 'car_play' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
-            // 'sanitized' => $request->sanitized,
             // 'car_feature' => $request->car_feature,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,
