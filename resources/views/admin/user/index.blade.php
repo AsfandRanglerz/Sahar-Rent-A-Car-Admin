@@ -21,7 +21,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
-                                            {{-- <th>Email</th> --}}
+                                            <th>Email</th>
                                             <th>Phone Number</th>
                                             {{-- <th>Address</th> --}}
                                             <th>Documents</th>
@@ -36,14 +36,14 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $user->name }}</td>
 
-                                                {{-- <td>
+                                                <td>
                                                     @if ($user->email)
                                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                                     @endif
-                                                </td> --}}
+                                                </td>
                                                 <td>{{ $user->phone }}</td>
                                                 {{-- <td>{{ $user->address }}</td> --}}
-                                                {{-- <td>
+                                                 <td>
                                                     @if ($user->documents)
                                                         <ul>
                                                             @if ($user->documents->emirate_id)
@@ -65,8 +65,8 @@
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
-                                                </td> --}}
-                                                <td>
+                                                </td> 
+                                                {{-- <td>
                                                     @if ($user->documents)
                                                         @php
                                                             $documents = [];
@@ -106,7 +106,7 @@
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                
                                                 <td>
                                                     @if($user->image)

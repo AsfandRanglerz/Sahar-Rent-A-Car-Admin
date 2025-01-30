@@ -9,12 +9,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Cars Inventory</h4>
+                                    <h4>Bookings</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                <a class="btn btn-primary mb-3" href="{{ route('booking.create') }}">Create
-                                </a>
+                                {{-- <a class="btn btn-primary mb-3" href="{{ route('booking.create') }}">Create
+                                </a> --}}
 
                                 <table class="responsive table " id="table-1">
                                     <thead>

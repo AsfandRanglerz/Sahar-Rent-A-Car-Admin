@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+
 use App\Models\LicenseApproval;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\LicenseRequest;
+use App\Mail\LicenseApprovalActivated;
+use App\Mail\LicenseApprovalDeActivated;
+
 
 class LicenseController extends Controller
 {
     
     public function index()
     {
+        
         $LicenseApprovals = LicenseApproval::latest()->get();
         $pendingCount = LicenseApproval::where('counter', 1)->count();
         return view('admin.LicenseApproval.index',compact('LicenseApprovals','pendingCount'));
@@ -21,7 +28,7 @@ class LicenseController extends Controller
         return view('admin.LicenseApproval.create');
     }
 
-    public function store(Request $request)
+    public function store(LicenseRequest $request)
     {
         // return $request;
 
@@ -41,7 +48,7 @@ class LicenseController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = 'public/admin/assets/images/avator.png';
+            $image = null;
         }
 
         $status = 1;
@@ -137,6 +144,7 @@ class LicenseController extends Controller
     
         try {
             Mail::to($data->email)->send(new LicenseApprovalActivated($message));
+
             return redirect()->route('license.index')->with([
                 'action' => true,
                 'message' => 'License Approval Activated Successfully',
@@ -172,6 +180,7 @@ class LicenseController extends Controller
 
     try {
         Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
+
         return redirect()->route('driver.index')->with([
             'action' => true,
             'message' => 'Driver Deactivated Successfully',

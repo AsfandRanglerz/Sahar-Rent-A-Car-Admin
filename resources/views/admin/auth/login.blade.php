@@ -19,9 +19,10 @@
                                     <span class="text-danger">Email required</span>
                                     @enderror
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group position-relative">
                                     <label for="password" class="control-label">Password</label>
                                     <input id="password" type="password" class="form-control" name="password" tabindex="2" required name="password">
+                                    <span class="fa fa-eye-slash position-absolute" style="top: 2.67rem; right:0.5rem" id="togglePassword"></span>
                                     @error('password')
                                     <span class="text-danger">{{$errors->first('password')}}</span>
                                     @enderror
@@ -69,6 +70,17 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-eye');
+        });
+    </script>
+
 @endsection
 @section('script')
 @endsection

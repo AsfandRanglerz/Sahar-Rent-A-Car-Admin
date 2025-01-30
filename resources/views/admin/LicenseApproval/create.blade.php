@@ -16,7 +16,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Name</label>
-                                            <input type="name" placeholder="Enter Your Name" name="name"
+                                            <input type="name" placeholder="Enter Name" name="name"
                                                 id="name" value="{{ old('name') }}" class="form-control">
                                             @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -26,7 +26,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
-                                            <input type="email" placeholder="Enter Your Email" name="email"
+                                            <input type="email" placeholder="Enter Email" name="email"
                                                 id="email" value="{{ old('email') }}" class="form-control">
                                             @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -61,7 +61,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Image</label>
-                                            <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
+                                            <input type="file" placeholder="Enter Image"name="image" value="{{ old('image') }}"
                                                 class="form-control">
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>

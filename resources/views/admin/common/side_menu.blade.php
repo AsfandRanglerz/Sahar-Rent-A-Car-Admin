@@ -64,7 +64,7 @@
 
             {{-- User --}}
             <li class="dropdown {{ request()->is('admin/user*') ? 'active' : '' }}">
-                <a href="{{ route('user.index') }}" class="nav-link"><span><i data-feather="user"></i>Customers</span></a>
+                <a href="{{ route('user.index') }}" class="nav-link"><span><i data-feather="users"></i>Customers</span></a>
             </li>
 
 

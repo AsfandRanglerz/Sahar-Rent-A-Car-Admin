@@ -38,7 +38,7 @@ class DriverController extends Controller
         //     'phone' => 'required|string|max:15',
         // ]);
 
-        $generatedPassword = random_int(10000000, 99999999);
+        // $generatedPassword = random_int(10000000, 99999999);
 
 
         if ($request->hasFile('image')) {
@@ -48,7 +48,7 @@ class DriverController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = 'public/admin/assets/images/avator.png';
+            $image = null;
         }
 
         $status = 1;
@@ -56,10 +56,10 @@ class DriverController extends Controller
         // Create the user
         $driver = Driver::create([
             'name' => $request->name,
-            // 'email' => $request->email,
+            'email' => $request->email,
             'phone' => $request->phone,
             'availability' => $request->availability,
-            'password' => Hash::make($generatedPassword),
+            'password' => Hash::make($request->password),
             'image' => $image,
             'status' => $status
 
@@ -77,7 +77,7 @@ class DriverController extends Controller
         return view('admin.driver.edit', compact('driver'));
     }
 
-    public function update(DriverRequest $request, $id)
+    public function update(Request $request, $id)
     {
 
         // Validate the incoming request
@@ -107,7 +107,7 @@ class DriverController extends Controller
         // Update user details
         $driver->update([
             'name' => $request->name,
-            // 'email' => $request->email,
+            'email' => $request->email,
             'phone' => $request->phone,
             'availability' => $request->availability,
             'image' => $image,
@@ -151,7 +151,7 @@ class DriverController extends Controller
         try {
             // Send an email based on `sendCredentials`
 
-            // Mail::to($data->email)->send(new DriverActivated($message));
+            Mail::to($data->email)->send(new DriverActivated($message));
 
 
             return redirect()->route('driver.index')->with([
@@ -184,7 +184,7 @@ class DriverController extends Controller
         $message['name'] = $data->name;
 
         try {
-            // Mail::to($data->email)->send(new DriverDeActivated($message));
+            Mail::to($data->email)->send(new DriverDeActivated($message));
             return redirect()->route('driver.index')->with(['message' => 'Driver Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

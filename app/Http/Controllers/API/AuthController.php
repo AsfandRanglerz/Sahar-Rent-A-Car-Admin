@@ -23,7 +23,7 @@ class AuthController extends Controller
     $validateUser = Validator::make(
     $request->all(),
     [
-    'name' => 'required|string|max:10',
+    'name' => 'required|string|min:10',
     'email' => 'required|email|unique:customers,email',
     'phone' => 'required|numeric',
     'password' => 'required|min:6|confirmed',
@@ -64,15 +64,24 @@ public function uploadDocument(Request $request)
 
         $document = UserDocument::firstOrCreate(['user_id' => $user->id]);
 
-        if ($request->hasFile('emirate_id')) {
-            $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
-        }
-        if ($request->hasFile('passport')) {
-            $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
-        }
-        if ($request->hasFile('driving_license')) {
-            $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
-        }
+        
+        // if ($request->hasFile('emirate_id')) {
+        //     $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
+        // }
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move(public_path('storage/documents/'), $filename);
+            $image = 'public/storage/documents/images/users/' . $filename;
+        } 
         
         $document->save();
         

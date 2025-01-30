@@ -59,7 +59,7 @@ class UserController extends Controller
         // Create the user
         $user = User::create([
             'name' => $request->name,
-            // 'email' => $request->email,
+            'email' => $request->email,
             'phone' => $request->phone,
             // 'address' => $request->address,
             'password' => Hash::make($request->password),
@@ -81,7 +81,7 @@ class UserController extends Controller
         return view('admin.user.edit', compact('user'));
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
 
         // Validate the incoming request
@@ -90,7 +90,7 @@ class UserController extends Controller
         //     // 'email' => 'required|email|unique:users,email,' . $id,
         //     'phone' => 'required|string|max:15',
         // ]);
-        $validatedData = $request->validated();
+        // $validatedData = $request->validated();
 
         $user = User::findOrFail($id);
         // Handle image upload
@@ -112,7 +112,7 @@ class UserController extends Controller
         // Update user details
         $user->update([
             'name' => $request->name,
-            // 'email' => $request->email,
+            'email' => $request->email,
             'phone' => $request->phone,
             // 'address' => $request->address,
             'image' => $image,
@@ -150,7 +150,7 @@ class UserController extends Controller
         try {
             // Send an email based on `sendCredentials`
 
-            // Mail::to($data->email)->send(new UserActivated($message));
+            Mail::to($data->email)->send(new UserActivated($message));
 
 
             return redirect()->route('user.index')->with([
@@ -183,7 +183,7 @@ class UserController extends Controller
         $message['name'] = $data->name;
 
         try {
-            // Mail::to($data->email)->send(new UserDeActivated($message));
+            Mail::to($data->email)->send(new UserDeActivated($message));
             return redirect()->route('user.index')->with(['message' => 'Customer Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

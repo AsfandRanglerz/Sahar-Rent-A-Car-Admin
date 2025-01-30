@@ -20,7 +20,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
-                                            {{-- <th>Email</th> --}}
+                                            <th>Email</th>
                                             <th>Phone</th>
                                             <th>Document (License)</th>
                                             <th>Image</th>
@@ -34,11 +34,11 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $driver->name }}</td>
-                                                {{-- <td>
+                                                <td>
                                                     @if ($driver->email)
                                                         <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
                                                     @endif
-                                                </td> --}}
+                                                </td>
                                                 <td>{{ $driver->phone }}</td>
                                                 {{-- <td>
                                                     @if ($driver->driverdocument)
@@ -84,8 +84,12 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                    @if($driver->image)
                                                     <img src="{{ asset($driver->image) }}" alt="" height="50"
                                                         width="50" class="image">
+                                                        @else
+                                                        <span>No Image</span>
+                                                        @endif
                                                 </td>
                                                 <td>
                                                     <div class="badge {{ $driver->availability == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">

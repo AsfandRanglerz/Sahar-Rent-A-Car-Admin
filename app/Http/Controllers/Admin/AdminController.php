@@ -2,22 +2,30 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Mail\ResetPasswordMail;
+use App\Models\User;
 use App\Models\Admin;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Driver;
+use App\Models\Booking;
+use App\Models\CarDetails;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
     //
     public function getdashboard()
     {
-
-        return view('admin.index');
+        $customersCount = User::count();
+        $carsCount = CarDetails::count();
+        $driversCount = Driver::count();
+        $bookingsCount = Booking::count();
+        $activeBookingsCount = Booking::count();
+        return view('admin.index', compact('customersCount','carsCount', 'driversCount', 'bookingsCount', 'activeBookingsCount'));
     }
     public function getProfile()
     {

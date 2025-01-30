@@ -13,7 +13,7 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                <a class="btn btn-primary mb-3" href="{{ route('license.create') }}">Create</a>
+                                {{--<a class="btn btn-primary mb-3" href="{{ route('license.create') }}">Create</a>--}}
 
                                 <table class="responsive table" id="table-1">
                                     <thead>
