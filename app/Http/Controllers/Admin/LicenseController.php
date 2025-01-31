@@ -147,7 +147,7 @@ class LicenseController extends Controller
 
             return redirect()->route('license.index')->with([
                 'action' => true,
-                'message' => 'License Approval Activated Successfully',
+                'message' => 'License Approved Successfully',
             ]);
         } catch (\Throwable $th) {
             return back()->with([
@@ -165,7 +165,7 @@ class LicenseController extends Controller
     $data = LicenseApproval::find($id);
 
     if (!$data) {
-        return redirect()->route('driver.index')->with([
+        return redirect()->route('license.index')->with([
             'action' => false,
             'message' => 'License Approval record not found.',
         ]);
@@ -181,9 +181,9 @@ class LicenseController extends Controller
     try {
         Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
 
-        return redirect()->route('driver.index')->with([
+        return redirect()->route('license.index')->with([
             'action' => true,
-            'message' => 'Driver Deactivated Successfully',
+            'message' => 'license Rejected Successfully',
         ]);
     } catch (\Throwable $th) {
         return back()->with([

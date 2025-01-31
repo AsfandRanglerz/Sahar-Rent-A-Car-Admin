@@ -92,8 +92,8 @@
                                                                     </svg>
                                                                 </a>
                                                             @endif --}}
-                                                            {{-- <a href="{{ route('license.edit', $loyaltypoint->id) }}"
-                                                                class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}
+                                                            <a href="{{ route('loyaltypoints.edit', $loyaltypoint->id) }}"
+                                                                class="btn btn-primary" style="margin-left: 10px">Edit</a>
                                                             <form action="{{ route('loyaltypoints.destroy', $loyaltypoint->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">

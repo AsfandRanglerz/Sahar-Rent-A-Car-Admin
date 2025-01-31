@@ -91,8 +91,12 @@
                                                     </div>
                                                 </td>
                                                 <td>
+                                                    @if($CarDetail->image)
                                                     <img src="{{ asset($CarDetail->image) }}" alt="" height="50"
                                                         width="50" class="image">
+                                                    @else
+                                                    <span>No Image</span>
+                                                    @endif
                                                 </td>
 
                                                 <td>
@@ -232,23 +236,22 @@
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
 
     <script>
-        $('.show_confirm').click(function(event) {
-            var form = $(this).closest("form");
-            var name = $(this).data("name");
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        form.submit();
-                    }
-                });
-        });
+        $(document).on('click', '.show_confirm', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var form = $(this).closest("form");
+    
+    swal({
+        title: "Are you sure you want to delete this record?",
+        text: "If you delete this, it will be gone forever.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((willDelete) => {
+        if (willDelete) {
+            form.submit();
+        }
+    });
+});
 
         function showDeactivationModal(managerId) {
             $('#deactivationForm').attr('action', '{{ url('admin/deactivate') }}/' + managerId);

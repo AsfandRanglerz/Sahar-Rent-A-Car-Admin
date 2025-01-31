@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Notification</h4>
+                                    <h4>Notifications</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -168,7 +168,7 @@
                         <!-- Message Textarea -->
                         <div class="form-group">
                             <label><strong>Message</strong></label>
-                            <textarea name="description" class="form-control" placeholder="Type your message here..." rows="4"></textarea>
+                            <textarea name="description" class="form-control" placeholder="Type your message here..." rows="4" required></textarea>
                             @error('description')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

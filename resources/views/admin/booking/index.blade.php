@@ -21,7 +21,9 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Car Id</th>
-                                            <th>Customer Name</th>
+                                            <th>Status</th>
+                                            <th>Driver</th>
+                                            <th>Customer</th>
                                             <th>Email Address</th>
                                             <th>Phone Number</th>
                                             <th>Self Pickup</th>
@@ -41,6 +43,18 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $booking->car_id }}</td>
+                                                <td>
+                                                    <div class="badge {{ $booking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
+                                                        {{ $booking->status == 0 ? 'Active' : 'Completed' }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                @if($booking->driver_name)    
+                                                    {{ $booking->driver_name }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
                                                 <td>{{ $booking->full_name }}</td>
                                                 <td>
                                                     @if ($booking->email)

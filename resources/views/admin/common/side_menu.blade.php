@@ -99,7 +99,7 @@
 
             <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
                 <a href="{{ route('notification.index') }}" class="nav-link"><span><i
-                            data-feather="bell"></i>Notification</span></a>
+                            data-feather="bell"></i>Notifications</span></a>
             </li>
 
             <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">

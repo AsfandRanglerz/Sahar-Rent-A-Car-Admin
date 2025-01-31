@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>License Approval</h4>
+                                    <h4>License Approvals</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -40,8 +40,8 @@
                                                 </td>
                                                 {{-- <td>{{ $LicenseApproval->phone }}</td> --}}
                                                 <td>
-                                                    <img src="{{ asset($LicenseApproval->image) }}" alt="" height="50"
-                                                        width="50" class="image">
+                                                    <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
+                                                        width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}">
                                                 </td>
                                                 {{-- <td>
                                                     <div class="badge {{ $LicenseApproval->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
@@ -50,9 +50,9 @@
                                                 </td> --}}
                                                 <td>
                                                     <div class="badge 
-                                                        {{ $LicenseApproval->status == 0 ? 'badge-success' : ($LicenseApproval->status == 1 ? 'badge-danger' : 'badge-warning') }} 
+                                                        {{ $LicenseApproval->action == 1 ? 'badge-success' : ($LicenseApproval->action == 0 ? 'badge-danger' : 'badge-warning') }} 
                                                         badge-shadow">
-                                                        {{ $LicenseApproval->status == 0 ? 'Accepted' : ($LicenseApproval->status == 1 ? 'Rejected' : 'Pending') }}
+                                                        {{ $LicenseApproval->action == 1 ? 'Approved' : ($LicenseApproval->action == 0 ? 'Rejected' : 'Pending') }}
                                                     </div>
                                                 </td>
                                                 
@@ -173,6 +173,23 @@
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="imageModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{-- <h5 class="modal-title"></h5> --}}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('js')
@@ -205,5 +222,13 @@
             $('#activationModal').modal('show');
         }
 
+        $(document).ready(function() {
+            $('#imageModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var imageUrl = button.data('image');
+                var modal = $(this);
+                modal.find('#modalImage').attr('src', imageUrl);
+            });
+        });
     </script>
 @endsection

@@ -4,7 +4,7 @@
 </div> --}}
 
 <h1>Hi {{ $message['name'] }},</h1>
-<p>Congratulations! Your License has been accepted by Saher Rent A Car Team.</p>
+<p>Congratulations! Your License has been approved by Saher Rent A Car Team.</p>
 
 Thanks,<br>
 {{ config('app.name') }}

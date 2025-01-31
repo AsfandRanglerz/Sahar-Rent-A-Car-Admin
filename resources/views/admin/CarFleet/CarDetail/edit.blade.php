@@ -245,8 +245,8 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 d-flex align-items-center">
-                                        <div class="flex-grow-1">
+                                     <div class="col-sm-4 d-flex align-items-center">
+                                       <div class="flex-grow-1">
                                         <div class="form-group mb-2">
                                             <label>Image</label>
                                             <input type="file" name="image" id="image" class="form-control">
@@ -263,31 +263,31 @@
                                             </div>
                                             @endif
                                            
-                                        
-                                    </div>
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label></label>
-                                            <button type="button" class="btn btn-primary btn-sm mb-3" id="addFeatureBtn" style="margin-top:15px; ">Add Feature</button>
-                                            <div id="featuresContainer">
-                                                @php
-                                                    $existingFeatures = explode("\n", $CarDetail->car_play); // Assuming comma-separated
-                                                @endphp
-                                    
-                                                @if (!empty($existingFeatures))
-                                                    @foreach ($existingFeatures as $feature)
-                                                        <div class="d-flex align-items-center mb-2 feature-field">
-                                                            <input type="text" name="features[]" class="form-control mr-2" placeholder="Enter Feature" value="{{ trim($feature) }}">
-                                                            <button type="button" class="btn btn-danger btn-sm removeFeatureBtn">Remove</button>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                            @error('features')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
                                         </div>
-                                    </div>
+                                        <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                            <div class="form-group mb-2">
+                                                <label></label>
+                                                <button type="button" class="btn btn-primary btn-sm mb-3" id="addFeatureBtn" style="margin-top:15px; ">Add Feature</button>
+                                                <div id="featuresContainer">
+                                                    @php
+                                                        $existingFeatures = explode("\n", $CarDetail->car_play); // Assuming comma-separated
+                                                    @endphp
+                                        
+                                                    @if (!empty($existingFeatures))
+                                                        @foreach ($existingFeatures as $feature)
+                                                            <div class="d-flex align-items-center mb-2 feature-field">
+                                                                <input type="text" name="features[]" class="form-control mr-2" placeholder="Enter Feature" value="{{ trim($feature) }}">
+                                                                <button type="button" class="btn btn-danger btn-sm removeFeatureBtn">Remove</button>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                                @error('features')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>    
+                                    
                                 </div>
 
                                 <div class="card-footer text-center">

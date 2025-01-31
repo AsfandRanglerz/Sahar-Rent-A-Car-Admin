@@ -52,7 +52,7 @@ class CarDetailsController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = 'public/admin/assets/images/avator.png';
+            $image = null;
         }
 
         do {
@@ -82,7 +82,7 @@ class CarDetailsController extends Controller
             // 'pickup' => $request->pickup,
             // 'travel_distance' => $request->travel_distance,
             'image' => $image,
-            // 'status' => $status
+            'status' => $request->status
 
         ]);
 
@@ -118,7 +118,8 @@ class CarDetailsController extends Controller
         // ]);
 
         $CarDetail = CarDetails::findOrFail($id);
-        // Handle image upload
+       // Handle image upload
+
         if ($request->hasFile('image')) {
             $destination = 'public/admin/assets/img/users/' . $CarDetail->image;
             if (File::exists($destination)) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoyaltyPointRequest;
 
 class LoyaltyPointsController extends Controller
 {
@@ -20,7 +21,7 @@ class LoyaltyPointsController extends Controller
         return view('admin.LoyaltyPoints.create');
     }
 
-    public function store(Request $request)
+    public function store(LoyaltyPointRequest $request)
     {
         // return $request;
 
@@ -69,7 +70,7 @@ class LoyaltyPointsController extends Controller
         return view('admin.LoyaltyPoints.edit', compact('loyaltyPoint'));
     }
 
-    public function update(Request $request, $id)
+    public function update(LoyaltyPointRequest $request, $id)
     {
 
         // Validate the incoming request

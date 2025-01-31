@@ -10,7 +10,8 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::latest()->get();
+        // $bookings = Booking::latest()->get();
+        $bookings = Booking::orderBy('status','ASC')->get();
         return view('admin.booking.index',compact('bookings'));
     }
 
@@ -57,13 +58,14 @@ class BookingController extends Controller
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
+            'driver_name' => $request->driver_name,
             // 'car_play' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
             // 'car_feature' => $request->car_feature,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,
             // 'travel_distance' => $request->travel_distance,
             // 'image' => $image,
-            // 'status' => $status
+            'status' => $request->status
 
         ]);
 

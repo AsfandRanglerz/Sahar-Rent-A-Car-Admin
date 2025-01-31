@@ -39,10 +39,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                        {{-- <div class="banner-img">
-                                            <img src="{{ asset('public/admin/assets/panel/customers.png') }}"
+                                        <div class="banner-img">
+                                            <img src="{{ asset('public/admin/assets/images/Admin Icons_Customers.png') }}"
                                                 alt="">
-                                        </div> --}}
+                                        </div>
                                     </div>
                                     </div>
                                 </div>
@@ -85,8 +85,8 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
                                         <div class="banner-img">
-                                            {{-- <img src="{{ asset('public/admin/assets/panel/customers.png') }}"
-                                                alt=""> --}}
+                                            <img src="{{ asset('public/admin/assets/images/Admin Icons_Drivers.png') }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     </div>
@@ -129,10 +129,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                        {{-- <div class="banner-img">
-                                            <img src="{{ asset('public/admin/assets/panel/customers.png') }}"
+                                        <div class="banner-img">
+                                            <img src="{{ asset('public/admin/assets/images/Admin Icons_Cars.png') }}"
                                                 alt="">
-                                        </div> --}}
+                                        </div>
                                     </div>
                                     </div>
                                 </div>
@@ -174,10 +174,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                        {{-- <div class="banner-img">
-                                            <img src="{{ asset('public/admin/assets/panel/customers.png') }}"
+                                        <div class="banner-img">
+                                            <img src="{{ asset('public/admin/assets/images/Admin Icons_Cars Bookings.png') }}"
                                                 alt="">
-                                        </div> --}}
+                                        </div>
                                     </div>
                                     </div>
                                 </div>
@@ -221,10 +221,10 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                        {{-- <div class="banner-img">
-                                            <img src="{{ asset('public/admin/assets/panel/customers.png') }}"
+                                        <div class="banner-img">
+                                            <img src="{{ asset('public/admin/assets/images/Admin Icons_ActiveBookings.png') }}"
                                                 alt="">
-                                        </div> --}}
+                                        </div>
                                     </div>
                                     </div>
                                 </div>

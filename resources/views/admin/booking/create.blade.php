@@ -135,6 +135,29 @@
 
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
+                                            <label>Driver</label>
+                                            <input type="text" name="driver_name" class="form-control" placeholder="Driver"> 
+                                            @error('driver_name')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Status</label>
+                                            <select name="status" class="form-control">
+                                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Active</option>
+                                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Completed</option>
+                                            </select>
+                                            @error('status')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
                                             <label>Additional Notes (Optional)</label>
                                             <textarea type="description" name="driver_required" class="form-control" placeholder="Enter Message" > </textarea>
                                             @error('driver_required')

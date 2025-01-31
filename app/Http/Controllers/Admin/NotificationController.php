@@ -12,7 +12,7 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::orderBy('id', 'ASC')->get();
+        $notifications = Notification::latest()->get();
         $customers = User::all();
         $drivers = Driver::all();
         return view('admin.Notification.index',compact('notifications','customers','drivers'));
