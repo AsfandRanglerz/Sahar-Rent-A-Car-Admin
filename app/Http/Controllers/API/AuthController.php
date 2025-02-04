@@ -9,6 +9,7 @@ use App\Models\UserDocument;
 use Illuminate\Http\Request;
 use App\Models\DriverDocument;
 use Illuminate\Support\Carbon;
+use App\Models\driversregister;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -23,18 +24,18 @@ class AuthController extends Controller
     $validateUser = Validator::make(
     $request->all(),
     [
-    'name' => 'required|string|min:10',
-    'email' => 'required|email|unique:customers,email',
-    'phone' => 'required|numeric',
-    'password' => 'required|min:6|confirmed',
+    // 'name' => 'required|string|min:10',
+    'email' => 'required|email|unique:customers,email|unique:driversregisters,email',
+    'phone' => 'required|numeric|min:7|unique:customers,phone|unique:driversregisters,phone',
+    // 'password' => 'required|min:6|confirmed',
     ]
 );
 
 if($validateUser->fails()){
 return response()->json([
-    'status' => false,
-    'message' => 'Validation Error',
-    'errors' => $validateUser->errors()->all()
+    // 'status' => false,
+    'message' => $validateUser->errors()->first(),
+    // 'errors' => $validateUser->errors()->all(),
 ],401);
 }
 
@@ -42,14 +43,69 @@ $customer = Customer::create([
     'name' => $request->name,
     'email' => $request->email,
     'phone' => $request->phone,
-    'password' => bcrypt($request->password)
+    'image' => $request->image,
+    'password' => bcrypt($request->password),
 ]);
 
+// if(!$customer){
+//     return response()->json([
+//         // 'status' => false,
+//         'message' => 'User not registered',
+//         'errors' => $customer,
+//     ],401);
+//     }
+
+// else{
 return response()->json([
-    'status' => true,
+    // 'status' => true,
     'message' => 'User created successfully',
-    'errors' => $customer,
+    'data' => $customer,
 ],200);
+// }
+}
+
+public function driverregister(Request $request){
+    // return "ok";
+$validateUser = Validator::make(
+$request->all(),
+[
+// 'name' => 'required|string|min:10',
+'email' => 'required|email|unique:driversregisters,email|unique:customers,email',
+'phone' => 'required|numeric|min:7|unique:driversregisters,phone|unique:customers,phone',
+// 'password' => 'required|min:6|confirmed',
+]
+);
+
+if($validateUser->fails()){
+return response()->json([
+// 'status' => false,
+'message' => $validateUser->errors()->first(),
+// 'errors' => $validateUser->errors()->all(),
+],401);
+}
+
+$driver = driversregister::create([
+'name' => $request->name,
+'email' => $request->email,
+'phone' => $request->phone,
+'password' => bcrypt($request->password),
+]);
+
+// if(!$customer){
+//     return response()->json([
+//         // 'status' => false,
+//         'message' => 'User not registered',
+//         'errors' => $customer,
+//     ],401);
+//     }
+
+// else{
+return response()->json([
+// 'status' => true,
+'message' => 'User created successfully',
+'data' => $driver,
+],200);
+// }
 }
 
 public function uploadDocument(Request $request)
@@ -65,23 +121,23 @@ public function uploadDocument(Request $request)
         $document = UserDocument::firstOrCreate(['user_id' => $user->id]);
 
         
-        // if ($request->hasFile('emirate_id')) {
-        //     $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
-        // }
-        // if ($request->hasFile('passport')) {
-        //     $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
-        // }
-        // if ($request->hasFile('driving_license')) {
-        //     $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
-        // }
+        if ($request->hasFile('emirate_id')) {
+            $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
+        }
+        if ($request->hasFile('passport')) {
+            $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
+        }
+        if ($request->hasFile('driving_license')) {
+            $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
+        }
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $file->move(public_path('storage/documents/'), $filename);
-            $image = 'public/storage/documents/images/users/' . $filename;
-        } 
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $extension = $file->getClientOriginalExtension();
+        //     $filename = time() . '.' . $extension;
+        //     $file->move(public_path('storage/documents/'), $filename);
+        //     $image = 'public/storage/documents/images/users/' . $filename;
+        // } 
         
         $document->save();
         
@@ -120,14 +176,18 @@ public function uploadDocument(Request $request)
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
+            ],
+            [
+                'identifier.required' => 'The email or phone number is required.',
+                'password.required' => 'The password is required.',
             ]
         );
     
         if ($validateUser->fails()) {
             return response()->json([
-                'status' => false,
-                'message' => 'Validation Errors',
-                'errors' => $validateUser->errors()->all(),
+                // 'status' => false,
+                'message' => $validateUser->errors()->first(),
+                // 'errors' => $validateUser->errors()->all(),
             ], 401);
         }
     
@@ -144,25 +204,85 @@ public function uploadDocument(Request $request)
             $customer = Customer::where('phone', $identifier)->first();
         }
     
-        if (!$customer) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid email or phone',
-            ], 404);
-        }
+        // if (!$customer) {
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => 'Invalid email or phone',
+        //     ], 404);
+        // }
     
-        if (!Hash::check($request->password, $customer->password)) {
+        // if (!Hash::check($request->password, $customer->password)) {
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => 'Invalid password',
+        //     ], 401);
+        // }
+    
+        return response()->json([
+            // 'status' => true,
+            'message' => 'Logged In successfully',
+            'token' => $customer->createToken("API Token")->plainTextToken,
+            // 'token_type' => 'Bearer',
+        ], 200);
+        
+        
+    }
+
+    public function driverlogin(Request $request){
+
+        $validateUser = Validator::make(
+            $request->all(),
+            [
+                // 'email' => 'required|email',
+                'identifier' => 'required',
+                'password' => 'required',
+            ],
+            [
+                'identifier.required' => 'The email or phone number is required.',
+                'password.required' => 'The password is required.',
+            ]
+        );
+    
+        if ($validateUser->fails()) {
             return response()->json([
-                'status' => false,
-                'message' => 'Invalid password',
+                // 'status' => false,
+                'message' => $validateUser->errors()->first(),
+                // 'errors' => $validateUser->errors()->all(),
             ], 401);
         }
     
+        // $customer = Customer::where('email', $request->email)->first();
+
+        $identifier = $request->identifier;
+        $driver = null;
+    
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            // If the identifier is an email
+            $driver = driversregister::where('email', $identifier)->first();
+        } else {
+            // If the identifier is a phone number
+            $driver = driversregister::where('phone', $identifier)->first();
+        }
+    
+        // if (!$customer) {
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => 'Invalid email or phone',
+        //     ], 404);
+        // }
+    
+        // if (!Hash::check($request->password, $customer->password)) {
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => 'Invalid password',
+        //     ], 401);
+        // }
+    
         return response()->json([
-            'status' => true,
+            // 'status' => true,
             'message' => 'Logged In successfully',
-            'token' => $customer->createToken("API Token")->plainTextToken,
-            'token_type' => 'Bearer',
+            'token' => $driver->createToken("API Token")->plainTextToken,
+            // 'token_type' => 'Bearer',
         ], 200);
         
         
@@ -182,7 +302,7 @@ public function uploadDocument(Request $request)
         $customer->tokens()->delete();      // Revoke all tokens associated with the customer
 
     return response()->json([
-        'status' => true,
+        // 'status' => true,
         'message' => 'Logged Out successfully',
     ], 200);
     }

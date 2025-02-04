@@ -24,7 +24,7 @@ class AdminController extends Controller
         $carsCount = CarDetails::count();
         $driversCount = Driver::count();
         $bookingsCount = Booking::count();
-        $activeBookingsCount = Booking::count();
+        $activeBookingsCount = Booking::where('status', 0)->count();
         return view('admin.index', compact('customersCount','carsCount', 'driversCount', 'bookingsCount', 'activeBookingsCount'));
     }
     public function getProfile()

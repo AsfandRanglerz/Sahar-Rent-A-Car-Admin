@@ -18,9 +18,12 @@ use App\Http\Controllers\API\ContactUsController;
 |
 */
 
-//#################  UserDocument ########################
-Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
+//#################  Driver ########################
 Route::post('/driverdocument',[AuthController::class,'driverdocument'])->middleware('auth:sanctum');
+Route::post('/driversregister',[AuthController::class,'driverregister']);
+Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
+//################# Customer ###########################
+Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');

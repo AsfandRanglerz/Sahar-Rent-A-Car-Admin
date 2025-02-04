@@ -61,7 +61,7 @@
                                                             if ($driver->driverdocument->license) {
                                                                 $documents[] = [
                                                                     'name' => 'License',
-                                                                    'url' => asset('public/storage/' . $driver->driverdocument->license),
+                                                                    'url' => asset('storage/app/public/' . $driver->driverdocument->license),
                                                                 ];
                                                             }
                                                         @endphp

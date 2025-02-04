@@ -27,7 +27,7 @@
                     </div>
                 </div> --}}
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="#">
+                    <a style="text-decoration: none;" href="{{ route('user.index') }}">
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -72,7 +72,7 @@
                     </div>
                 </div>--}}
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="#">
+                    <a style="text-decoration: none;" href="{{ route('driver.index') }}">
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -117,7 +117,7 @@
                     </div>
                 </div> --}}
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="#">
+                    <a style="text-decoration: none;" href="{{ route('car.index') }}">
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -162,7 +162,7 @@
                     </div>
                 </div> --}}
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="#">
+                    <a style="text-decoration: none;" href="{{ route('booking.index') }}">
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">

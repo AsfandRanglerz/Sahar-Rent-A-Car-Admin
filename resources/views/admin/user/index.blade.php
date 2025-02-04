@@ -48,17 +48,17 @@
                                                         <ul>
                                                             @if ($user->documents->emirate_id)
                                                                 <li>
-                                                                    <a href="{{ asset('public/storage/' . $user->documents->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->documents->emirate_id) }}" target="_blank">Emirate ID</a>
                                                                 </li>
                                                             @endif
                                                             @if ($user->documents->passport)
                                                                 <li>
-                                                                    <a href="{{ asset('public/storage/' . $user->documents->passport) }}" target="_blank">Passport</a>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->documents->passport) }}" target="_blank">Passport</a>
                                                                 </li>
                                                             @endif
                                                             @if ($user->documents->driving_license)
                                                                 <li>
-                                                                    <a href="{{ asset('public/storage/' . $user->documents->driving_license) }}" target="_blank">Driving License</a>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->documents->driving_license) }}" target="_blank">Driving License</a>
                                                                 </li>
                                                             @endif
                                                         </ul>
