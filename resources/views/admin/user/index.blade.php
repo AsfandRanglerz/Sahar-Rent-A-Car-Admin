@@ -25,6 +25,7 @@
                                             <th>Phone Number</th>
                                             {{-- <th>Address</th> --}}
                                             <th>Documents</th>
+                                            {{-- <th>Documents2</th> --}}
                                             <th>Image</th>
                                             <th>Status</th>
                                             <th scope="col">Actions</th>
@@ -66,6 +67,17 @@
                                                         <span>No documents uploaded</span>
                                                     @endif
                                                 </td> 
+                                                {{-- <td>
+                                                    @if ($user->emirate_id)
+                                                        <a href="{{ asset('storage/' . $user->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                    @endif
+                                                    @if ($user->passport)
+                                                        | <a href="{{ asset('storage/' . $user->passport) }}" target="_blank">Passport</a>
+                                                    @endif
+                                                    @if ($user->driving_license)
+                                                        | <a href="{{ asset('storage/' . $user->driving_license) }}" target="_blank">Driving License</a>
+                                                    @endif
+                                                </td> --}}
                                                 {{-- <td>
                                                     @if ($user->documents)
                                                         @php

@@ -55,6 +55,25 @@ class UserController extends Controller
         }
 
         $status = 1;
+        // $emirateId = $request->hasFile('emirate_id') ? $request->file('emirate_id')->store('documents', 'public') : null;
+        // $passport = $request->hasFile('passport') ? $request->file('passport')->store('documents', 'public') : null;
+        // $drivingLicense = $request->hasFile('driving_license') ? $request->file('driving_license')->store('documents', 'public') : null;
+    
+        // $document = User::firstOrCreate();
+        // if ($request->hasFile('emirate_id')) {
+        //     $document->emirate_id = $request->file('emirate_id')->store("documents/", 'public');
+        //     // $document->emirate_id = $path;
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $document->passport = $request->file('passport')->store("documents/", 'public');
+        //     // $document->passport = $path;
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $document->driving_license = $request->file('driving_license')->store("documents/", 'public');
+        //     // $document->driving_license = $path;
+        // }
+        // $document->save();
+        
 
         // Create the user
         $user = User::create([
@@ -62,6 +81,10 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             // 'address' => $request->address,
+            // 'document' => $request->documents,
+        //     'emirate_id' => $emirateId,
+        // 'passport' => $passport,
+        // 'driving_license' => $drivingLicense,
             'password' => Hash::make($request->password),
             'image' => $image,
             'status' => $status
@@ -114,6 +137,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'document' => $request->document,
             // 'address' => $request->address,
             'image' => $image,
         ]);

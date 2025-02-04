@@ -64,6 +64,38 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Emirate Id (Document)</label>
+                                            <input type="file" placeholder="Enter Document"name="emirate_id" value="{{ old('emirate_id') }}"
+                                                class="form-control">
+                                            @error('emirate_id')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Passport (Document)</label>
+                                            <input type="file" placeholder="Enter Document"name="passport" value="{{ old('passport') }}"
+                                                class="form-control">
+                                            @error('passport')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Driving License (Document)</label>
+                                            <input type="file" placeholder="Enter Document"name="driving_license" value="{{ old('driving_license') }}"
+                                                class="form-control">
+                                            @error('driving_license')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">

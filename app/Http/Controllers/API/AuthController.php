@@ -43,9 +43,17 @@ $customer = Customer::create([
     'name' => $request->name,
     'email' => $request->email,
     'phone' => $request->phone,
-    'image' => $request->image,
     'password' => bcrypt($request->password),
 ]);
+
+if ($request->hasFile('profile_image')) {
+    $file = $request->file('profile_image');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $image = 'public/admin/assets/images/users/' . $filename;
+
+    $customer->update(['profile_image' => $image]);
+}
 
 // if(!$customer){
 //     return response()->json([
@@ -56,10 +64,30 @@ $customer = Customer::create([
 //     }
 
 // else{
+
+$document = UserDocument::firstOrCreate(['user_id' => $customer->id]);
+
+if ($request->hasFile('emirate_id')) {
+    $path = $request->file('emirate_id')->store("documents/{$customer->id}/emirate_id", 'public');
+    $document->emirate_id = "storage/app/public/{$path}";
+}
+if ($request->hasFile('passport')) {
+    $path = $request->file('passport')->store("documents/{$customer->id}/passport", 'public');
+    $document->passport = "storage/app/public/{$path}";
+}
+if ($request->hasFile('driving_license')) {
+    $path = $request->file('driving_license')->store("documents/{$customer->id}/driving_license", 'public');
+    $document->driving_license = "storage/app/public/{$path}";
+}
+
+$document->save();
+
 return response()->json([
     // 'status' => true,
     'message' => 'User created successfully',
-    'data' => $customer,
+    'data' => ['customer'=>$customer,
+               'document'=>$document
+              ],
 ],200);
 // }
 }
@@ -84,12 +112,21 @@ return response()->json([
 ],401);
 }
 
-$driver = driversregister::create([
+$drivers = driversregister::create([
 'name' => $request->name,
 'email' => $request->email,
 'phone' => $request->phone,
 'password' => bcrypt($request->password),
 ]);
+
+if ($request->hasFile('profile_image')) {
+    $file = $request->file('profile_image');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $image = 'public/admin/assets/images/users/' . $filename;
+
+    $drivers->update(['profile_image' => $image]);
+}
 
 // if(!$customer){
 //     return response()->json([
@@ -100,73 +137,81 @@ $driver = driversregister::create([
 //     }
 
 // else{
+
+// $drivers = $request->user();
+
+// $document = DriverDocument::firstOrCreate(['driver_id' => $drivers->id]);
+
+// if ($request->hasFile('license')) {
+// $document->license = $request->file('license')->store("driverdocument/{$drivers->id}/license", 'public');
+// }
+       
+// $document->save();
+        
+
 return response()->json([
 // 'status' => true,
 'message' => 'User created successfully',
-'data' => $driver,
+'data' => ['driver'=>$drivers,
+        //    'document'=>$document
+          ],
 ],200);
 // }
 }
 
-public function uploadDocument(Request $request)
-    {
-        // $request->validate([
-        //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        // ]);
+// public function uploadDocument(Request $request)
+//     {
+//         // $request->validate([
+//         //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+//         //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+//         //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+//         // ]);
 
-        $user = $request->user();
+//         $user = $request->user();
 
-        $document = UserDocument::firstOrCreate(['user_id' => $user->id]);
+//         $document = UserDocument::firstOrCreate(['user_id' => $user->id]);
 
         
-        if ($request->hasFile('emirate_id')) {
-            $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
-        }
-        if ($request->hasFile('passport')) {
-            $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
-        }
-        if ($request->hasFile('driving_license')) {
-            $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
-        }
+//         if ($request->hasFile('emirate_id')) {
+//             $document->emirate_id = $request->file('emirate_id')->store("documents/{$user->id}/emirate_id", 'public');
+//         }
+//         if ($request->hasFile('passport')) {
+//             $document->passport = $request->file('passport')->store("documents/{$user->id}/passport", 'public');
+//         }
+//         if ($request->hasFile('driving_license')) {
+//             $document->driving_license = $request->file('driving_license')->store("documents/{$user->id}/driving_license", 'public');
+//         }
 
-        // if ($request->hasFile('image')) {
-        //     $file = $request->file('image');
-        //     $extension = $file->getClientOriginalExtension();
-        //     $filename = time() . '.' . $extension;
-        //     $file->move(public_path('storage/documents/'), $filename);
-        //     $image = 'public/storage/documents/images/users/' . $filename;
-        // } 
-        
-        $document->save();
-        
-
-        return response()->json(['message' => 'Documents uploaded successfully', 'data' => $document], 200);
-    }
-
-    public function driverdocument(Request $request)
-    {
-        // $request->validate([
-        //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        // ]);
-
-        $driver = $request->user();
-
-        $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
-
-        if ($request->hasFile('license')) {
-            $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
-        }
        
         
-        $document->save();
+//         $document->save();
         
 
-        return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
-    }
+//         return response()->json(['message' => 'Documents uploaded successfully', 'data' => $document], 200);
+//     }
+
+    // public function driverdocument(Request $request)
+    // {
+    //     // $request->validate([
+    //     //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //     //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //     //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //     // ]);
+
+    //     $driver = $request->user();
+
+    //     $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
+
+    //     if ($request->hasFile('license')) {
+    //         $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
+    //     }
+       
+        
+    //     $document->save();
+        
+
+    //     return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
+    // }
 
     public function login(Request $request){
 
@@ -176,6 +221,7 @@ public function uploadDocument(Request $request)
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
+                'fcm_token' => 'nullable|string',
             ],
             [
                 'identifier.required' => 'The email or phone number is required.',
@@ -204,24 +250,29 @@ public function uploadDocument(Request $request)
             $customer = Customer::where('phone', $identifier)->first();
         }
     
-        // if (!$customer) {
-        //     return response()->json([
-        //         // 'status' => false,
-        //         'message' => 'Invalid email or phone',
-        //     ], 404);
-        // }
+        if (!$customer) {
+            return response()->json([
+                // 'status' => false,
+                'message' => 'Invalid email or phone',
+            ], 404);
+        }
     
-        // if (!Hash::check($request->password, $customer->password)) {
-        //     return response()->json([
-        //         // 'status' => false,
-        //         'message' => 'Invalid password',
-        //     ], 401);
-        // }
+        if (!Hash::check($request->password, $customer->password)) {
+            return response()->json([
+                // 'status' => false,
+                'message' => 'Invalid password',
+            ], 401);
+        }
     
+        if ($request->fcm_token) {
+            $customer->update(['fcm_token' => $request->fcm_token]);
+        }
+
         return response()->json([
             // 'status' => true,
             'message' => 'Logged In successfully',
             'token' => $customer->createToken("API Token")->plainTextToken,
+            'fcm_token' => $customer->fcm_token,
             // 'token_type' => 'Bearer',
         ], 200);
         

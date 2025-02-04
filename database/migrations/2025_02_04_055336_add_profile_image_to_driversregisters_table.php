@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIamgeToCustomersTable extends Migration
+class AddProfileImageToDriversregistersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddIamgeToCustomersTable extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->string('image')->after('phone')->nullable();
+        Schema::table('driversregisters', function (Blueprint $table) {
+            $table->string('profile_image')->after('phone')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddIamgeToCustomersTable extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('image');
+        Schema::table('driversregisters', function (Blueprint $table) {
+            $table->dropColumn('profile_image');
         });
     }
 }
