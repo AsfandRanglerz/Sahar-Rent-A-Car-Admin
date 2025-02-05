@@ -40,7 +40,10 @@ class UserController extends Controller
         $validatedData = $request->validated();
 
         // $generatedPassword = random_int(10000000, 99999999);
-
+        $emirate_id = null;
+        $passport = null;
+        $driving_license = null;
+        $plainPassword = $request->password;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -60,18 +63,18 @@ class UserController extends Controller
         // $drivingLicense = $request->hasFile('driving_license') ? $request->file('driving_license')->store('documents', 'public') : null;
     
         // $document = User::firstOrCreate();
-        // if ($request->hasFile('emirate_id')) {
-        //     $document->emirate_id = $request->file('emirate_id')->store("documents/", 'public');
-        //     // $document->emirate_id = $path;
-        // }
-        // if ($request->hasFile('passport')) {
-        //     $document->passport = $request->file('passport')->store("documents/", 'public');
-        //     // $document->passport = $path;
-        // }
-        // if ($request->hasFile('driving_license')) {
-        //     $document->driving_license = $request->file('driving_license')->store("documents/", 'public');
-        //     // $document->driving_license = $path;
-        // }
+        if ($request->hasFile('emirate_id')) {
+            $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
+            // $emirate_id = $path;
+        }
+        if ($request->hasFile('passport')) {
+            $passport = $request->file('passport')->store("documents/", 'public');
+            // $passport = $path;
+        }
+        if ($request->hasFile('driving_license')) {
+            $driving_license = $request->file('driving_license')->store("documents/", 'public');
+            // $document->driving_license = $path;
+        }
         // $document->save();
         
 
@@ -82,16 +85,16 @@ class UserController extends Controller
             'phone' => $request->phone,
             // 'address' => $request->address,
             // 'document' => $request->documents,
-        //     'emirate_id' => $emirateId,
-        // 'passport' => $passport,
-        // 'driving_license' => $drivingLicense,
-            'password' => Hash::make($request->password),
+            'emirate_id' => $emirate_id,
+            'passport' => $passport,
+            'driving_license' => $driving_license,
+            'password' => Hash::make($plainPassword),
             'image' => $image,
             'status' => $status
 
         ]);
 
-        // Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $generatedPassword));
+        Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
 
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
     }
@@ -108,11 +111,14 @@ class UserController extends Controller
     {
 
         // Validate the incoming request
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     // 'email' => 'required|email|unique:users,email,' . $id,
-        //     'phone' => 'required|string|max:15',
-        // ]);
+        $request->validate([
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|email|unique:users,email,' . $id,
+            // 'phone' => 'required|string|max:15',
+            'emirate_id' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'passport' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'driving_license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
         // $validatedData = $request->validated();
 
         $user = User::findOrFail($id);
@@ -132,12 +138,32 @@ class UserController extends Controller
             $image = $user->image;
         }
 
+        $emirate_id = $user->emirate_id;
+        $passport = $user->passport;
+        $driving_license = $user->driving_license;
+
+        if ($request->hasFile('emirate_id')) {
+            $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
+            // $emirate_id = $path;
+        }
+        if ($request->hasFile('passport')) {
+            $passport = $request->file('passport')->store("documents/", 'public');
+            // $passport = $path;
+        }
+        if ($request->hasFile('driving_license')) {
+            $driving_license = $request->file('driving_license')->store("documents/", 'public');
+            // $document->driving_license = $path;
+        }
+
         // Update user details
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'document' => $request->document,
+            'emirate_id' => $emirate_id,
+            'passport' => $passport,
+            'driving_license' => $driving_license,
             // 'address' => $request->address,
             'image' => $image,
         ]);

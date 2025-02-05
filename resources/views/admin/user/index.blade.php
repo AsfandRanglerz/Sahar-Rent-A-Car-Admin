@@ -45,7 +45,25 @@
                                                 <td>{{ $user->phone }}</td>
                                                 {{-- <td>{{ $user->address }}</td> --}}
                                                  <td>
-                                                    @if ($user->documents)
+                                                    @if ($user->emirate_id||$user->passport||$user->driving_license)
+                                                        <ul>
+                                                            @if ($user->emirate_id)
+                                                                <li>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->passport)
+                                                                <li>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->passport) }}" target="_blank">Passport</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->driving_license)
+                                                                <li>
+                                                                    <a href="{{ asset('storage/app/public/' . $user->driving_license) }}" target="_blank">Driving License</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                        @elseif($user->documents)
                                                         <ul>
                                                             @if ($user->documents->emirate_id)
                                                                 <li>

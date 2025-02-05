@@ -40,6 +40,7 @@ class DriverController extends Controller
 
         // $generatedPassword = random_int(10000000, 99999999);
 
+        $plainPassword = $request->password;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -59,13 +60,13 @@ class DriverController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'availability' => $request->availability,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($plainPassword),
             'image' => $image,
             'status' => $status
 
         ]);
 
-        // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
+        Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
 
         return redirect()->route('driver.index')->with(['message' => 'Driver Created Successfully']);
     }

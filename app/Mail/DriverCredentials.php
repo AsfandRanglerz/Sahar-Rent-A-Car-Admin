@@ -17,14 +17,16 @@ class DriverCredentials extends Mailable
      * @return void
      */
 
-     public $userName;
+     public $name;
      public $email;
+     public $phone;
      public $password;
 
-    public function __construct($userName, $email, $password)
+    public function __construct($name, $email, $phone, $password)
     {
-        $this->userName = $userName;
+        $this->name = $name;
         $this->email = $email;
+        $this->phone = $phone;
         $this->password = $password;
     }
 

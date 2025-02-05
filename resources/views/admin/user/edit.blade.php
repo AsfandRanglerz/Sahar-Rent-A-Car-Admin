@@ -24,7 +24,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
                                             <input type="email" placeholder="Enter Your Email" name="email"
@@ -33,7 +33,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone Number</label>
@@ -65,22 +65,86 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-sm-6 d-flex align-items-center">
+                                        <!-- Input to Upload New Image -->
+                                        <div class="flex-grow-1">
+                                            <div class="form-group mb-2">
+                                                <label>Image (Optional)</label>
+                                                <input type="file" name="image" id="image" class="form-control">
+                                                @error('image')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Display Existing Image -->
+                                        @if($user->image)
+                                            <div class="ms-3">
+                                                <img src="{{ asset($user->image) }}" 
+                                                     alt="image" 
+                                                     style="width: 80px; height: 80px; margin-left:20px;border: 1px solid #ddd;">
+                                            </div>
+                                        @endif
+                                    </div>
+
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Image (Optional)</label>
-                                            <input type="file" name="image" class="form-control" >
-                                            @error('image')
+                                            <label>Emirate Id</label>
+                                            <input type="file" name="emirate_id" id="emirate_id" class="form-control">
+                                            
+                                            @if ($user->emirate_id)
+                                                <p>Current File: 
+                                                    <a href="{{ asset('storage/app/public/' . $user->emirate_id) }}" target="_blank">
+                                                        View Emirate ID
+                                                    </a>
+                                                </p>
+                                            @endif
+                                    
+                                            @error('emirate_id')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        @if($user->image)
-                                        <div class="ms-3">
-                                            <img src="{{ asset($user->image) }}" 
-                                                 alt="image" 
-                                                 style="width: 80px; height: 70px;  border: 1px solid #ddd;">
-                                        </div>
-                                    @endif
                                     </div>
+                                    
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Passport</label>
+                                            <input type="file" name="passport" id="passport" class="form-control">
+                                            
+                                            @if ($user->passport)
+                                                <p>Current File: 
+                                                    <a href="{{ asset('storage/app/public/' . $user->passport) }}" target="_blank">
+                                                        View Passport
+                                                    </a>
+                                                </p>
+                                            @endif
+                                    
+                                            @error('passport')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Driving License</label>
+                                            <input type="file" name="driving_license" id="driving_license" class="form-control">
+                                            
+                                            @if ($user->driving_license)
+                                                <p>Current File: 
+                                                    <a href="{{ asset('storage/app/public/' . $user->driving_license) }}" target="_blank">
+                                                        View Driving License
+                                                    </a>
+                                                </p>
+                                            @endif
+                                    
+                                            @error('driving_license')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                   
                                 </div>
 
                                 <div class="card-footer text-center">

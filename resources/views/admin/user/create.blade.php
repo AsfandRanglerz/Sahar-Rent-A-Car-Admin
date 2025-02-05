@@ -16,7 +16,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Name</label>
-                                            <input type="text" placeholder="Enter Your Name" name="name"
+                                            <input type="text" placeholder="Enter Name" name="name"
                                                 id="name" value="{{ old('name') }}" class="form-control">
                                             @error('name')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -26,8 +26,8 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
-                                            <input type="email" placeholder="Enter Your Email" name="email"
-                                                id="email"  class="form-control">
+                                            <input type="email" placeholder="Enter Email" name="email"
+                                                id="email"  value="{{ old('email') }}" class="form-control">
                                             @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -36,7 +36,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone Number</label>
-                                            <input type="number" placeholder="Enter Your Phone Number" name="phone"
+                                            <input type="number" placeholder="Enter Phone Number" name="phone"
                                                 id="phone" value="{{ old('phone') }}" class="form-control">
                                             @error('phone')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -56,8 +56,8 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2 position-relative">
                                             <label>Password</label>
-                                            <input type="password" placeholder="Enter Your Password" name="password"
-                                                id="password"  class="form-control">
+                                            <input type="password" placeholder="Enter Password" name="password"
+                                                id="password" value="{{ old('password') }}"  class="form-control">
                                                 <span class="fa fa-eye-slash position-absolute" style="top: 2.67rem; right:0.5rem" id="togglePassword"></span>
                                             @error('password')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Emirate Id (Document)</label>
+                                            <label>Emirate Id</label>
                                             <input type="file" placeholder="Enter Document"name="emirate_id" value="{{ old('emirate_id') }}"
                                                 class="form-control">
                                             @error('emirate_id')
@@ -77,7 +77,7 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Passport (Document)</label>
+                                            <label>Passport</label>
                                             <input type="file" placeholder="Enter Document"name="passport" value="{{ old('passport') }}"
                                                 class="form-control">
                                             @error('passport')
@@ -88,7 +88,7 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Driving License (Document)</label>
+                                            <label>Driving License</label>
                                             <input type="file" placeholder="Enter Document"name="driving_license" value="{{ old('driving_license') }}"
                                                 class="form-control">
                                             @error('driving_license')
@@ -100,7 +100,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Image (Optional)</label>
-                                            <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
+                                            <input type="file" placeholder="Enter Image"name="image" value="{{ old('image') }}"
                                                 class="form-control">
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>
