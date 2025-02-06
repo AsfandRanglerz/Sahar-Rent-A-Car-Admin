@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\API;
 
 
+use App\Models\OTP;
+use App\Mail\OTPMail;
 use App\Models\Customer;
+use App\Models\ForgotOTP;
+use App\Mail\ForgotOTPMail;
 use Illuminate\Support\Str;
 use App\Models\UserDocument;
 use Illuminate\Http\Request;
@@ -15,6 +19,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -221,11 +226,13 @@ return response()->json([
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
-                'fcm_token' => 'nullable|string',
+                'send_otp' => 'required',
+                // 'fcm_token' => 'nullable|string',
             ],
             [
                 'identifier.required' => 'The email or phone number is required.',
                 'password.required' => 'The password is required.',
+                'send_otp.required' => 'The otp field is required.',
             ]
         );
     
@@ -263,6 +270,27 @@ return response()->json([
                 'message' => 'Invalid password',
             ], 401);
         }
+        $otp = rand(100000, 999999);
+    $otpToken = Str::uuid(); // Unique token for OTP verification
+    // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
+
+    // Store OTP in the database
+    OTP::create([
+        'identifier' => $identifier,
+        'otp' => $otp,
+        'otp_token' => $otpToken,
+        // 'expires_at' => $expiresAt,
+    ]);
+
+    // Send OTP via email (or SMS)
+    if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+        Mail::to($identifier)->send(new OTPMail($otp));
+    }
+
+    return response()->json([
+        'message' => 'OTP sent successfully.',
+        'otp_token' => $otpToken, // Send OTP token to frontend
+    ], 200);
     
         if ($request->fcm_token) {
             $customer->update(['fcm_token' => $request->fcm_token]);
@@ -271,13 +299,57 @@ return response()->json([
         return response()->json([
             // 'status' => true,
             'message' => 'Logged In successfully',
-            'token' => $customer->createToken("API Token")->plainTextToken,
+            // 'token' => $customer->createToken("API Token")->plainTextToken,
             'fcm_token' => $customer->fcm_token,
             // 'token_type' => 'Bearer',
         ], 200);
         
         
     }
+
+    public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'otp' => 'required|digits:6',
+        'otp_token' => 'required'
+    ]);
+
+    // Find OTP record in database
+    $otpRecord = OTP::where('otp_token', $request->otp_token)->first();
+
+    if (!$otpRecord) {
+        return response()->json(['message' => 'Invalid OTP token.'], 400);
+    }
+
+    // Check if OTP is valid
+    if ($otpRecord->otp !== $request->otp) {
+        return response()->json(['message' => 'Invalid OTP.'], 401);
+    }
+
+    // Check if OTP has expired
+    // if (Carbon::now()->gt($otpRecord->expires_at)) {
+    //     return response()->json(['message' => 'OTP has expired.'], 401);
+    // }
+
+    // Retrieve user (optional: if logging in)
+    $customer = Customer::where('email', $otpRecord->identifier)
+                        // ->orWhere('phone', $otpRecord->identifier)
+                        ->first();
+
+    if (!$customer) {
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+    // Delete OTP after successful verification
+    $otpRecord->delete();
+
+    return response()->json([
+        'message' => 'OTP verified successfully',
+        'token' => $customer->createToken("API Token")->plainTextToken,
+    ], 200);
+}
+
+    
 
     public function driverlogin(Request $request){
 
@@ -365,27 +437,71 @@ public function forgotPassword(Request $request)
         'email' => 'required|email|exists:customers,email',
     ]);
 
+    $email = $request->email;
+
     // Generate a unique token
-    $token = Str::random(64);
+    $otp = rand(100000, 999999);
+    $otpToken = Str::uuid(); // Unique token for OTP verification
+    // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
 
-    // Store the reset token in the password_resets table
-    DB::table('password_resets')->updateOrInsert(
-        ['email' => $request->email],
-        [
-            'token' => $token,
-            'created_at' => Carbon::now(),
-        ]
-    );
+    // Store OTP in the database
+    ForgotOTP::create([
+        'identifier' => $request->email,
+        'otp' => $otp,
+        'otp_token' => $otpToken,
+        // 'expires_at' => $expiresAt,
+    ]);
 
-    // Send the reset link to the user
-    Mail::send('admin.emails.forgot-password', ['token' => $token], function ($message) use ($request) {
-        $message->to($request->email);
-        $message->subject('Reset Password Notification');
-    });
+    // Send OTP via email (or SMS)
+    // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+        Mail::to($email)->send(new ForgotOTPMail($otp));
+    // }
 
     return response()->json([
-        'status' => true,
-        'message' => 'Password reset link has been sent to your email.',
+        'message' => 'OTP sent successfully.',
+        'otp_token' => $otpToken, // Send OTP token to frontend
+    ], 200);
+}
+
+public function forgotverifyOtp(Request $request)
+{
+    $request->validate([
+        'otp' => 'required|digits:6',
+        'otp_token' => 'required'
+    ]);
+
+    // Find OTP record in database
+    $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
+
+    if (!$otpRecord) {
+        return response()->json(['message' => 'Invalid OTP token.'], 400);
+    }
+
+    // Check if OTP is valid
+    if ($otpRecord->otp !== $request->otp) {
+        return response()->json(['message' => 'Invalid OTP.'], 401);
+    }
+
+    // Check if OTP has expired
+    // if (Carbon::now()->gt($otpRecord->expires_at)) {
+    //     return response()->json(['message' => 'OTP has expired.'], 401);
+    // }
+
+    // Retrieve user (optional: if logging in)
+    $user = Customer::where('email', $otpRecord->identifier)
+                        // ->orWhere('phone', $otpRecord->identifier)
+                        ->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+    
+    $otpRecord->update(['verified' => true]);
+
+    return response()->json([
+        'message' => 'OTP verified successfully',
+        'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
 
@@ -393,44 +509,32 @@ public function resetPassword(Request $request)
 {
     // Validate the input
     $request->validate([
-        'email' => 'required|email|exists:customers,email',
-        'token' => 'required',
-        'password' => 'required|confirmed|min:6',
+        'otp_token' => 'required|uuid',
+        'new_password' => 'required|string|min:6|confirmed',
     ]);
 
-    // Find the reset token in the database
-    $resetRecord = DB::table('password_resets')->where([
-        ['email', '=', $request->email],
-        ['token', '=', $request->token],
-    ])->first();
+    // Fetch OTP record using otp_token
+    $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
 
-    if (!$resetRecord) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Invalid token or email.',
-        ], 400);
+    if (!$otpRecord || !$otpRecord->verified) {
+        return response()->json(['message' => 'Invalid or unverified OTP token'], 400);
     }
 
-    // Check if the token is expired (valid for 60 minutes)
-    $isExpired = Carbon::parse($resetRecord->created_at)->addMinutes(60)->isPast();
-    if ($isExpired) {
-        return response()->json([
-            'status' => false,
-            'message' => 'This token has expired.',
-        ], 400);
+    // Find the user
+    $user = Customer::where('email', $otpRecord->identifier)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
 
-    // Update the user's password
-    $customer = Customer::where('email', $request->email)->first();
-    $customer->password = Hash::make($request->password);
-    $customer->save();
+    // Update password
+    $user->update(['password' => Hash::make($request->new_password)]);
 
-    // Delete the reset token
-    DB::table('password_resets')->where('email', $request->email)->delete();
+    // Delete OTP record after successful password reset
+    $otpRecord->delete();
 
     return response()->json([
-        'status' => true,
-        'message' => 'Password has been reset successfully.',
+        'message' => 'Password reset successfully.',
     ], 200);
 }
 
