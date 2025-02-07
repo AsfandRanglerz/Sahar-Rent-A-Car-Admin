@@ -38,8 +38,8 @@ class SubadminController extends Controller
             'phone' => 'required|string|max:15',
         ]);
 
-        $generatedPassword = random_int(10000000, 99999999);
-
+        // $generatedPassword = random_int(10000000, 99999999);
+        $plainPassword = $request->password;
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -58,13 +58,13 @@ class SubadminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => Hash::make($generatedPassword),
+            'password' => Hash::make($plainPassword),
             'image' => $image,
             'status' => $status
 
         ]);
 
-        Mail::to($user->email)->send(new SubadminCredentials($user->name, $user->email, $generatedPassword));
+        Mail::to($user->email)->send(new SubadminCredentials($user->name, $user->email, $plainPassword));
 
         return redirect()->route('subadmin.index')->with(['message' => 'Subadmin Created Successfully']);
     }

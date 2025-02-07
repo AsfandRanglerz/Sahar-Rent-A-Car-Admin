@@ -58,7 +58,7 @@
 
             {{-- sub admin --}}
             <li class="dropdown {{ request()->is('admin/subadmin*') ? 'active' : '' }}">
-                <a href="#" class="nav-link"><span><i
+                <a href="{{ route('subadmin.index') }}" class="nav-link"><span><i
                             data-feather="shield"></i>Sub Admins</span></a>
             </li>
 

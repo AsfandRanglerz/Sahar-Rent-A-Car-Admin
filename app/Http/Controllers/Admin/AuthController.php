@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Subadmin;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,21 @@ class AuthController extends Controller
             return back()->with(['error' => 'Invalid email or password']);
         }
 
+        // if (!auth()->guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $remember_me)) {
+        //     $check = Subadmin::where('email',$request->email)->first();
+        //     if ($check->status == 0) {
+        //         return back()->with('warning', 'Your Account is Blocked by Admin!');
+        //     }
+        //     $user = auth()->guard('web')->user();
+        //     if ($user->type === 'subadmin') {
+        //         $request->session()->regenerate();
+        //         return redirect('admin/dashboard')->with('success', 'Login Successfully as Sub-Admin');
+        //     }
+
+        //     // Logout if the user is not a sub-admin
+        //     auth()->guard('web')->logout();
+        //     return back()->with('warning', 'Access denied!');
+        // }
         return redirect('admin/dashboard')->with(['message' => 'Login Successfully']);
     }
 }

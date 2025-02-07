@@ -45,6 +45,18 @@
                                     </div>
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2 position-relative">
+                                            <label>Password</label>
+                                            <input type="password" placeholder="Enter Password" name="password"
+                                                id="password" value="{{ old('password') }}"  class="form-control">
+                                                <span class="fa fa-eye-slash position-absolute" style="top: 2.67rem; right:0.5rem" id="togglePassword"></span>
+                                            @error('password')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Image</label>
                                             <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
@@ -69,6 +81,15 @@
             </div>
         </section>
     </div>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-eye');
+        });
+    </script>
 
 @endsection
 

@@ -34,6 +34,7 @@ class CarRequest extends FormRequest
             // 'call_number' => 'required|numeric|digits:11',
             // 'whatsapp_number' => 'required|numeric|digits:11',
             'pricing' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'image' => 'required|file|max:2048',
         ];
     }
 
@@ -78,6 +79,8 @@ class CarRequest extends FormRequest
     
     'pricing.required' => 'The Price Per Hour is required.',
     'pricing.regex' => 'The Price Per Hour must be a valid number with up to two decimal places.',
+
+    'image.required' => 'The image is required.',
         ];
     }
 }

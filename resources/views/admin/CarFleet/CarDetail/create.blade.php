@@ -252,6 +252,7 @@
                                             <label>Image</label>
                                             <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
                                                 class="form-control">
+                                                <small text-muted>(Image should be of size 2MB)</small>
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror

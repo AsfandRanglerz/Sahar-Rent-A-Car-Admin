@@ -80,6 +80,9 @@ Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->na
     Route::get('/subadmin-edit/{id}',  'edit')->name('subadmin.edit');
     Route::post('/subadmin-update/{id}',  'update')->name('subadmin.update');
     Route::delete('/subadmin-destroy/{id}',  'destroy')->name('subadmin.destroy');
+//     Route::get('/subadmin/getPermissions',  'getPermissions')->name('subadmin.getPermissions');
+// Route::post('/subadmin/savePermissions',  'savePermissions')->name('subadmin.savePermissions');
+
 });
 
  // ############ Car Details #################

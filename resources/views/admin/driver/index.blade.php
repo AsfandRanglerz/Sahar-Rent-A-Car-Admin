@@ -55,10 +55,18 @@
                                                     @endif
                                                 </td> --}}
                                                 <td>
-                                                    @if ($driver->driverdocument)
+                                                    @if ($driver->license || ($driver->driverdocument && $driver->driverdocument->license))
                                                         @php
                                                             $documents = [];
-                                                            if ($driver->driverdocument->license) {
+                                                
+                                                            if ($driver->license) {
+                                                                $documents[] = [
+                                                                    'name' => 'License',
+                                                                    'url' => asset('storage/app/public/' . $driver->license),
+                                                                ];
+                                                            }
+                                                
+                                                            if ($driver->driverdocument && $driver->driverdocument->license) {
                                                                 $documents[] = [
                                                                     'name' => 'License',
                                                                     'url' => asset('storage/app/public/' . $driver->driverdocument->license),
@@ -76,13 +84,12 @@
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
-                                                        @else
-                                                            <span>No documents uploaded</span>
                                                         @endif
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
                                                 </td>
+                                                
                                                 <td>
                                                     @if($driver->image)
                                                     <img src="{{ asset($driver->image) }}" alt="" height="50"

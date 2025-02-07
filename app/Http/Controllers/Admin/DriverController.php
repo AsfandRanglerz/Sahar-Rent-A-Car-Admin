@@ -40,6 +40,7 @@ class DriverController extends Controller
 
         // $generatedPassword = random_int(10000000, 99999999);
 
+        $license = null;
         $plainPassword = $request->password;
 
         if ($request->hasFile('image')) {
@@ -54,11 +55,16 @@ class DriverController extends Controller
 
         $status = 1;
 
+if($request->hasFile('license')){
+            $license = $request->file('license')->store("driverdocumet/",'public');
+}
+
         // Create the user
         $driver = Driver::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'license' => $license,
             'availability' => $request->availability,
             'password' => Hash::make($plainPassword),
             'image' => $image,
@@ -88,6 +94,8 @@ class DriverController extends Controller
         //     'phone' => 'required|string|max:15',
         // ]);
 
+        $license = null;
+
         $driver = Driver::findOrFail($id);
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -105,11 +113,16 @@ class DriverController extends Controller
             $image = $driver->image;
         }
 
+        if($request->hasFile('license')){
+            $license = $request->file('license')->store("driverdocumet/",'public');
+        }
+
         // Update user details
         $driver->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'license' => $license,
             'availability' => $request->availability,
             'image' => $image,
         ]);

@@ -44,6 +44,11 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+       'subadmin' => [
+        'driver' => 'session',
+        'provider' => 'subadmins',
+    ],
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
@@ -76,6 +81,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'subadmins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Subadmin::class,
         ],
 
         // 'users' => [

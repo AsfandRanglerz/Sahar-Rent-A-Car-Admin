@@ -250,6 +250,7 @@
                                         <div class="form-group mb-2">
                                             <label>Image</label>
                                             <input type="file" name="image" id="image" class="form-control">
+                                            <small text-muted>(Image should be of size 2MB)</small>
                                             @error('image')
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror

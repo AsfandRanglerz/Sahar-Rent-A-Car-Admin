@@ -29,6 +29,7 @@ class UserRequest extends FormRequest
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'required|string|max:11',
                 'password' => 'required|string|min:8',
+                'image' => 'nullable|file|max:2048',
                 'emirate_id' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'passport' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'driving_license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
