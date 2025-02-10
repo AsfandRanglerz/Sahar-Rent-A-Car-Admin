@@ -18,7 +18,7 @@ class admin
     public function handle(Request $request, Closure $next)
     {
 
-        if(auth::guard('admin')->check()){
+        if(Auth::guard('admin')->check() || Auth::guard('subadmin')->check()){
 
             return $next($request);
         }else{

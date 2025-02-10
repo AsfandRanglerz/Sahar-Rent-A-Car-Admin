@@ -4,11 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Subadmin extends Authenticatable
+class SubAdminPermission extends Model
 {
     use HasFactory;
-    protected $guarded=[];
-
+    protected $guarded = [];
 }

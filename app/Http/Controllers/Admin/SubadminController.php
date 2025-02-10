@@ -9,6 +9,7 @@ use App\Mail\SubAdminActivated;
 use App\Mail\SubadminCredentials;
 use App\Mail\SubAdminDeActivated;
 
+use App\Models\SubAdminPermission;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -48,7 +49,7 @@ class SubadminController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = 'public/admin/assets/images/avator.png';
+            $image = null;
         }
 
         $status = 1;
@@ -101,7 +102,7 @@ class SubadminController extends Controller
             $file->move('public/admin/assets/images/users', $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = $subadmin->image;
+            $image = null;
         }
 
         // Update user details
@@ -127,7 +128,39 @@ class SubadminController extends Controller
 
 
 
+    public function savePermissions(Request $request)
+    {
+        $subadminId = $request->subadmin_id;
+        
+        // Save the permissions
+        foreach ($request->permissions as $menu => $perm) {
+            SubAdminPermission::updateOrCreate(
+                ['subadmin_id' => $subadminId, 'menu' => $menu],
+                [
+                    'add' => isset($perm['add']) ? 1 : 0,
+                    'edit' => isset($perm['edit']) ? 1 : 0,
+                    'view' => isset($perm['view']) ? 1 : 0,
+                    'delete' => isset($perm['delete']) ? 1 : 0,
+                ]
+            );
+        }
+    
+        return response()->json(['message' => 'Permissions updated successfully']);
+    }
+    
+//     public function getSubadminPermission($subadminId)
+// {
+//     $subadmin = Subadmin::find($subadminId);
 
+//     if (!$subadmin) {
+//         return response()->json(['error' => 'Subadmin not found'], 404);
+//     }
+
+//     // Assuming permissions are stored in a JSON column
+//     $permissions = json_decode($subadmin->permissions, true);
+
+//     return response()->json(['permissions' => $permissions]);
+// }
 
 
 
