@@ -149,7 +149,7 @@
                             </tr>
                             <tr>
                                 <td>Sub Admins</td>
-                                <td><input type="checkbox" name="permissions[sub_admins][add]></td>
+                                <td><input type="checkbox" name="permissions[sub_admins][add]"></td>
                                 <td><input type="checkbox" name="permissions[sub_admins][edit]"></td>
                                 <td><input type="checkbox" name="permissions[sub_admins][view]"></td>
                                 <td><input type="checkbox" name="permissions[sub_admins][delete]" ></td>
@@ -191,9 +191,9 @@
                             </tr>
                             <tr>
                                 <td>Bookings</td>
-                                <td><input type="checkbox" name="permissions[bookings][ad></td>
-                                <td><input type="checkbox" name="permissions[bookings][edit></td>
-                                <td><input type="checkbox" name="permissions[bookings][view></td>
+                                <td><input type="checkbox" name="permissions[bookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[bookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[bookings][view]"></td>
                                 <td><input type="checkbox" name="permissions[bookings][delete]"></td>
                             </tr>
                             <tr>
@@ -321,34 +321,100 @@
     </script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            // Show Permissions Modal when clicking "View" button
-            $(".view-permissions").click(function() {
-                let subadminId = $(this).data('subadmin-id');
-                $("#subadmin_id").val(subadminId); // Set the subadmin ID in the hidden field
+        // $(document).ready(function() {
+        //     // Show Permissions Modal when clicking "View" button
+        //     $(".view-permissions").click(function() {
+        //         let subadminId = $(this).data('subadmin-id');
+        //         $("#subadmin_id").val(subadminId); // Set the subadmin ID in the hidden field
                 
-                $("#permissionsModal").modal("show"); // Show the modal
-            });
+        //         $("#permissionsModal").modal("show"); // Show the modal
+        //     });
     
-            // Submit Permissions Form via AJAX
-            $("#permissionsForm").submit(function(e) {
-                e.preventDefault();
-                let formData = $(this).serialize();
+        //     // Submit Permissions Form via AJAX
+        //     $("#permissionsForm").submit(function(e) {
+        //         e.preventDefault();
+        //         let formData = $(this).serialize();
     
-                $.ajax({
-                    url: "{{ route('subadmin.savePermissions') }}",
-                    type: "POST",
-                    data: formData,
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    success: function(response) {
-                        alert(response.message);
-                        $("#permissionsModal").modal("hide");
-                    },
-                    error: function() {
-                        alert("Error saving permissions.");
+        //         $.ajax({
+        //             url: "{{ route('subadmin.savePermissions') }}",
+        //             type: "POST",
+        //             data: formData,
+        //             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        //             success: function(response) {
+        //                 alert(response.message);
+        //                 $("#permissionsModal").modal("hide");
+        //             },
+        //             error: function() {
+        //                 alert("Error saving permissions.");
+        //             }
+        //         });
+        //     });
+        // });
+
+        $(document).ready(function() {
+    // Show Permissions Modal when clicking "View" button
+    $(".view-permissions").click(function() {
+        let subadminId = $(this).data('subadmin-id');
+        $("#subadmin_id").val(subadminId); // Set the subadmin ID in the hidden field
+
+        // Fetch Permissions from Database
+        $.ajax({
+            url: "{{ route('subadmin.getPermissions') }}",
+            type: "GET",
+            data: { subadmin_id: subadminId },
+            success: function(response) {
+                console.log(response); // Debugging: Ensure response contains expected data
+
+                // Clear all checkboxes first
+                $("input[type='checkbox']").prop("checked", false);
+
+                // Ensure correct data key is used
+                $.each(response.sub_admin_permissions, function(index, perm) {
+                    let menu = perm.menu;
+                    if (perm.add == 1) {
+                        $(`input[name="permissions[${menu}][add]"]`).prop("checked", true);
+                    }
+                    if (perm.edit == 1) {
+                        $(`input[name="permissions[${menu}][edit]"]`).prop("checked", true);
+                    }
+                    if (perm.view == 1) {
+                        $(`input[name="permissions[${menu}][view]"]`).prop("checked", true);
+                    }
+                    if (perm.delete == 1) {
+                        $(`input[name="permissions[${menu}][delete]"]`).prop("checked", true);
                     }
                 });
-            });
+
+                $("#permissionsModal").modal("show"); // Show the modal
+            },
+            error: function() {
+                alert("Error fetching permissions.");
+            }
         });
+    });
+
+    // Submit Permissions Form via AJAX
+    $("#permissionsForm").submit(function(e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+
+        $.ajax({
+            url: "{{ route('subadmin.savePermissions') }}",
+            type: "POST",
+            data: formData,
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            success: function(response) {
+                alert(response.message);
+                $("#permissionsModal").modal("hide");
+            },
+            error: function() {
+                alert("Error saving permissions.");
+            }
+        });
+    });
+});
+
     </script>
+
+    
 @endsection

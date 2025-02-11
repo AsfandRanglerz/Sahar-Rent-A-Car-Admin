@@ -10,6 +10,7 @@ use App\Mail\SubadminCredentials;
 use App\Mail\SubAdminDeActivated;
 
 use App\Models\SubAdminPermission;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -162,6 +163,17 @@ class SubadminController extends Controller
 //     return response()->json(['permissions' => $permissions]);
 // }
 
+public function getPermissions(Request $request)
+{
+    $subadminId = $request->input('subadmin_id');
+
+    // Fetch permissions from the database
+    $permissions = DB::table('sub_admin_permissions')
+                    ->where('subadmin_id', $subadminId)
+                    ->get();
+
+    return response()->json(['sub_admin_permissions' => $permissions]);
+}
 
 
 

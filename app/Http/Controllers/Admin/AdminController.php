@@ -153,4 +153,6 @@ class AdminController extends Controller
         Auth::guard('admin')->logout();
         return redirect('admin')->with(['message' => 'Logout Successfully']);
     }
+
+    
 }

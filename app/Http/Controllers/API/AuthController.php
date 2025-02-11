@@ -287,10 +287,10 @@ return response()->json([
         Mail::to($identifier)->send(new OTPMail($otp));
     }
 
-    return response()->json([
-        'message' => 'OTP sent successfully.',
-        'otp_token' => $otpToken, // Send OTP token to frontend
-    ], 200);
+    // return response()->json([
+    //     'message' => 'OTP sent successfully.',
+    //     'otp_token' => $otpToken, // Send OTP token to frontend
+    // ], 200);
     
         if ($request->fcm_token) {
             $customer->update(['fcm_token' => $request->fcm_token]);
@@ -298,8 +298,10 @@ return response()->json([
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Logged In successfully',
-            // 'token' => $customer->createToken("API Token")->plainTextToken,
+            // 'message' => 'Logged In successfully',
+            'message' => 'OTP sent successfully.',
+            'token' => $customer->createToken("API Token")->plainTextToken,
+            'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $customer->fcm_token,
             // 'token_type' => 'Bearer',
         ], 200);
