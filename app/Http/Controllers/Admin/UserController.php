@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use App\Mail\UserCredentials;
 use App\Mail\UserDeActivated;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -24,6 +26,19 @@ class UserController extends Controller
 
     public function create()
     {
+        // if (Auth::guard('subadmin')->check()) {
+        //     $subadmin = Auth::guard('subadmin')->user();
+            
+        //     // Check if subadmin has permission to create users
+        //     $permission = DB::table('sub_admin_permissions')
+        //         ->where('subadmin_id', $subadmin->id)
+        //         ->where('menu', 'users')
+        //         ->first();
+    
+        //     if (!$permission || $permission->add != 1) {
+        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
+        //     }
+        // }
         return view('admin.user.create');
     }
 
@@ -36,7 +51,19 @@ class UserController extends Controller
         //     // 'email' => 'required|email|unique:users,email',
         //     'phone' => 'required|string|max:15',
         // ]);
-
+        // if (Auth::guard('subadmin')->check()) {
+        //     $subadmin = Auth::guard('subadmin')->user();
+            
+        //     // Check if subadmin has permission to create users
+        //     $permission = DB::table('sub_admin_permissions')
+        //         ->where('subadmin_id', $subadmin->id)
+        //         ->where('menu', 'users')
+        //         ->first();
+    
+        //     if (!$permission || $permission->add != 1) {
+        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
+        //     }
+        // }
         $validatedData = $request->validated();
 
         // $generatedPassword = random_int(10000000, 99999999);
@@ -104,11 +131,37 @@ class UserController extends Controller
     {
         $user = User::find($id);
         // return $user;
+        // if (Auth::guard('subadmin')->check()) {
+        //     $subadmin = Auth::guard('subadmin')->user();
+            
+        //     // Check permission
+        //     $permission = DB::table('sub_admin_permissions')
+        //         ->where('subadmin_id', $subadmin->id)
+        //         ->where('menu', 'users')
+        //         ->first();
+    
+        //     if (!$permission || $permission->edit != 1) {
+        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
+        //     }
+        // }
         return view('admin.user.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
+        // if (Auth::guard('subadmin')->check()) {
+        //     $subadmin = Auth::guard('subadmin')->user();
+            
+        //     // Check permission
+        //     $permission = DB::table('sub_admin_permissions')
+        //         ->where('subadmin_id', $subadmin->id)
+        //         ->where('menu', 'users')
+        //         ->first();
+    
+        //     if (!$permission || $permission->edit != 1) {
+        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
+        //     }
+        // }
 
         // Validate the incoming request
         $request->validate([
@@ -176,6 +229,19 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        // if (Auth::guard('subadmin')->check()) {
+        //     $subadmin = Auth::guard('subadmin')->user();
+            
+        //     // Check permission
+        //     $permission = DB::table('sub_admin_permissions')
+        //         ->where('subadmin_id', $subadmin->id)
+        //         ->where('menu', 'users')
+        //         ->first();
+    
+        //     if (!$permission || $permission->delete != 1) {
+        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
+        //     }
+        // }
         User::destroy($id);
         return redirect()->route('user.index')->with(['message' => 'Customer Deleted Successfully']);
     }

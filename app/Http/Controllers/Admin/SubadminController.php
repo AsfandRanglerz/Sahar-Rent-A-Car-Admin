@@ -129,25 +129,71 @@ class SubadminController extends Controller
 
 
 
-    public function savePermissions(Request $request)
-    {
-        $subadminId = $request->subadmin_id;
+    // public function savePermissions(Request $request)
+    // {
+    //     $subadminId = $request->subadmin_id;
         
-        // Save the permissions
-        foreach ($request->permissions as $menu => $perm) {
-            SubAdminPermission::updateOrCreate(
-                ['subadmin_id' => $subadminId, 'menu' => $menu],
-                [
+    //     // Save the permissions
+    //     foreach ($request->permissions as $menu => $perm) {
+    //         SubAdminPermission::updateOrCreate(
+    //             ['subadmin_id' => $subadminId, 'menu' => $menu],
+    //             [
+    //                 'add' => isset($perm['add']) ? 1 : 0,
+    //                 'edit' => isset($perm['edit']) ? 1 : 0,
+    //                 'view' => isset($perm['view']) ? 1 : 0,
+    //                 'delete' => isset($perm['delete']) ? 1 : 0,
+    //             ]
+    //         );
+    //     }
+    
+    //     return response()->json(['message' => 'Permissions updated successfully']);
+    // }
+    
+    
+    public function savePermissions(Request $request)
+{
+    try {
+        $subadminId = $request->input('subadmin_id');
+        $submittedPermissions = $request->input('permissions', []);
+
+        // Fetch all existing permissions
+        $existingPermissions = SubAdminPermission::where('subadmin_id', $subadminId)->get()->keyBy('menu');
+
+        foreach ($existingPermissions as $menu => $existingPermission) {
+            if (!isset($submittedPermissions[$menu])) {
+                // Remove permission if it's not in the submitted permissions
+                $existingPermission->delete();
+            } else {
+                // Update permission
+                $existingPermission->update([
+                    'add' => isset($submittedPermissions[$menu]['add']) ? 1 : 0,
+                    'edit' => isset($submittedPermissions[$menu]['edit']) ? 1 : 0,
+                    'view' => isset($submittedPermissions[$menu]['view']) ? 1 : 0,
+                    'delete' => isset($submittedPermissions[$menu]['delete']) ? 1 : 0,
+                ]);
+            }
+        }
+
+        // Insert new permissions if they didn't exist before
+        foreach ($submittedPermissions as $menu => $perm) {
+            if (!isset($existingPermissions[$menu])) {
+                SubAdminPermission::create([
+                    'subadmin_id' => $subadminId,
+                    'menu' => $menu,
                     'add' => isset($perm['add']) ? 1 : 0,
                     'edit' => isset($perm['edit']) ? 1 : 0,
                     'view' => isset($perm['view']) ? 1 : 0,
                     'delete' => isset($perm['delete']) ? 1 : 0,
-                ]
-            );
+                ]);
+            }
         }
-    
+
         return response()->json(['message' => 'Permissions updated successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
     
 //     public function getSubadminPermission($subadminId)
 // {

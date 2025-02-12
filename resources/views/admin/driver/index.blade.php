@@ -13,8 +13,14 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
+                                {{-- @php
+                                 $isAdmin = $isAdmin ?? false;
+    $permissions = $subadminPermissions['drivers'] ?? null;
+    // Fetch permissions for this menu
+@endphp --}}
+{{-- @if($isAdmin || ($permissions && $permissions->add == 1)) --}}
                                 <a class="btn btn-primary mb-3" href="{{ route('driver.create') }}">Create</a>
-
+{{-- @endif --}}
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -138,8 +144,11 @@
                                                                     </svg>
                                                                 </a>
                                                             @endif
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
                                                             <a href="{{ route('driver.edit', $driver->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
+                                                            {{-- @endif --}}
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1))     --}}
                                                             <form action="{{ route('driver.destroy', $driver->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
@@ -149,6 +158,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
+                                                            {{-- @endif --}}
                                                         </div>
                                                     </div>
                                                 </td>
@@ -225,23 +235,22 @@
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
-            var form = $(this).closest("form");
-            var name = $(this).data("name");
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        form.submit();
-                    }
-                });
-        });
+        $(document).on('click', '.show_confirm', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var form = $(this).closest("form");
+    
+    swal({
+        title: "Are you sure you want to delete this record?",
+        text: "If you delete this, it will be gone forever.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((willDelete) => {
+        if (willDelete) {
+            form.submit();
+        }
+    });
+});
         function showDeactivationModal(managerId) {
             $('#deactivationForm').attr('action', '{{ url('admin/driverDeactivate') }}/' + managerId);
             $('#deactivationModal').modal('show');

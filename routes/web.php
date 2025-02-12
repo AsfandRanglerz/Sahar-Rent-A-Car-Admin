@@ -46,7 +46,7 @@ Route::prefix('admin')->middleware('admin')->group(function (){
 
 
  // ############ User #################
- Route::controller(UserController::class)->group(function () {
+ Route::controller(UserController::class)->middleware('admin')->group(function () {
     Route::get('/user',  'index')->name('user.index');
     Route::get('/user-create',  'create')->name('user.create');
     Route::post('/user-store',  'store')->name('user.store');
@@ -60,7 +60,7 @@ Route::post('/deactivate/{id}', [UserController::class, 'deactive'])->name('user
 
 
  // ############ Driver #################
- Route::controller(DriverController::class)->group(function () {
+ Route::controller(DriverController::class)->middleware('admin')->group(function () {
     Route::get('/driver',  'index')->name('driver.index');
     Route::get('/driver-create',  'create')->name('driver.create');
     Route::post('/driver-store',  'store')->name('driver.store');
@@ -73,7 +73,7 @@ Route::post('/driverActivate/{id}', [DriverController::class, 'active'])->name('
 Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->name('driver.deactivate');
 
  // ############ subadmin #################
- Route::controller(SubadminController::class)->group(function () {
+ Route::controller(SubadminController::class)->middleware('admin')->group(function () {
     Route::get('/subadmin',  'index')->name('subadmin.index');
     Route::get('/subadmin-create',  'create')->name('subadmin.create');
     Route::post('/subadmin-store',  'store')->name('subadmin.store');
@@ -90,7 +90,7 @@ Route::post('/subadmin/savePermissions',  'savePermissions')->name('subadmin.sav
 });
 
  // ############ Car Details #################
- Route::controller(CarDetailsController::class)->group(function () {
+ Route::controller(CarDetailsController::class)->middleware('admin')->group(function () {
     Route::get('/car',  'index')->name('car.index');
     Route::get('/car-create',  'create')->name('car.create');
     Route::post('/car-store',  'store')->name('car.store');
@@ -100,7 +100,7 @@ Route::post('/subadmin/savePermissions',  'savePermissions')->name('subadmin.sav
 });
 
 // ############ Notification #################
-Route::controller(NotificationController::class)->group(function () {
+Route::controller(NotificationController::class)->middleware('admin')->group(function () {
     Route::get('/notification',  'index')->name('notification.index');
     Route::get('/notification-create',  'create')->name('notification.create');
     Route::post('/notification-store',  'store')->name('notification.store');
@@ -109,7 +109,7 @@ Route::controller(NotificationController::class)->group(function () {
     Route::delete('/notification-destroy/{id}',  'destroy')->name('notification.destroy');
 });
 
-Route::controller(LicenseController::class)->group(function () {
+Route::controller(LicenseController::class)->middleware('admin')->group(function () {
     Route::get('/license',  'index')->name('license.index');
     Route::get('/license-create',  'create')->name('license.create');
     Route::post('/license-store',  'store')->name('license.store');
@@ -120,7 +120,7 @@ Route::controller(LicenseController::class)->group(function () {
 Route::post('/LicenseApprovalActivate/{id}', [LicenseController::class, 'active'])->name('license.activate');
 Route::post('/LicenseApprovalDeactivate/{id}', [LicenseController::class, 'deactive'])->name('license.deactivate');
 
-Route::controller(LoyaltyPointsController::class)->group(function () {
+Route::controller(LoyaltyPointsController::class)->middleware('admin')->group(function () {
     Route::get('/loyaltypoints',  'index')->name('loyaltypoints.index');
     Route::get('/loyaltypoints-create',  'create')->name('loyaltypoints.create');
     Route::post('/loyaltypoints-store',  'store')->name('loyaltypoints.store');
@@ -132,7 +132,7 @@ Route::controller(LoyaltyPointsController::class)->group(function () {
 Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
 Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');
 
-Route::controller(BookingController::class)->group(function () {
+Route::controller(BookingController::class)->middleware('admin')->group(function () {
     Route::get('/booking',  'index')->name('booking.index');
     Route::get('/booking-create',  'create')->name('booking.create');
     Route::post('/booking-store',  'store')->name('booking.store');

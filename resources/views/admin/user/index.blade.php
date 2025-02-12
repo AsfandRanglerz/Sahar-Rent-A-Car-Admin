@@ -13,9 +13,10 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
+                                {{-- @if(Auth::guard('admin')->check() || (isset($subadminPermissions) && in_array('users', $subadminPermissions))) --}}
                                 <a class="btn btn-primary mb-3" href="{{ route('user.create') }}">Create
                                 </a>
-
+{{-- @endif --}}
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
@@ -289,23 +290,22 @@
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
 
     <script>
-        $('.show_confirm').click(function(event) {
-            var form = $(this).closest("form");
-            var name = $(this).data("name");
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        form.submit();
-                    }
-                });
-        });
+         $(document).on('click', '.show_confirm', function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var form = $(this).closest("form");
+    
+    swal({
+        title: "Are you sure you want to delete this record?",
+        text: "If you delete this, it will be gone forever.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((willDelete) => {
+        if (willDelete) {
+            form.submit();
+        }
+    });
+});
 
         function showDeactivationModal(managerId) {
             $('#deactivationForm').attr('action', '{{ url('admin/deactivate') }}/' + managerId);
