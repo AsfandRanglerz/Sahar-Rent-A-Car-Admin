@@ -1675,22 +1675,22 @@
         },
         {
             "name": "laravel/tinker",
-            "version": "v2.10.0",
+            "version": "v2.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/tinker.git",
-                "reference": "ba4d51eb56de7711b3a37d63aa0643e99a339ae5"
+                "reference": "22177cc71807d38f2810c6204d8f7183d88a57d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/tinker/zipball/ba4d51eb56de7711b3a37d63aa0643e99a339ae5",
-                "reference": "ba4d51eb56de7711b3a37d63aa0643e99a339ae5",
+                "url": "https://api.github.com/repos/laravel/tinker/zipball/22177cc71807d38f2810c6204d8f7183d88a57d3",
+                "reference": "22177cc71807d38f2810c6204d8f7183d88a57d3",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "illuminate/console": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
                 "php": "^7.2.5|^8.0",
                 "psy/psysh": "^0.11.1|^0.12.0",
                 "symfony/var-dumper": "^4.3.4|^5.0|^6.0|^7.0"
@@ -1698,10 +1698,10 @@
             "require-dev": {
                 "mockery/mockery": "~1.3.3|^1.4.2",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.5.8|^9.3.3"
+                "phpunit/phpunit": "^8.5.8|^9.3.3|^10.0"
             },
             "suggest": {
-                "illuminate/database": "The Illuminate Database package (^6.0|^7.0|^8.0|^9.0|^10.0|^11.0)."
+                "illuminate/database": "The Illuminate Database package (^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0)."
             },
             "type": "library",
             "extra": {
@@ -1735,9 +1735,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/tinker/issues",
-                "source": "https://github.com/laravel/tinker/tree/v2.10.0"
+                "source": "https://github.com/laravel/tinker/tree/v2.10.1"
             },
-            "time": "2024-09-23T13:32:56+00:00"
+            "time": "2025-01-27T14:24:01+00:00"
         },
         {
             "name": "league/commonmark",
@@ -2182,16 +2182,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.72.6",
+            "version": "2.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5"
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/1e9d50601e7035a4c61441a208cb5bed73e108c5",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/9228ce90e1035ff2f0db84b40ec2e023ed802075",
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075",
                 "shasum": ""
             },
             "require": {
@@ -2285,7 +2285,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-27T09:28:11+00:00"
+            "time": "2025-01-08T20:10:23+00:00"
         },
         {
             "name": "nette/schema",
@@ -3484,16 +3484,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v16.5.0",
+            "version": "v16.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "3fb22256317344e049fce02ff289af3b776b0464"
+                "reference": "05c7c3a8a15b1bc396f09d17c88539c0db3d3255"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/3fb22256317344e049fce02ff289af3b776b0464",
-                "reference": "3fb22256317344e049fce02ff289af3b776b0464",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/05c7c3a8a15b1bc396f09d17c88539c0db3d3255",
+                "reference": "05c7c3a8a15b1bc396f09d17c88539c0db3d3255",
                 "shasum": ""
             },
             "require": {
@@ -3537,9 +3537,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/v16.5.0"
+                "source": "https://github.com/stripe/stripe-php/tree/v16.5.1"
             },
-            "time": "2025-01-27T20:20:33+00:00"
+            "time": "2025-02-07T21:24:29+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -6588,16 +6588,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.12.1",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845"
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/123267b2c49fbf30d78a7b2d333f6be754b94845",
-                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/024473a478be9df5fdaca2c793f2232fe788e414",
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414",
                 "shasum": ""
             },
             "require": {
@@ -6636,7 +6636,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.0"
             },
             "funding": [
                 {
@@ -6644,7 +6644,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-08T17:47:46+00:00"
+            "time": "2025-02-12T12:17:51+00:00"
         },
         {
             "name": "nunomaduro/collision",

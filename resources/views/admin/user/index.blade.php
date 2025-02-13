@@ -13,10 +13,15 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                {{-- @if(Auth::guard('admin')->check() || (isset($subadminPermissions) && in_array('users', $subadminPermissions))) --}}
+                                @php
+                                $isAdmin = $isAdmin ?? false;
+                               $permissions = $subadminPermissions['customers'] ?? null;
+                                // Fetch permissions for this menu
+                               @endphp 
+                           @if($isAdmin || ($permissions && $permissions->add == 1)) 
                                 <a class="btn btn-primary mb-3" href="{{ route('user.create') }}">Create
                                 </a>
-{{-- @endif --}}
+                            @endif
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
@@ -193,10 +198,12 @@
                                                                 </a>
                                                             @endif
 
-
+                                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                             <a href="{{ route('user.edit', $user->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
-                                                            <form action="{{ route('user.destroy', $user->id) }}"
+                                                            @endif
+                                                            @if($isAdmin || ($permissions && $permissions->delete == 1))    
+                                                                <form action="{{ route('user.destroy', $user->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf
@@ -205,6 +212,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

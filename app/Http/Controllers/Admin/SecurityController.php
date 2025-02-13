@@ -19,9 +19,18 @@ class SecurityController extends Controller
         $request->validate([
             'description'=>'required'
         ]);
-
-        $data=PrivacyPolicy::first();
-        PrivacyPolicy::find($data->id)->update($request->all());
+        $data = PrivacyPolicy::first();
+        if (!$data) {
+            // If no record exists, create a new one
+            $data = PrivacyPolicy::create([
+                'description' => $request->description
+            ]);
+        } else {
+            // Update the existing record
+            $data->update($request->all());
+        }
+        // $data=PrivacyPolicy::first();
+        // PrivacyPolicy::find($data->id)->update($request->all());
         return redirect('/admin/Privacy-policy')->with(['status'=>true, 'message' => 'Privacy Policy Updated Successfully']);
     }
     public function TermCondition(){
@@ -36,9 +45,18 @@ class SecurityController extends Controller
         $request->validate([
             'description'=>'required'
         ]);
-
-        $data=TermCondition::first();
-        TermCondition::find($data->id)->update($request->all());
+        $data = TermCondition::first();
+        if (!$data) {
+            // If no record exists, create a new one
+            $data = TermCondition::create([
+                'description' => $request->description
+            ]);
+        } else {
+            // Update the existing record
+            $data->update($request->all());
+        }
+        // $data=TermCondition::first();
+        // TermCondition::find($data->id)->update($request->all());
         return redirect('/admin/term-condition')->with(['status'=>true, 'message' => 'Terms & Conditions Updated Successfully']);
     }
 }

@@ -54,6 +54,13 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if($subadmin->image)
+                                        <div class="ms-3">
+                                            <img src="{{ asset($subadmin->image) }}" 
+                                                 alt="image" 
+                                                 style="width: 80px; height: 80px; border: 1px solid #ddd;">
+                                        </div>
+                                    @endif
                                     </div>
                                 </div>
 

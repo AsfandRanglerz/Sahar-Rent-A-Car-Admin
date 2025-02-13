@@ -23,17 +23,17 @@
                                         <div class="col-md-3 col-6 b-r">
                                             <strong>Full Name</strong>
                                             <br>
-                                            <p class="text-muted">{{$data->name}}</p>
+                                            <p class="text-muted">{{ isset($data) ? $data->name : '' }}</p>
                                         </div>
                                         <div class="col-md-3 col-6 b-r">
                                             <strong>Mobile</strong>
                                             <br>
-                                            <p class="text-muted">{{$data->phone}}</p>
+                                            <p class="text-muted">{{ isset($data) ? $data->phone : '' }}</p>
                                         </div>
                                         <div class="col-md-3 col-6 b-r">
                                             <strong>Email</strong>
                                             <br>
-                                            <p class="text-muted">{{$data->email}}</p>
+                                            <p class="text-muted">{{ isset($data) ? $data->email : '' }}</p>
                                         </div>
 
                                     </div>
@@ -51,7 +51,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>Name</label>
-                                                    <input type="text" name="name" value="{{$data->name}}" class="form-control" >
+                                                    <input type="text" name="name" value="{{ isset($data) ? $data->name : '' }}" class="form-control" >
                                                     @error('name')
                                                     <div class="text-danger">
                                                         Please fill in the  Name
@@ -60,7 +60,7 @@
                                                 </div>
                                                 <div class="form-group col-md-6 col-12">
                                                     <label>Email</label>
-                                                    <input type="email" name="email" value="{{$data->email}}" class="form-control">
+                                                    <input type="email" name="email" value="{{ isset($data) ? $data->email : '' }}" class="form-control">
                                                     @error('email')
                                                     <div class="text-danger">
                                                         Please fill in the email
@@ -82,7 +82,7 @@
                                                 </div>
                                                 <div class="form-group col-md-5 col-12">
                                                     <label>Phone</label>
-                                                    <input type="tel" name="phone" value="{{$data->phone}}"  class="form-control" value="">
+                                                    <input type="tel" name="phone" value="{{ isset($data) ? $data->phone : '' }}"  class="form-control" value="">
                                                     @error('phone')
                                                     <div class="text-danger">
                                                         Please fill in the email

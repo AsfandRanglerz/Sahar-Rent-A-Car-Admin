@@ -16,7 +16,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label>Description</label>
-                                        <textarea name="description" class="form-control">{{$data->description}}</textarea>
+                                        <textarea name="description" class="form-control">{{ isset($data) ? $data->description : '' }}</textarea>
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">

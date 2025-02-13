@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Driver;
 use App\Models\Booking;
+use App\Models\Subadmin;
 use App\Models\CarDetails;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -29,7 +30,10 @@ class AdminController extends Controller
     }
     public function getProfile()
     {
-        $data = Admin::find(Auth::guard('admin')->id());
+        $admin = Admin::find(Auth::guard('admin')->id());
+        $Subadmin = Subadmin::find(Auth::guard('subadmin')->id());
+
+        $data = $admin ?? $Subadmin;
         // return $data;
         return view('admin.auth.profile', compact('data'));
     }
@@ -65,15 +69,18 @@ class AdminController extends Controller
 
         // Get the logged-in admin ID
         $admin = Admin::find(Auth::guard('admin')->id());
+        $Subadmin = Subadmin::find(Auth::guard('subadmin')->id());
 
+        $user = $admin ?? $Subadmin;
+        
         // Data to be updated
         $data = $request->only(['name', 'email', 'phone']);
 
         // Handle image upload if a file is present
         if ($request->hasFile('image')) {
             // Delete the previous image if it exists
-            if ($admin->image && file_exists(public_path($admin->image))) {
-                unlink(public_path($admin->image));
+            if ($user->image && file_exists(public_path($user->image))) {
+                unlink(public_path($user->image));
             }
 
             // Upload the new image
@@ -87,7 +94,7 @@ class AdminController extends Controller
         }
 
         // Update the admin profile
-        $admin->update($data);
+        $user->update($data);
 
         // Redirect back with a success message
         return back()->with(['message' => 'Profile Updated Successfully']);

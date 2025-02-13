@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Driver;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Mail\DriverActivated;
 use App\Mail\DriverCredentials;
 use App\Mail\DriverDeActivated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DriverRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -71,7 +73,14 @@ if($request->hasFile('license')){
             'status' => $status
 
         ]);
-
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Drivers',
+                'action' => 'add',
+                'message' => 'Added driver: ' . $request->name,
+            ]);
+        }
         Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
 
         return redirect()->route('driver.index')->with(['message' => 'Driver Created Successfully']);
@@ -126,7 +135,14 @@ if($request->hasFile('license')){
             'availability' => $request->availability,
             'image' => $image,
         ]);
-
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Drivers',
+                'action' => 'edit',
+                'message' => 'Updated driver: ' . $request->name,
+            ]);
+        }
         // Redirect back with a success message
         return redirect()->route('driver.index')->with(['message' => 'Driver Updated Successfully']);
     }
@@ -136,6 +152,14 @@ if($request->hasFile('license')){
     public function destroy($id)
     {
         Driver::destroy($id);
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Drivers',
+                'action' => 'delete',
+                'message' => 'Deleted driver: ' . $request->name,
+            ]);
+        }
         return redirect()->route('driver.index')->with(['message' => 'Driver Deleted Successfully']);
     }
 

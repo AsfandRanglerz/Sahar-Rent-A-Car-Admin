@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\CarDetails;
+use App\Models\SubAdminLog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\CarRequest;
@@ -85,7 +86,14 @@ class CarDetailsController extends Controller
             'status' => $request->status
 
         ]);
-
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Car Inventory',
+                'action' => 'Add',
+                'message' => 'Added Car Inventory: ' . $request->car_name,
+            ]);
+        }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Created Successfully']);
@@ -157,7 +165,14 @@ class CarDetailsController extends Controller
             'image' => $image,
             'status' => $request->status
         ]);
-
+if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Car Inventory',
+                'action' => 'edit',
+                'message' => 'Updated Car Inventory: ' . $request->car_name,
+            ]);
+        }
         // Redirect back with a success message
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Updated Successfully']);
     }
@@ -167,6 +182,14 @@ class CarDetailsController extends Controller
     public function destroy($id)
     {
         CarDetails::destroy($id);
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Car Inventory',
+                'action' => 'delete',
+                'message' => 'deleted Car Inventory: ' . $request->car_name,
+            ]);
+        }
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Deleted Successfully']);
     }
 }

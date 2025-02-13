@@ -245,7 +245,7 @@
                   </div>
                   <div class="modal-body">
                       <div class="form-group">
-                          <label for="reason">Please provide the reason for deactivating this Store Manager:</label>
+                          <label for="reason">Please provide the reason for deactivating this SubAdmin:</label>
                           <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
 
                       </div>
@@ -268,8 +268,7 @@
               <form id="activationForm" action="" method="POST">
                   @csrf
                   <div class="modal-header">
-                      <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this Store
-                          Manager?</h5>
+                      <h5 class="modal-title" id="activationModalLabel">Are you sure you want to activate this SubAdmin?</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>

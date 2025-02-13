@@ -13,8 +13,14 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
+                                @php
+                                $isAdmin = $isAdmin ?? false;
+                               $permissions = $subadminPermissions['loyalty_points'] ?? null;
+                                // Fetch permissions for this menu
+                               @endphp 
+                           @if($isAdmin || ($permissions && $permissions->add == 1)) 
                                 <a class="btn btn-primary mb-3" href="{{ route('loyaltypoints.create') }}">Create</a>
-
+@endif
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -92,9 +98,12 @@
                                                                     </svg>
                                                                 </a>
                                                             @endif --}}
+                                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                             <a href="{{ route('loyaltypoints.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
-                                                            <form action="{{ route('loyaltypoints.destroy', $loyaltypoint->id) }}"
+                                                            @endif
+                                                            @if($isAdmin || ($permissions && $permissions->delete == 1)) 
+                                                                <form action="{{ route('loyaltypoints.destroy', $loyaltypoint->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf
@@ -103,6 +112,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

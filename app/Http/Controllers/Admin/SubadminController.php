@@ -12,6 +12,7 @@ use App\Mail\SubAdminDeActivated;
 use App\Models\SubAdminPermission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -103,7 +104,7 @@ class SubadminController extends Controller
             $file->move('public/admin/assets/images/users', $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = null;
+            $image = $subadmin->image;
         }
 
         // Update user details
@@ -269,12 +270,17 @@ public function getPermissions(Request $request)
         $data->update([
             'status' => $request->status,
         ]);
-
+        // if (Auth::guard('subadmin')->id() == $id) {
+        //     Auth::guard('subadmin')->logout();
+        //     session()->flush();
+        //     session()->regenerate();
+        // }
         $message['reason'] = $reason;
         $message['name'] = $data->name;
 
         try {
             Mail::to($data->email)->send(new SubAdminDeActivated($message));
+
             return redirect()->route('subadmin.index')->with(['message' => 'SubAdmin Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

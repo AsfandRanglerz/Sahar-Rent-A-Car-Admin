@@ -11,6 +11,11 @@
                                 <h4>Privacy Policy</h4>
                             </div>
                             <div class="card-body">
+                                @php
+                                $isAdmin = $isAdmin ?? false;
+                               $permissions = $subadminPermissions['privacy_policy'] ?? null;
+                                // Fetch permissions for this menu
+                               @endphp 
                                 <table class="table">
                                     <thead>
                                     <tr>
@@ -22,8 +27,16 @@
                                     <tbody>
                                     <tr>
                                         <th scope="row">1</th>
-                                        <td>{!! $data->description !!}</td>
-                                        <td><a href="{{url('/admin/privacy-policy-edit')}}"><i class="fas fa-edit"></i></a></td>
+                                        <td>
+                                            @if(isset($data))
+                                            {!! $data->description !!}
+                                        @endif
+                                        </td>
+                                        <td>
+                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
+                                            <a href="{{url('/admin/privacy-policy-edit')}}"><i class="fas fa-edit"></i></a>
+                                        @endif
+                                        </td>
 
                                     </tr>
 

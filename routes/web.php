@@ -26,7 +26,7 @@ use App\Http\Controllers\Admin\LoyaltyPointsController;
 /*Admin routes
  * */
 Route::get('/admin',[AuthController::class,'getLoginPage']);
-Route::post('/login',[AuthController::class,'Login']);
+Route::post('/login',[AuthController::class,'Login'])->name('login');
 Route::get('/admin-forgot-password',[AdminController::class,'forgetPassword']);
 Route::post('/admin-reset-password-link',[AdminController::class,'adminResetPasswordLink']);
 Route::get('/change_password/{id}',[AdminController::class,'change_password']);

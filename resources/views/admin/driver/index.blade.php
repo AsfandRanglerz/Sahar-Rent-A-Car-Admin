@@ -13,14 +13,14 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                {{-- @php
+                                 @php
                                  $isAdmin = $isAdmin ?? false;
-    $permissions = $subadminPermissions['drivers'] ?? null;
+                                $permissions = $subadminPermissions['drivers'] ?? null;
     // Fetch permissions for this menu
-@endphp --}}
-{{-- @if($isAdmin || ($permissions && $permissions->add == 1)) --}}
+                                @endphp 
+                            @if($isAdmin || ($permissions && $permissions->add == 1)) 
                                 <a class="btn btn-primary mb-3" href="{{ route('driver.create') }}">Create</a>
-{{-- @endif --}}
+                            @endif 
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -144,11 +144,11 @@
                                                                     </svg>
                                                                 </a>
                                                             @endif
-                                                            {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
+                                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                             <a href="{{ route('driver.edit', $driver->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
-                                                            {{-- @endif --}}
-                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1))     --}}
+                                                            @endif
+                                                            @if($isAdmin || ($permissions && $permissions->delete == 1))    
                                                             <form action="{{ route('driver.destroy', $driver->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
@@ -158,7 +158,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
-                                                            {{-- @endif --}}
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

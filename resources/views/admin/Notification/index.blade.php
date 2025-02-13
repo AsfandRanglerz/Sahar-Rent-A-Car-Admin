@@ -13,10 +13,16 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
+                                @php
+                                $isAdmin = $isAdmin ?? false;
+                               $permissions = $subadminPermissions['notifications'] ?? null;
+                                // Fetch permissions for this menu
+                               @endphp 
+                           @if($isAdmin || ($permissions && $permissions->add == 1)) 
                                 <a  class="btn btn-primary mb-3" data-toggle="modal" data-target="#createNotificationModal">
                                     Create
                                 </a>
-
+@endif
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -61,9 +67,12 @@
                                                 </td> --}}
                                                 <td>
                                                     <div class="d-flex gap-4">
+                                                        @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                         {{-- <a href="{{route('notification.Edit',$notification->id)}}"
                                                             class="btn btn-primary" style="margin-left: 10px">
                                                             <span class="fas fa-edit"></span> </a> --}}
+                                                            @endif
+                                                            @if($isAdmin || ($permissions && $permissions->delete == 1))    
                                                             <form action="{{ route('notification.destroy', $notification->id) }}" method="POST" style="display:inline-block; margin-left: 10px">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -71,6 +80,7 @@
                                                                     <span class="fas fa-trash-alt"></span> <!-- Delete icon -->
                                                                 </button>
                                                             </form>
+                                                            @endif
                                                     </div>
                                                 </td>
 

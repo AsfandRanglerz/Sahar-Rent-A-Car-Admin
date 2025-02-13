@@ -26,8 +26,11 @@
                         </div>
                     </div>
                 </div> --}}
+                @php
+    $hasCustomerPermission = $isAdmin || (isset($subadminPermissions) && in_array('customers', array_column($subadminPermissions, 'menu')));
+@endphp
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="{{ route('user.index') }}">
+                    <a style="text-decoration: none; {{ !$hasCustomerPermission ? 'pointer-events: none;' : '' }}" @if($hasCustomerPermission) href="{{ route('user.index') }}" @endif>
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -71,8 +74,11 @@
                         </div>
                     </div>
                 </div>--}}
+                @php
+                $hasDriverPermission = $isAdmin || (isset($subadminPermissions) && in_array('drivers', array_column($subadminPermissions, 'menu')));
+            @endphp
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="{{ route('driver.index') }}">
+                    <a style="text-decoration: none; {{ !$hasDriverPermission ? 'pointer-events: none;' : '' }}" @if($hasDriverPermission) href="{{ route('driver.index') }}" @endif>
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -116,8 +122,11 @@
                         </div>
                     </div>
                 </div> --}}
+                @php
+                $hasCarPermission = $isAdmin || (isset($subadminPermissions) && in_array('cars_inventory', array_column($subadminPermissions, 'menu')));
+            @endphp
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="{{ route('car.index') }}">
+                    <a style="text-decoration: none; {{ !$hasCarPermission ? 'pointer-events: none;' : '' }}" @if($hasCarPermission) href="{{ route('car.index') }}"@endif>
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -161,8 +170,11 @@
                         </div>
                     </div>
                 </div> --}}
+                @php
+                $hasBookingPermission = $isAdmin || (isset($subadminPermissions) && in_array('bookings', array_column($subadminPermissions, 'menu')));
+            @endphp
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="{{ route('booking.index') }}">
+                    <a style="text-decoration: none; {{ !$hasBookingPermission ? 'pointer-events:none' : '' }}" @if($hasBookingPermission)href="{{ route('booking.index') }}"@endif>
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">
@@ -207,9 +219,11 @@
                         </div>
                     </div>
                 </div> --}}
-
+                @php
+                $hasActiveBookingPermission = $isAdmin || (isset($subadminPermissions) && in_array('bookings', array_column($subadminPermissions, 'menu')));
+            @endphp
                 <div class="col-xl-3 mb-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <a style="text-decoration: none;" href="#">
+                    <a style="text-decoration: none; {{ !$hasActiveBookingPermission ? 'pointer-events:none' : '' }}" @if($hasActiveBookingPermission)href="#"@endif>
                         <div class="card">
                             <div class="card-statistic-4">
                                 <div class="align-items-center justify-content-between">

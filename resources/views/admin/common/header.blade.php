@@ -11,21 +11,31 @@
         </ul>
     </div>
     <ul class="navbar-nav navbar-right">
-
+       
         <?php
+         // use App\Models\Admin;
+        // use App\Models\Subadmin;
+        // $admin = Auth::guard('admin')->check() ? Admin::find(Auth::guard('admin')->id()) : null;
+        // $Subadmin = Auth::guard('subadmin')->check() ? Subadmin::find(Auth::guard('subadmin')->id()) : null;
         use App\Models\Admin;
-
-        $admin = Auth::guard('admin')->check() ? Admin::find(Auth::guard('admin')->id()) : null;
+        use App\Models\Subadmin;
+        
+        // Get logged-in admin or subadmin
+        $admin = Auth::guard('admin')->user();
+        $subadmin = Auth::guard('subadmin')->user();
+        
+        // Determine user and profile image
+        $user = $admin ?? $subadmin;
+        $image = $user && $user->image ? asset($user->image) : asset('public/admin/assets/img/user.png');
         ?>
-
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                @if ($admin && $admin->image)
-                    <img alt="image" src="{{ asset($admin->image) }}" class="user-img-radious-style">
-                @else
+                {{-- @if ($admin && $admin->image) --}}
+                    <img alt="image" src="{{ $image }}" class="user-img-radious-style">
+                {{-- @else
                     <img alt="image" src="{{ asset('public/admin/assets/img/user.png') }}"
                         class="user-img-radious-style">
-                @endif
+                @endif --}}
                 {{-- <img
                     alt="image" src="{{ asset('public/admin/assets/img/user.png') }}" class="user-img-radious-style"> --}}
                 <span class="d-sm-none d-lg-inline-block"></span>

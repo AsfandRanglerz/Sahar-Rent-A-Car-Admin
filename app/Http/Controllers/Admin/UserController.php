@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Mail\UserActivated;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Mail\UserCredentials;
 use App\Mail\UserDeActivated;
@@ -26,19 +27,7 @@ class UserController extends Controller
 
     public function create()
     {
-        // if (Auth::guard('subadmin')->check()) {
-        //     $subadmin = Auth::guard('subadmin')->user();
-            
-        //     // Check if subadmin has permission to create users
-        //     $permission = DB::table('sub_admin_permissions')
-        //         ->where('subadmin_id', $subadmin->id)
-        //         ->where('menu', 'users')
-        //         ->first();
-    
-        //     if (!$permission || $permission->add != 1) {
-        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
-        //     }
-        // }
+        
         return view('admin.user.create');
     }
 
@@ -46,24 +35,7 @@ class UserController extends Controller
     {
         // return $request;
 
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     // 'email' => 'required|email|unique:users,email',
-        //     'phone' => 'required|string|max:15',
-        // ]);
-        // if (Auth::guard('subadmin')->check()) {
-        //     $subadmin = Auth::guard('subadmin')->user();
-            
-        //     // Check if subadmin has permission to create users
-        //     $permission = DB::table('sub_admin_permissions')
-        //         ->where('subadmin_id', $subadmin->id)
-        //         ->where('menu', 'users')
-        //         ->first();
-    
-        //     if (!$permission || $permission->add != 1) {
-        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
-        //     }
-        // }
+        
         $validatedData = $request->validated();
 
         // $generatedPassword = random_int(10000000, 99999999);
@@ -121,6 +93,14 @@ class UserController extends Controller
 
         ]);
 
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Customers',
+                'action' => 'Add',
+                'message' => 'Added customer: ' . $request->name,
+            ]);
+        }
         Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
 
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
@@ -130,38 +110,13 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        // return $user;
-        // if (Auth::guard('subadmin')->check()) {
-        //     $subadmin = Auth::guard('subadmin')->user();
-            
-        //     // Check permission
-        //     $permission = DB::table('sub_admin_permissions')
-        //         ->where('subadmin_id', $subadmin->id)
-        //         ->where('menu', 'users')
-        //         ->first();
-    
-        //     if (!$permission || $permission->edit != 1) {
-        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
-        //     }
-        // }
+       
         return view('admin.user.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
     {
-        // if (Auth::guard('subadmin')->check()) {
-        //     $subadmin = Auth::guard('subadmin')->user();
-            
-        //     // Check permission
-        //     $permission = DB::table('sub_admin_permissions')
-        //         ->where('subadmin_id', $subadmin->id)
-        //         ->where('menu', 'users')
-        //         ->first();
-    
-        //     if (!$permission || $permission->edit != 1) {
-        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
-        //     }
-        // }
+        
 
         // Validate the incoming request
         $request->validate([
@@ -220,7 +175,14 @@ class UserController extends Controller
             // 'address' => $request->address,
             'image' => $image,
         ]);
-
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Customers',
+                'action' => 'Edit',
+                'message' => 'Customer updated: ' . $request->name,
+            ]);
+        }
         // Redirect back with a success message
         return redirect()->route('user.index')->with(['message' => 'Customer Updated Successfully']);
     }
@@ -229,20 +191,16 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        // if (Auth::guard('subadmin')->check()) {
-        //     $subadmin = Auth::guard('subadmin')->user();
-            
-        //     // Check permission
-        //     $permission = DB::table('sub_admin_permissions')
-        //         ->where('subadmin_id', $subadmin->id)
-        //         ->where('menu', 'users')
-        //         ->first();
-    
-        //     if (!$permission || $permission->delete != 1) {
-        //         return redirect()->route('user.index')->with('error', 'Unauthorized Access');
-        //     }
-        // }
+        
         User::destroy($id);
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Customers',
+                'action' => 'delete',
+                'message' => 'customer deleted: ' . $request->name,
+            ]);
+        }
         return redirect()->route('user.index')->with(['message' => 'Customer Deleted Successfully']);
     }
 
