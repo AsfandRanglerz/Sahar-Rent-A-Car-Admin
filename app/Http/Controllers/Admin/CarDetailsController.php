@@ -83,15 +83,15 @@ class CarDetailsController extends Controller
             // 'pickup' => $request->pickup,
             // 'travel_distance' => $request->travel_distance,
             'image' => $image,
-            'status' => $request->status
-
+            'status' => $request->status,
+        'added_by_subadmin' => Auth::guard('subadmin')->id(),
         ]);
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Car Inventory',
                 'action' => 'Add',
-                'message' => 'Added Car Inventory: ' . $request->car_name,
+                'message' => 'Added Car Inventory: ' . $CarDetail->car_name,
             ]);
         }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
@@ -165,31 +165,51 @@ class CarDetailsController extends Controller
             'image' => $image,
             'status' => $request->status
         ]);
-if (Auth::guard('subadmin')->check()) {
-            SubAdminLog::create([
-                'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Car Inventory',
-                'action' => 'edit',
-                'message' => 'Updated Car Inventory: ' . $request->car_name,
-            ]);
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'Car Inventory',
+        //         'action' => 'edit',
+        //         'message' => 'Updated Car Inventory: ' . $request->car_name,
+        //     ]);
+        // }
+        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        $addedBy = $CarDetail->added_by_subadmin;
+        
+        if ($editedBy->id !== $addedBy) {
+            $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
+        } else {
+            $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
         }
+        
+        // Log the edit
+        SubAdminLog::create([
+            'subadmin_id' => $editedBy->id,
+            'section' => 'Cars Inventory',
+            'action' => 'Edit',
+            'message' => $message,
+        ]);
         // Redirect back with a success message
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Updated Successfully']);
     }
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        CarDetails::destroy($id);
+        $carDetail = CarDetails::find($id);
+        $carDetailName = $carDetail->name;
         if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Car Inventory',
                 'action' => 'delete',
-                'message' => 'deleted Car Inventory: ' . $request->car_name,
+                'message' => "SubAdmin: {$subadminName} deleted Car Inventory: {$carDetailName}",
             ]);
         }
+        $carDetail->delete();
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Deleted Successfully']);
     }
 }

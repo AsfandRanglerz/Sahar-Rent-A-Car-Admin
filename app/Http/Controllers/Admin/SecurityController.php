@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-use App\Http\Controllers\Controller;
+use App\Models\SubAdminLog;
+use Illuminate\Http\Request;
 use App\Models\PrivacyPolicy;
 use App\Models\TermCondition;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 class SecurityController extends Controller
 {
     public function PrivacyPolicy(){
@@ -29,6 +32,14 @@ class SecurityController extends Controller
             // Update the existing record
             $data->update($request->all());
         }
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'PrivacyPolicy',
+                'action' => 'Add',
+                'message' => 'Added Privacy Policy',
+            ]);
+        } 
         // $data=PrivacyPolicy::first();
         // PrivacyPolicy::find($data->id)->update($request->all());
         return redirect('/admin/Privacy-policy')->with(['status'=>true, 'message' => 'Privacy Policy Updated Successfully']);
@@ -54,6 +65,14 @@ class SecurityController extends Controller
         } else {
             // Update the existing record
             $data->update($request->all());
+        }
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Terms & Conditions',
+                'action' => 'Add',
+                'message' => 'Added Terms & Conditions',
+            ]);
         }
         // $data=TermCondition::first();
         // TermCondition::find($data->id)->update($request->all());

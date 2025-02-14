@@ -70,15 +70,15 @@ if($request->hasFile('license')){
             'availability' => $request->availability,
             'password' => Hash::make($plainPassword),
             'image' => $image,
-            'status' => $status
-
+            'status' => $status,
+            'added_by_subadmin' => Auth::guard('subadmin')->id(),
         ]);
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Drivers',
-                'action' => 'add',
-                'message' => 'Added driver: ' . $request->name,
+                'action' => 'Add',
+                'message' => 'Added driver: ' . $driver->name,
             ]);
         }
         Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
@@ -135,31 +135,52 @@ if($request->hasFile('license')){
             'availability' => $request->availability,
             'image' => $image,
         ]);
-        if (Auth::guard('subadmin')->check()) {
-            SubAdminLog::create([
-                'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Drivers',
-                'action' => 'edit',
-                'message' => 'Updated driver: ' . $request->name,
-            ]);
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'Drivers',
+        //         'action' => 'edit',
+        //         'message' => 'Updated driver: ' . $request->name,
+        //     ]);
+        // }
+        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        $addedBy = $driver->added_by_subadmin;
+        
+        if ($editedBy->id !== $addedBy) {
+            $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
+        } else {
+            $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
         }
+        
+        // Log the edit
+        SubAdminLog::create([
+            'subadmin_id' => $editedBy->id,
+            'section' => 'Drivers',
+            'action' => 'Edit',
+            'message' => $message,
+        ]);
+        
         // Redirect back with a success message
         return redirect()->route('driver.index')->with(['message' => 'Driver Updated Successfully']);
     }
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Driver::destroy($id);
+        $driver = Driver::find($id);
+        $driverName = $driver->name;
         if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Drivers',
-                'action' => 'delete',
-                'message' => 'Deleted driver: ' . $request->name,
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} deleted driver: {$driverName}",
             ]);
         }
+        $driver->delete();
         return redirect()->route('driver.index')->with(['message' => 'Driver Deleted Successfully']);
     }
 

@@ -88,7 +88,10 @@ Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->na
 Route::post('/subadmin/savePermissions',  'savePermissions')->name('subadmin.savePermissions');
 
 });
-
+Route::controller(SubadminController::class)->middleware('admin')->group(function () {
+    Route::get('/logs',  'logindex')->name('admin.logs');
+    Route::delete('/logs-destroy/{id}',  'logdestroy')->name('logs.destroy');
+});
  // ############ Car Details #################
  Route::controller(CarDetailsController::class)->middleware('admin')->group(function () {
     Route::get('/car',  'index')->name('car.index');

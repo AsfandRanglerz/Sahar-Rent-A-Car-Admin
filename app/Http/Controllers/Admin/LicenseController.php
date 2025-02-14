@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Models\SubAdminLog;
 
+use Illuminate\Http\Request;
 use App\Models\LicenseApproval;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\LicenseRequest;
 use App\Mail\LicenseApprovalActivated;
@@ -119,9 +121,21 @@ class LicenseController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        LicenseApproval::destroy($id);
+        $LicenseApproval = LicenseApproval::find($id);
+        $LicenseApprovalName = $LicenseApproval->name;
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'License Approvals',
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} deleted License: {$LicenseApprovalName}",
+            ]);
+        }
+        $LicenseApproval->delete();
         return redirect()->route('license.index')->with(['message' => 'License Approval Deleted Successfully']);
     }
 

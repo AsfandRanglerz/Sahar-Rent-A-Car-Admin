@@ -128,12 +128,43 @@
 
             
             {{-- sub admin --}}
-             @if($isAdmin || isset($subadminPermissions['sub_admins']))
+             {{-- @if($isAdmin || isset($subadminPermissions['sub_admins']))
             <li class="dropdown {{ request()->is('admin/subadmin*') ? 'active' : '' }}">
                 <a href="{{ route('subadmin.index') }}" class="nav-link"><span><i
                             data-feather="shield"></i>Sub Admins</span></a>
             </li>
-@endif 
+@endif  --}}
+@if($isAdmin || isset($subadminPermissions['sub_admins']) || isset($subadminPermissions['admin_logs']))
+<li class="dropdown">
+    <a href="#" class="menu-toggle nav-link has-dropdown">
+        <i data-feather="layout"></i> <!-- Icon for header section -->
+        <span>SubAdmins</span>
+    </a>
+    <ul class="dropdown-menu {{ request()->is('admin/subadmin*') || request()->is('admin/logs*') ? 'show' : '' }}">
+        
+        {{-- Sub Admins --}}
+        @if($isAdmin || isset($subadminPermissions['sub_admins']))
+        <li class="{{ request()->is('admin/subadmin*') ? 'active' : '' }}">
+            <a href="{{ route('subadmin.index') }}" class="nav-link">
+                <i data-feather="shield"></i>
+                <span>Sub Admins</span>
+            </a>
+        </li>
+        @endif
+
+        {{-- Admin Logs --}}
+        @if($isAdmin || isset($subadminPermissions['admin_logs']))
+        <li class="{{ request()->is('admin/logs*') ? 'active' : '' }}">
+            <a href="{{ route('admin.logs') }}" class="nav-link">
+                <i data-feather="file-text"></i>
+                <span>SubAdmin Logs</span>
+            </a>
+        </li>
+        @endif
+        
+    </ul>
+</li>
+@endif
             {{-- User --}}
             {{-- @if($isAdmin || isset($subadminPermissions['customers'])) --}}
             @if($isAdmin || (isset($subadminPermissions['customers']) && $subadminPermissions['customers']->view == 1))

@@ -107,12 +107,18 @@ class AdminController extends Controller
     public function adminResetPasswordLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|exists:admins,email',
+            'email' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $admin = DB::table('admins')->where('email', $value)->exists();
+                    $subadmin = DB::table('subadmins')->where('email', $value)->exists();
+                    if (!$admin && !$subadmin) {
+                        $fail('The selected email is invalid.');
+                    }
+                },
+            ],
         ]);
-        $exists = DB::table('password_resets')->where('email', $request->email)->first();
-        if ($exists) {
-            return back()->with('message', 'Reset Password link has been already sent');
-        } else {
+        
             $token = Str::random(30);
             DB::table('password_resets')->insert([
                 'email' => $request->email,
@@ -122,7 +128,7 @@ class AdminController extends Controller
             $data['url'] = url('change_password', $token);
             Mail::to($request->email)->send(new ResetPasswordMail($data));
             return back()->with('message', 'Reset Password Link Send Successfully');
-        }
+        
     }
     public function change_password($id)
     {
@@ -150,10 +156,29 @@ class AdminController extends Controller
         $tags_data = [
             'password' => bcrypt($request->password)
         ];
-        if (Admin::where('email', $request->email)->update($tags_data)) {
-            DB::table('password_resets')->where('email', $request->email)->delete();
-            return redirect('admin')->with('message', 'Password reset successfully');
+        if (Admin::where('email', $request->email)->exists()) {
+            Admin::where('email', $request->email)->update($tags_data);
+        } 
+        // Check if the email exists in Subadmins
+        elseif (Subadmin::where('email', $request->email)->exists()) {
+            Subadmin::where('email', $request->email)->update($tags_data);
+        } 
+        else {
+            return back()->with(['error_message' => 'Email not found.']);
         }
+    
+        // Delete the reset token
+        DB::table('password_resets')->where('email', $request->email)->delete();
+    
+        // Redirect to login page with success message
+        return redirect('admin')->with('message', 'Password reset successfully');
+        
+        // if (Admin::where('email', $request->email)->update($tags_data)) {
+        //     DB::table('password_resets')->where('email', $request->email)->delete();
+        //     return redirect('admin')->with('message', 'Password reset successfully');
+        // }
+        
+
     }
     public function logout()
     {

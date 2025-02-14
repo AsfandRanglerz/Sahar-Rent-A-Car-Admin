@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Driver;
+use App\Models\SubAdminLog;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -48,7 +50,14 @@ class NotificationController extends Controller
                 ]);
         //     }
         // }
-    
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Notifications',
+                'action' => 'Add',
+                'message' => 'Added  Notification',
+            ]);
+       }
         return redirect()->route('notification.index')->with(['message' => 'Notifications Created Successfully']);
     }
     
@@ -87,9 +96,21 @@ class NotificationController extends Controller
     //     return redirect()->route('notification.index')->with(['message' => 'Notification Updated Successfully']);
     // }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Notification::destroy($id);
+         $notification = Notification::find($id);
+        $notificationName = $notification->name;
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'Notifications',
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} deleted Notification: {$notificationName}",
+            ]);
+        }
+        $notification->delete();
         return redirect()->route('notification.index')->with(['message' => 'Notification Deleted Successfully']);
 
     }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Booking;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -43,7 +45,7 @@ class BookingController extends Controller
         $status = 1;
 
         // Create the user
-        $CarDetail = Booking::create([
+        $booking = Booking::create([
             'car_id' => $carId,
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -68,14 +70,33 @@ class BookingController extends Controller
             'status' => $request->status
 
         ]);
-
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'Bookings',
+        //         'action' => 'Add',
+        //         'message' => 'Added Booking: ' . $request->full_name,
+        //     ]);
+        // }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
         return redirect()->route('booking.index')->with(['message' => 'Booking Created Successfully']);
     } 
 
-    public function destroy($id){
-    Booking::destroy($id);
+    public function destroy(Request $request, $id){
+     $booking = Booking::find($id);
+        $bookingName = $booking->name;
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
+        SubAdminLog::create([
+            'subadmin_id' => Auth::guard('subadmin')->id(),
+            'section' => 'Bookings',
+            'action' => 'Delete',
+            'message' => "SubAdmin: {$subadminName} deleted Notification: {$bookingName}",
+        ]);
+    }
+    $booking->delete();
     return redirect()->route('booking.index')->with(['message' => 'Booking Deleted Successfully']);
     }
 }

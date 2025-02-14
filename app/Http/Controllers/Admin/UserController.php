@@ -89,8 +89,8 @@ class UserController extends Controller
             'driving_license' => $driving_license,
             'password' => Hash::make($plainPassword),
             'image' => $image,
-            'status' => $status
-
+            'status' => $status,
+            'added_by_subadmin' => Auth::guard('subadmin')->id(), // Store subadmin ID
         ]);
 
         if (Auth::guard('subadmin')->check()) {
@@ -98,9 +98,10 @@ class UserController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Customers',
                 'action' => 'Add',
-                'message' => 'Added customer: ' . $request->name,
+                'message' => 'Added customer: ' . $user->name,
             ]);
         }
+
         Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
 
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
@@ -175,32 +176,52 @@ class UserController extends Controller
             // 'address' => $request->address,
             'image' => $image,
         ]);
-        if (Auth::guard('subadmin')->check()) {
-            SubAdminLog::create([
-                'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Customers',
-                'action' => 'Edit',
-                'message' => 'Customer updated: ' . $request->name,
-            ]);
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'Customers',
+        //         'action' => 'Edit',
+        //         'message' => 'Customer updated: ' . $request->name,
+        //     ]);
+        // }
+        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        $addedBy = $customer->added_by_subadmin;
+        
+        if ($editedBy->id !== $addedBy) {
+            $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
+        } else {
+            $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
         }
+        
+        // Log the edit
+        SubAdminLog::create([
+            'subadmin_id' => $editedBy->id,
+            'section' => 'Customers',
+            'action' => 'Edit',
+            'message' => $message,
+        ]);
+        
         // Redirect back with a success message
         return redirect()->route('user.index')->with(['message' => 'Customer Updated Successfully']);
     }
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        
-        User::destroy($id);
+        $user = User::find($id);
+        $customerName = $user->name;
         if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Customers',
-                'action' => 'delete',
-                'message' => 'customer deleted: ' . $request->name,
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} deleted customer: {$customerName}",
             ]);
         }
+        $user->delete();
         return redirect()->route('user.index')->with(['message' => 'Customer Deleted Successfully']);
     }
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoyaltyPointRequest;
 
 class LoyaltyPointsController extends Controller
@@ -55,9 +57,16 @@ class LoyaltyPointsController extends Controller
             // 'password' => Hash::make($generatedPassword),
             // 'image' => $image,
             // 'status' => $status
-
+            'added_by_subadmin' => Auth::guard('subadmin')->id(),
         ]);
-
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'LoyaltyPoints',
+                'action' => 'Add',
+                'message' => 'Added LoyaltyPoints ',
+            ]);
+        }
         // Mail::to($loyaltyPoints->email)->send(new loyaltyPointsCredentials($loyaltyPoints->name, $loyaltyPoints->email, $generatedPassword));
 
         return redirect()->route('loyaltypoints.index')->with(['message' => 'Loyalty Points Created Successfully']);
@@ -104,16 +113,50 @@ class LoyaltyPointsController extends Controller
             'on_car' => $request->on_car,
             'discount' => $request->discount,
         ]);
-
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'LoyaltyPoints',
+        //         'action' => 'Edit',
+        //         'message' => 'Updated  LoyaltyPoints',
+        //     ]);
+        // }
+        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        $addedBy = $loyaltypoint->added_by_subadmin;
+        
+        if ($editedBy->id !== $addedBy) {
+            $message = "Loyalty Points updated by SubAdmin: " . $editedBy->name ;
+        } else {
+            $message = "Loyalty Points Original updated by SubAdmin: " . $editedBy->name ;
+        }
+        
+        // Log the edit
+        SubAdminLog::create([
+            'subadmin_id' => $editedBy->id,
+            'section' => 'LoyaltyPoints',
+            'action' => 'Edit',
+            'message' => $message,
+        ]);
         // Redirect back with a success message
         return redirect()->route('loyaltypoints.index')->with(['message' => 'Loyalty Points Updated Successfully']);
     }
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         LoyaltyPoints::destroy($id);
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'LoyaltyPoints',
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} Deleted  LoyaltyPoints",
+            ]);
+        }
+
         return redirect()->route('loyaltypoints.index')->with(['message' => 'LoyaltyPoints Deleted Successfully']);
     }
 }

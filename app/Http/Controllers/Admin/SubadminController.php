@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Subadmin;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Mail\SubAdminActivated;
 use App\Mail\SubadminCredentials;
-use App\Mail\SubAdminDeActivated;
 
+use App\Mail\SubAdminDeActivated;
 use App\Models\SubAdminPermission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -128,7 +129,17 @@ class SubadminController extends Controller
     }
 
 
+    public function logindex()
+    {
+        $logs = SubAdminLog::with('subadmin')->latest()->get();
+        return view('admin.Log.index', compact('logs'));
+    }
 
+    public function logdestroy($id)
+    {
+        SubAdminLog::destroy($id);
+        return redirect()->route('admin.logs')->with(['message' => 'Log Deleted Successfully']);
+    }
 
     // public function savePermissions(Request $request)
     // {
