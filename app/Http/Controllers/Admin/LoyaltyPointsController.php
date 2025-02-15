@@ -121,22 +121,37 @@ class LoyaltyPointsController extends Controller
         //         'message' => 'Updated  LoyaltyPoints',
         //     ]);
         // }
-        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
-        $addedBy = $loyaltypoint->added_by_subadmin;
+        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        // $addedBy = $loyaltypoint->added_by_subadmin;
         
-        if ($editedBy->id !== $addedBy) {
-            $message = "Loyalty Points updated by SubAdmin: " . $editedBy->name ;
-        } else {
-            $message = "Loyalty Points Original updated by SubAdmin: " . $editedBy->name ;
-        }
+        // if ($editedBy->id !== $addedBy) {
+        //     $message = "Loyalty Points updated by SubAdmin: " . $editedBy->name ;
+        // } else {
+        //     $message = "Loyalty Points Original updated by SubAdmin: " . $editedBy->name ;
+        // }
         
-        // Log the edit
-        SubAdminLog::create([
-            'subadmin_id' => $editedBy->id,
-            'section' => 'LoyaltyPoints',
-            'action' => 'Edit',
-            'message' => $message,
-        ]);
+        // // Log the edit
+        // SubAdminLog::create([
+        //     'subadmin_id' => $editedBy->id,
+        //     'section' => 'LoyaltyPoints',
+        //     'action' => 'Edit',
+        //     'message' => $message,
+        // ]);
+        $editedBy = Auth::guard('subadmin')->user();
+
+// Only log if a subadmin is editing
+if ($editedBy) {
+    $message = "Loyalty Point updated by SubAdmin: " . $editedBy->name . " - Updated Loyalty Point: " . $request->name;
+
+    SubAdminLog::create([
+        'subadmin_id' => $editedBy->id,
+        'section' => 'Loyalty Points',
+        'action' => 'Edit',
+        'message' => $message,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
         // Redirect back with a success message
         return redirect()->route('loyaltypoints.index')->with(['message' => 'Loyalty Points Updated Successfully']);
     }

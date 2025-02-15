@@ -184,23 +184,42 @@ class UserController extends Controller
         //         'message' => 'Customer updated: ' . $request->name,
         //     ]);
         // }
-        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
-        $addedBy = $customer->added_by_subadmin;
+        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
         
-        if ($editedBy->id !== $addedBy) {
-            $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
-        } else {
-            $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
-        }
+        // $addedBy = $user->added_by_subadmin;
         
-        // Log the edit
-        SubAdminLog::create([
-            'subadmin_id' => $editedBy->id,
-            'section' => 'Customers',
-            'action' => 'Edit',
-            'message' => $message,
-        ]);
         
+        // if ($editedBy->id !== $addedBy) {
+        //     $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
+        // } else {
+        //     $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
+        // }
+        
+        // // Log the edit
+        // SubAdminLog::create([
+        //     'subadmin_id' => $editedBy->id,
+        //     'section' => 'Customers',
+        //     'action' => 'Edit',
+        //     'message' => $message,
+        // ]);
+        // Check if a subadmin is logged in
+$editedBy = Auth::guard('subadmin')->user();
+
+// Only log if a subadmin is editing
+if ($editedBy) {
+    $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
+
+    SubAdminLog::create([
+        'subadmin_id' => $editedBy->id,
+        'section' => 'Customers',
+        'action' => 'Edit',
+        'message' => $message,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
+
+
         // Redirect back with a success message
         return redirect()->route('user.index')->with(['message' => 'Customer Updated Successfully']);
     }

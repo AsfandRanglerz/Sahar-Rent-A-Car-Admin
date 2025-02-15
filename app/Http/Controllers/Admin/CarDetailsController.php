@@ -173,22 +173,37 @@ class CarDetailsController extends Controller
         //         'message' => 'Updated Car Inventory: ' . $request->car_name,
         //     ]);
         // }
-        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
-        $addedBy = $CarDetail->added_by_subadmin;
+        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        // $addedBy = $CarDetail->added_by_subadmin;
         
-        if ($editedBy->id !== $addedBy) {
-            $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
-        } else {
-            $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
-        }
+        // if ($editedBy->id !== $addedBy) {
+        //     $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
+        // } else {
+        //     $message = "Car Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Car Inventory: " . $request->name;
+        // }
         
-        // Log the edit
-        SubAdminLog::create([
-            'subadmin_id' => $editedBy->id,
-            'section' => 'Cars Inventory',
-            'action' => 'Edit',
-            'message' => $message,
-        ]);
+        // // Log the edit
+        // SubAdminLog::create([
+        //     'subadmin_id' => $editedBy->id,
+        //     'section' => 'Cars Inventory',
+        //     'action' => 'Edit',
+        //     'message' => $message,
+        // ]);
+        $editedBy = Auth::guard('subadmin')->user();
+
+// Only log if a subadmin is editing
+if ($editedBy) {
+    $message = "Cars Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Cars Inventory: " . $request->name;
+
+    SubAdminLog::create([
+        'subadmin_id' => $editedBy->id,
+        'section' => 'Cars Inventory',
+        'action' => 'Edit',
+        'message' => $message,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
         // Redirect back with a success message
         return redirect()->route('car.index')->with(['message' => 'Car Inventory Updated Successfully']);
     }

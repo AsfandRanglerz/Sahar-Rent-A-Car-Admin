@@ -143,23 +143,37 @@ if($request->hasFile('license')){
         //         'message' => 'Updated driver: ' . $request->name,
         //     ]);
         // }
-        $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
-        $addedBy = $driver->added_by_subadmin;
+        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        // $addedBy = $driver->added_by_subadmin;
         
-        if ($editedBy->id !== $addedBy) {
-            $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
-        } else {
-            $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
-        }
+        // if ($editedBy->id !== $addedBy) {
+        //     $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
+        // } else {
+        //     $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
+        // }
         
-        // Log the edit
-        SubAdminLog::create([
-            'subadmin_id' => $editedBy->id,
-            'section' => 'Drivers',
-            'action' => 'Edit',
-            'message' => $message,
-        ]);
-        
+        // // Log the edit
+        // SubAdminLog::create([
+        //     'subadmin_id' => $editedBy->id,
+        //     'section' => 'Drivers',
+        //     'action' => 'Edit',
+        //     'message' => $message,
+        // ]);
+$editedBy = Auth::guard('subadmin')->user();
+
+// Only log if a subadmin is editing
+if ($editedBy) {
+    $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
+
+    SubAdminLog::create([
+        'subadmin_id' => $editedBy->id,
+        'section' => 'Drivers',
+        'action' => 'Edit',
+        'message' => $message,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
         // Redirect back with a success message
         return redirect()->route('driver.index')->with(['message' => 'Driver Updated Successfully']);
     }
