@@ -13,11 +13,11 @@
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/components.css') }}">
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/custom.css') }}">
-    <link rel='shortcut icon' type='image/x-icon' href='assets/img/Sahar_logo.png' />
+    <link rel='shortcut icon' type='image/x-icon' href='public/admin/assets/img/sahar_logo(1).png' />
 
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('public/admin/toastr/toastr.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     @yield('style')
 </head>
 

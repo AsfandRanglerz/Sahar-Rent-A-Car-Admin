@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\driversregister;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LicenseApproval extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function driver()
+    {
+        return $this->belongsTo(driversregister::class,'driver_id');
+    }
 }

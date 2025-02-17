@@ -38,17 +38,31 @@
                                         @foreach ($LicenseApprovals as $LicenseApproval)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $LicenseApproval->name }}</td>
+                                                <td>{{ $LicenseApproval->driver ? $LicenseApproval->driver->name : 'N/A' }}</td>
                                                 <td>
-                                                    @if ($LicenseApproval->email)
-                                                        <a href="mailto:{{ $LicenseApproval->email }}">{{ $LicenseApproval->email }}</a>
-                                                    @endif
+                                                    {{-- @if ($LicenseApproval->driver && $LicenseApproval->driver->email)
+                                                        <a href="mailto:{{ $LicenseApproval->driver->email }}">{{ $LicenseApproval->driver->email }}</a>
+                                                    @endif --}}
+                                                    @if ($LicenseApproval->driver && $LicenseApproval->driver->email)
+                                                    <a href="mailto:{{ $LicenseApproval->driver->email }}">{{ $LicenseApproval->driver->email }}</a>
+                                                @else
+                                                    N/A
+                                                @endif
                                                 </td>
                                                 {{-- <td>{{ $LicenseApproval->phone }}</td> --}}
                                                 <td>
-                                                    <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
-                                                        width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}">
-                                                </td>
+                                                    {{-- <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
+                                                        width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}"> --}}
+                                                        @if ($LicenseApproval->driver && $LicenseApproval->driver->document && $LicenseApproval->driver->document->license)
+                                                        <img src="{{ asset('storage/app/public/' . $LicenseApproval->driver->document->license) }}" 
+                                                            alt="License Image" height="45" width="50" class="image"
+                                                            style="cursor: pointer;" data-toggle="modal" 
+                                                            data-target="#imageModal" 
+                                                            data-image="{{ asset('storage/app/public/' . $LicenseApproval->driver->document->license) }}">
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                    </td>
                                                 {{-- <td>
                                                     <div class="badge {{ $LicenseApproval->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
                                                         {{ $LicenseApproval->status == 0 ? 'Accepted' : 'Rejected' }}

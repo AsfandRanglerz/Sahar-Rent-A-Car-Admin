@@ -20,8 +20,9 @@ class LicenseController extends Controller
     public function index()
     {
         
-        $LicenseApprovals = LicenseApproval::latest()->get();
+        $LicenseApprovals = LicenseApproval::latest()->with(['driver.document'])->get();
         $pendingCount = LicenseApproval::where('counter', 1)->count();
+        
         return view('admin.LicenseApproval.index',compact('LicenseApprovals','pendingCount'));
     }
 

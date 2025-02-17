@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\DriverDocument;
 use Illuminate\Support\Carbon;
 use App\Models\driversregister;
+use App\Models\LicenseApproval;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -117,11 +118,19 @@ return response()->json([
 ],401);
 }
 
-$drivers = driversregister::create([
+$driver = driversregister::create([
 'name' => $request->name,
 'email' => $request->email,
 'phone' => $request->phone,
 'password' => bcrypt($request->password),
+]);
+
+LicenseApproval::create([
+    'driver_id' => $driver->id,
+    // 'status' => 'pending', // No document yet
+    'email' => $driver->email,
+    'name' => $driver->name,
+    // 'document_uploaded' => false, // New field to track document upload
 ]);
 
 if ($request->hasFile('profile_image')) {
@@ -130,7 +139,7 @@ if ($request->hasFile('profile_image')) {
     $file->move(public_path('admin/assets/images/users'), $filename);
     $image = 'public/admin/assets/images/users/' . $filename;
 
-    $drivers->update(['profile_image' => $image]);
+    $driver->update(['profile_image' => $image]);
 }
 
 // if(!$customer){
@@ -157,7 +166,7 @@ if ($request->hasFile('profile_image')) {
 return response()->json([
 // 'status' => true,
 'message' => 'User created successfully',
-'data' => ['driver'=>$drivers,
+'data' => ['driver'=>$driver,
         //    'document'=>$document
           ],
 ],200);
@@ -195,28 +204,29 @@ return response()->json([
 //         return response()->json(['message' => 'Documents uploaded successfully', 'data' => $document], 200);
 //     }
 
-    // public function driverdocument(Request $request)
-    // {
-    //     // $request->validate([
-    //     //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    //     //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    //     //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    //     // ]);
+    public function driverdocument(Request $request)
+    {
+        // $request->validate([
+        //     'emirate_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'passport' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        // ]);
 
-    //     $driver = $request->user();
+        $driver = $request->user();
 
-    //     $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
+        $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
 
-    //     if ($request->hasFile('license')) {
-    //         $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
-    //     }
-       
+        if ($request->hasFile('license')) {
+            $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
+        }
+        LicenseApproval::where('driver_id', $request->driver_id);
+        // ->update(['document_uploaded' => true, 'status' => 'ready']);
         
-    //     $document->save();
+        $document->save();
         
 
-    //     return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
-    // }
+        return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
+    }
 
     public function login(Request $request){
 
