@@ -127,9 +127,9 @@ $driver = driversregister::create([
 
 LicenseApproval::create([
     'driver_id' => $driver->id,
-    // 'status' => 'pending', // No document yet
     'email' => $driver->email,
     'name' => $driver->name,
+    // 'status' => 'pending', // No document yet
     // 'document_uploaded' => false, // New field to track document upload
 ]);
 

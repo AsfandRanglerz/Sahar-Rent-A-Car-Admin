@@ -20,7 +20,12 @@ class LicenseController extends Controller
     public function index()
     {
         
-        $LicenseApprovals = LicenseApproval::latest()->with(['driver.document'])->get();
+        $LicenseApprovals = LicenseApproval::latest()
+        ->with(['driver.document'])
+        ->whereHas('driver.document', function ($query) {
+            $query->whereNotNull('license'); // Assuming 'license' is the column where license data is stored
+        })  
+        ->get();
         $pendingCount = LicenseApproval::where('counter', 1)->count();
         
         return view('admin.LicenseApproval.index',compact('LicenseApprovals','pendingCount'));
@@ -106,7 +111,15 @@ class LicenseController extends Controller
         } else {
             $image = $LicenseApproval->image;
         }
-
+        // $status = $LicenseApproval->status; // Default to existing status
+        // if ($request->has('action')) {
+        //     if ($request->action == 1) {
+        //         $status = 1; // Approved
+        //     } elseif ($request->action == 0) {
+        //         $status = 0; // Rejected
+        //     }
+        // }
+        return $status;
         // Update user details
         $LicenseApproval->update([
             'name' => $request->name,
@@ -114,6 +127,7 @@ class LicenseController extends Controller
             // 'phone' => $request->phone,
             // 'availability' => $request->availability,
             'image' => $image,
+            'status' => $status
         ]);
 
         // Redirect back with a success message
@@ -156,7 +170,11 @@ class LicenseController extends Controller
         ]);
     
         $message['name'] = $data->name;
-    
+
+        $licenseApproval = LicenseApproval::findOrFail($id);
+        $licenseApproval->update([
+            'status' => 1  // Set status to Approved when action is taken
+        ]);
         try {
             Mail::to($data->email)->send(new LicenseApprovalActivated($message));
 
@@ -193,6 +211,10 @@ class LicenseController extends Controller
     $message['reason'] = $request->reason;
     $message['name'] = $data->name;
 
+ $licenseApproval = LicenseApproval::findOrFail($id);
+    $licenseApproval->update([
+        'status' => 0  // Set status to Rejected when action is taken
+    ]);
     try {
         Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
 

@@ -58,16 +58,10 @@
         </div>
     </section>
 @endsection
-@section('js')
-    @if(\Illuminate\Support\Facades\Session::has('message'))
-        <script>
-            toastr.success('{{\Illuminate\Support\Facades\Session::get('message')}}');
-        
-        </script>
-    @endif
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        // Add event listener for all toggle password icons
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Add event listener for all toggle password icons
         document.querySelectorAll('.toggle-password').forEach(function (toggleIcon) {
             toggleIcon.addEventListener('click', function () {
                 const targetId = this.getAttribute('data-target');
@@ -88,5 +82,14 @@
             });
         });
     });
-    </script>
+</script>
+
+@section('js')
+    @if(\Illuminate\Support\Facades\Session::has('message'))
+        <script>
+            toastr.success('{{\Illuminate\Support\Facades\Session::get('message')}}');
+        
+        </script>
+    @endif
+    
 @endsection

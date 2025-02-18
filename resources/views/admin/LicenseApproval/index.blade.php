@@ -28,7 +28,7 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             {{-- <th>Phone</th> --}}
-                                            <th>Image</th>
+                                            <th>License</th>
                                             {{-- <th>Availability</th> --}}
                                             <th>Status</th>
                                             <th>Actions</th>
@@ -69,48 +69,46 @@
                                                     </div>
                                                 </td> --}}
                                                 <td>
-                                                    <div class="badge 
+                                                    {{-- <div class="badge 
                                                         {{ $LicenseApproval->action == 1 ? 'badge-success' : ($LicenseApproval->action == 0 ? 'badge-danger' : 'badge-warning') }} 
                                                         badge-shadow">
                                                         {{ $LicenseApproval->action == 1 ? 'Approved' : ($LicenseApproval->action == 0 ? 'Rejected' : 'Pending') }}
-                                                    </div>
+                                                    </div> --}}
+                                                    @if ($LicenseApproval->status == 1)
+                                                        <div class="badge badge-success badge-shadow">Approved</div>
+                                                    @elseif($LicenseApproval->status == 0)
+                                                        <div class="badge badge-danger badge-shadow">Rejected</div>
+                                                    @elseif($LicenseApproval->status == 2)
+                                                        <div class="badge badge-warning badge-shadow">Pending</div>
+                                                    @endif
                                                 </td>
                                                 
                                                 <td>
                                                     <div class="d-flex gap-4">
-                                                        <div class="gap-3"
-                                                            style="display: flex; align-items: center; justify-content: center; column-gap: 8px">
-                                                            @if ($LicenseApproval->action == 1)
-                                                                <a href="javascript:void(0);"
-                                                                    onclick="showDeactivationModal({{ $LicenseApproval->id }})"
-                                                                    class="btn btn-success">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                        height="24" viewBox="0 0 24 24" fill="none"
-                                                                        stroke="currentColor" stroke-width="2"
-                                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                                        class="feather feather-toggle-left">
-                                                                        <rect x="1" y="5" width="22" height="14"
-                                                                            rx="7" ry="7"></rect>
-                                                                        <circle cx="16" cy="12" r="3">
-                                                                        </circle>
-                                                                    </svg>
-                                                                </a>
-                                                            @elseif($LicenseApproval->action == 0)
-                                                                <a href="javascript:void(0);"
-                                                                    onclick="showActivationModal({{ $LicenseApproval->id }})"
-                                                                    class="btn btn-btn btn-danger">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                        height="24" viewBox="0 0 24 24" fill="none"
-                                                                        stroke="currentColor" stroke-width="2"
-                                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                                        class="feather feather-toggle-left">
-                                                                        <rect x="1" y="5" width="22" height="14"
-                                                                            rx="7" ry="7"></rect>
-                                                                        <circle cx="16" cy="12" r="3">
-                                                                        </circle>
-                                                                    </svg>
-                                                                </a>
-                                                            @endif
+                                                        <div class="gap-3" style="display: flex; align-items: center; justify-content: center; column-gap: 8px">
+                                                            <!-- Approve Button -->
+                                                            <a href="javascript:void(0);" onclick="showActivationModal({{ $LicenseApproval->id }})"
+                                                                class="btn btn-success">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="feather feather-toggle-left">
+                                                                    <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
+                                                                    <circle cx="16" cy="12" r="3"></circle>
+                                                                </svg>
+                                                                
+                                                            </a>
+                                                    
+                                                            <!-- Reject Button -->
+                                                            <a href="javascript:void(0);" onclick="showDeactivationModal({{ $LicenseApproval->id }})"
+                                                                class="btn btn-danger">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="feather feather-toggle-left">
+                                                                    <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
+                                                                    <circle cx="16" cy="12" r="3"></circle>
+                                                                </svg>
+                                                                
+                                                            </a>
                                                             {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
                                                             {{-- <a href="{{ route('license.edit', $LicenseApproval->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}
@@ -200,14 +198,13 @@
     <!-- Modal Structure -->
     <div id="imageModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content bg-transparent shadow-none">
                 <div class="modal-header">
-                    {{-- <h5 class="modal-title"></h5> --}}
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true" class="text-white">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body bg-transparent">
                     <img id="modalImage" src="" alt="" style="width: 100%;">
                 </div>
             </div>
