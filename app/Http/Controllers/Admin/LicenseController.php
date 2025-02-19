@@ -26,7 +26,7 @@ class LicenseController extends Controller
             $query->whereNotNull('license'); // Assuming 'license' is the column where license data is stored
         })  
         ->get();
-        $pendingCount = LicenseApproval::where('counter', 1)->count();
+        $pendingCount = LicenseApproval::where('status', 2)->count();
         
         return view('admin.LicenseApproval.index',compact('LicenseApprovals','pendingCount'));
     }

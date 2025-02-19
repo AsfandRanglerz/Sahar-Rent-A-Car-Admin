@@ -204,9 +204,13 @@
             <li class="dropdown {{ request()->is('admin/license*') ? 'active' : '' }}">
                 <a href="{{ route('license.index') }}" class="nav-link"><span ><i
                             data-feather="file-text"></i>License Approvals
-                            @if (isset($pendingCount) && $pendingCount > 0)
-                            <span class="badge rounded-pill bg-warning text-dark d-flex justify-content-center align-items-center" style="width: 24px; height: 24px; font-size: 14px;">{{ $pendingCount }}</span>
-                        @endif
+                            {{-- @if (isset($pendingCount) && $pendingCount > 0) --}}
+                            @if ($pendingCount > 0)
+                                <span class="badge rounded-pill bg-warning text-dark d-flex justify-content-center align-items-center" 
+                                    style="width: 24px; height: 24px; font-size: 14px;">
+                                    {{ $pendingCount }}
+                                </span>
+                            @endif
                         </span></a>
             </li>
 @endif

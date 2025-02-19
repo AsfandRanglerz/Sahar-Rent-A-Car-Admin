@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 
 use App\Models\OTP;
+use App\Models\User;
 use App\Mail\OTPMail;
 use App\Models\Customer;
 use App\Models\ForgotOTP;
@@ -31,8 +32,8 @@ class AuthController extends Controller
     $request->all(),
     [
     // 'name' => 'required|string|min:10',
-    'email' => 'required|email|unique:customers,email|unique:driversregisters,email',
-    'phone' => 'required|numeric|min:7|unique:customers,phone|unique:driversregisters,phone',
+    'email' => 'required|email|unique:users,email|unique:driversregisters,email',
+    'phone' => 'required|numeric|min:7|unique:users,phone|unique:driversregisters,phone',
     // 'password' => 'required|min:6|confirmed',
     ]
 );
@@ -44,22 +45,69 @@ return response()->json([
     // 'errors' => $validateUser->errors()->all(),
 ],401);
 }
+$emirate_id = null;
+$passport = null;
+$driving_license = null;
 
-$customer = Customer::create([
+if ($request->hasFile('emirate_id')) {
+    $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
+    // $document->emirate_id = "storage/app/public/{$path}";
+}
+if ($request->hasFile('passport')) {
+    $passport = $request->file('passport')->store("documents/passport", 'public');
+    // $document->passport = "storage/app/public/{$path}";
+}
+if ($request->hasFile('driving_license')) {
+    $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
+    // $document->driving_license = "storage/app/public/{$path}";
+}
+$customer = User::create([
     'name' => $request->name,
     'email' => $request->email,
     'phone' => $request->phone,
     'password' => bcrypt($request->password),
+    'emirate_id' => $emirate_id,
+    'passport' => $passport,
+    'driving_license' => $driving_license,
 ]);
 
-if ($request->hasFile('profile_image')) {
-    $file = $request->file('profile_image');
+if ($request->hasFile('image')) {
+    $file = $request->file('image');
     $filename = time() . '_' . $file->getClientOriginalName();
     $file->move(public_path('admin/assets/images/users'), $filename);
     $image = 'public/admin/assets/images/users/' . $filename;
 
-    $customer->update(['profile_image' => $image]);
+    $customer->update(['image' => $image]);
 }
+// $document->save();
+
+return response()->json([
+    // 'status' => true,
+    'message' => 'User created successfully',
+    'data' => ['customer'=>$customer,
+               'documents' => [
+            'emirate_id' => $emirate_id ?? null,
+            'passport' => $passport ?? null,
+            'driving_license' => $driving_license ?? null
+        ]
+              ],
+],200);
+// $customer = Customer::create([
+//     'name' => $request->name,
+//     'email' => $request->email,
+//     'phone' => $request->phone,
+//     'password' => bcrypt($request->password),
+// ]);
+
+
+// if ($request->hasFile('profile_image')) {
+//     $file = $request->file('profile_image');
+//     $filename = time() . '_' . $file->getClientOriginalName();
+//     $file->move(public_path('admin/assets/images/users'), $filename);
+//     $image = 'public/admin/assets/images/users/' . $filename;
+
+//     $customer->update(['profile_image' => $image]);
+// }
 
 // if(!$customer){
 //     return response()->json([
@@ -71,30 +119,30 @@ if ($request->hasFile('profile_image')) {
 
 // else{
 
-$document = UserDocument::firstOrCreate(['user_id' => $customer->id]);
+// $document = UserDocument::firstOrCreate(['user_id' => $customer->id]);
 
-if ($request->hasFile('emirate_id')) {
-    $path = $request->file('emirate_id')->store("documents/{$customer->id}/emirate_id", 'public');
-    $document->emirate_id = "storage/app/public/{$path}";
-}
-if ($request->hasFile('passport')) {
-    $path = $request->file('passport')->store("documents/{$customer->id}/passport", 'public');
-    $document->passport = "storage/app/public/{$path}";
-}
-if ($request->hasFile('driving_license')) {
-    $path = $request->file('driving_license')->store("documents/{$customer->id}/driving_license", 'public');
-    $document->driving_license = "storage/app/public/{$path}";
-}
+// if ($request->hasFile('emirate_id')) {
+//     $path = $request->file('emirate_id')->store("documents/{$customer->id}/emirate_id", 'public');
+//     $document->emirate_id = "storage/app/public/{$path}";
+// }
+// if ($request->hasFile('passport')) {
+//     $path = $request->file('passport')->store("documents/{$customer->id}/passport", 'public');
+//     $document->passport = "storage/app/public/{$path}";
+// }
+// if ($request->hasFile('driving_license')) {
+//     $path = $request->file('driving_license')->store("documents/{$customer->id}/driving_license", 'public');
+//     $document->driving_license = "storage/app/public/{$path}";
+// }
 
-$document->save();
+// $document->save();
 
-return response()->json([
-    // 'status' => true,
-    'message' => 'User created successfully',
-    'data' => ['customer'=>$customer,
-               'document'=>$document
-              ],
-],200);
+// return response()->json([
+//     // 'status' => true,
+//     'message' => 'User created successfully',
+//     'data' => ['customer'=>$customer,
+//                'document'=>$document
+//               ],
+// ],200);
 // }
 }
 
@@ -261,10 +309,10 @@ return response()->json([
     
         if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
             // If the identifier is an email
-            $customer = Customer::where('email', $identifier)->first();
+            $customer = User::where('email', $identifier)->first();
         } else {
             // If the identifier is a phone number
-            $customer = Customer::where('phone', $identifier)->first();
+            $customer = User::where('phone', $identifier)->first();
         }
     
         if (!$customer) {
@@ -344,7 +392,7 @@ return response()->json([
     // }
 
     // Retrieve user (optional: if logging in)
-    $customer = Customer::where('email', $otpRecord->identifier)
+    $customer = User::where('email', $otpRecord->identifier)
                         // ->orWhere('phone', $otpRecord->identifier)
                         ->first();
 
@@ -500,7 +548,7 @@ public function forgotverifyOtp(Request $request)
     // }
 
     // Retrieve user (optional: if logging in)
-    $user = Customer::where('email', $otpRecord->identifier)
+    $user = User::where('email', $otpRecord->identifier)
                         // ->orWhere('phone', $otpRecord->identifier)
                         ->first();
 
@@ -533,7 +581,7 @@ public function resetPassword(Request $request)
     }
 
     // Find the user
-    $user = Customer::where('email', $otpRecord->identifier)->first();
+    $user = User::where('email', $otpRecord->identifier)->first();
 
     if (!$user) {
         return response()->json(['message' => 'User not found'], 404);

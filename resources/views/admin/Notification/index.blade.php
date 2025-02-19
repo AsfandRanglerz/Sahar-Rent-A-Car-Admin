@@ -222,50 +222,50 @@
         });
     });
 
-    // $(document).ready(function () {
-    //         // Initialize Select2
-    //         $('.select2').select2({
-    //             placeholder: "Select options",
-    //             allowClear: true,
-    //         });
+     $(document).ready(function () {
+             // Initialize Select2
+             $('.select2').select2({
+                 placeholder: "Select options",
+                 allowClear: true,
+             });
     
-    //         // Handle user type selection
-    //         $('#user_type').on('change', function () {
-    //             let selectedType = $(this).val();
+              //Handle user type selection
+             $('#user_type').on('change', function () {
+                 let selectedType = $(this).val();
     
-    //             // Hide both sections initially
-    //             $('#customer_field, #driver_field').addClass('d-none');
+                 // Hide both sections initially
+                 $('#customer_field, #driver_field').addClass('d-none');
     
-    //             // Reset checkboxes and dropdowns
-    //             $('#select_all_customers, #select_all_drivers').prop('checked', false);
-    //             $('#customers, #drivers').val([]).trigger('change');
+                 // Reset checkboxes and dropdowns
+                 $('#select_all_customers, #select_all_drivers').prop('checked', false);
+                 $('#customers, #drivers').val([]).trigger('change');
     
-    //             // Show the appropriate section
-    //             if (selectedType === 'Customer') {
-    //                 $('#customer_field').removeClass('d-none');
-    //             } else if (selectedType === 'Driver') {
-    //                 $('#driver_field').removeClass('d-none');
-    //             }
-    //         });
+                 // Show the appropriate section
+                 if (selectedType === 'Customer') {
+                     $('#customer_field').removeClass('d-none');
+                 } else if (selectedType === 'Driver') {
+                     $('#driver_field').removeClass('d-none');
+                 }
+             });
     
-    //         // "Select All Customers" functionality
-    //         $('#select_all_customers').on('change', function () {
-    //             $('#customers > option').prop('selected', this.checked).trigger('change');
-    //         });
+            //  "Select All Customers" functionality
+             $('#select_all_customers').on('change', function () {
+                 $('#customers > option').prop('selected', this.checked).trigger('change');
+             });
     
-    //         // "Select All Drivers" functionality
-    //         $('#select_all_drivers').on('change', function () {
-    //             $('#drivers > option').prop('selected', this.checked).trigger('change');
-    //         });
+            //  "Select All Drivers" functionality
+             $('#select_all_drivers').on('change', function () {
+                 $('#drivers > option').prop('selected', this.checked).trigger('change');
+             });
     
-    //         // Ensure "Select All" is unchecked if any individual option is deselected
-    //         $('#customers').on('change', function () {
-    //             $('#select_all_customers').prop('checked', $('#customers option:selected').length === $('#customers option').length);
-    //         });
+             // Ensure "Select All" is unchecked if any individual option is deselected
+             $('#customers').on('change', function () {
+                 $('#select_all_customers').prop('checked', $('#customers option:selected').length === $('#customers option').length);
+             });
     
-    //         $('#drivers').on('change', function () {
-    //             $('#select_all_drivers').prop('checked', $('#drivers option:selected').length === $('#drivers option').length);
-    //         });
-    //     });
+             $('#drivers').on('change', function () {
+                 $('#select_all_drivers').prop('checked', $('#drivers option:selected').length === $('#drivers option').length);
+             });
+         });
 </script>
 @endsection
