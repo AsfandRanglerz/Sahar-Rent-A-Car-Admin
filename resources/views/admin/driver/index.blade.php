@@ -28,7 +28,7 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Document (License)</th>
+                                            {{-- <th>Document (License)</th> --}}
                                             <th>Image</th>
                                             <th>Availability</th>
                                             {{-- <th>Status</th> --}}
@@ -60,7 +60,7 @@
                                                         <span>No documents uploaded</span>
                                                     @endif
                                                 </td> --}}
-                                                <td>
+                                                {{-- <td>
                                                     @if ($driver->license || ($driver->driverdocument && $driver->driverdocument->license))
                                                         @php
                                                             $documents = [];
@@ -94,7 +94,7 @@
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 
                                                 <td>
                                                     @if($driver->image)

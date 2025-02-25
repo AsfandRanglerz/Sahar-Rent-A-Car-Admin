@@ -197,6 +197,13 @@
                                 <td><input type="checkbox" name="permissions[bookings][delete]"></td>
                             </tr>
                             <tr>
+                                <td>Request Bookings</td>
+                                <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td>
+                            </tr>
+                            <tr>
                                 <td>Loyalty Points</td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][add]" ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][edit]"  ></td>

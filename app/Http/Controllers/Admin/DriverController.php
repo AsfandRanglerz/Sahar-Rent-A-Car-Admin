@@ -57,9 +57,9 @@ class DriverController extends Controller
 
         $status = 1;
 
-if($request->hasFile('license')){
-            $license = $request->file('license')->store("driverdocumet/",'public');
-}
+// if($request->hasFile('license')){
+//             $license = $request->file('license')->store("driverdocumet/",'public');
+// }
 
         // Create the user
         $driver = Driver::create([
@@ -122,9 +122,9 @@ if($request->hasFile('license')){
             $image = $driver->image;
         }
 
-        if($request->hasFile('license')){
-            $license = $request->file('license')->store("driverdocumet/",'public');
-        }
+        // if($request->hasFile('license')){
+        //     $license = $request->file('license')->store("driverdocumet/",'public');
+        // }
 
         // Update user details
         $driver->update([

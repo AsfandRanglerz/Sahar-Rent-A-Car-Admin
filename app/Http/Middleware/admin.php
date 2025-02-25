@@ -47,7 +47,9 @@ class admin
                     ->toArray();
                 view()->share('isAdmin', false); 
                 view()->share('subadminPermissions', $permissions);
-            } else {
+                
+            } 
+            else {
                 view()->share('subadminPermissions', []);
             }
     

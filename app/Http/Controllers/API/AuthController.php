@@ -6,6 +6,7 @@ namespace App\Http\Controllers\API;
 use App\Models\OTP;
 use App\Models\User;
 use App\Mail\OTPMail;
+use App\Models\Driver;
 use App\Models\Customer;
 use App\Models\ForgotOTP;
 use App\Mail\ForgotOTPMail;
@@ -18,6 +19,7 @@ use App\Models\driversregister;
 use App\Models\LicenseApproval;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Mail\CustomerRegisteredMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -80,16 +82,12 @@ if ($request->hasFile('image')) {
     $customer->update(['image' => $image]);
 }
 // $document->save();
-
+Mail::to($customer->email)->send(new CustomerRegisteredMail($customer->name, $customer->email, $customer->phone));
 return response()->json([
     // 'status' => true,
     'message' => 'User created successfully',
     'data' => ['customer'=>$customer,
-               'documents' => [
-            'emirate_id' => $emirate_id ?? null,
-            'passport' => $passport ?? null,
-            'driving_license' => $driving_license ?? null
-        ]
+               
               ],
 ],200);
 // $customer = Customer::create([
@@ -166,7 +164,7 @@ return response()->json([
 ],401);
 }
 
-$driver = driversregister::create([
+$driver = Driver::create([
 'name' => $request->name,
 'email' => $request->email,
 'phone' => $request->phone,
@@ -213,7 +211,7 @@ if ($request->hasFile('profile_image')) {
 
 return response()->json([
 // 'status' => true,
-'message' => 'User created successfully',
+'message' => 'Driver created successfully',
 'data' => ['driver'=>$driver,
         //    'document'=>$document
           ],
@@ -358,7 +356,7 @@ return response()->json([
             // 'status' => true,
             // 'message' => 'Logged In successfully',
             'message' => 'OTP sent successfully.',
-            'token' => $customer->createToken("API Token")->plainTextToken,
+            // 'token' => $customer->createToken("API Token")->plainTextToken,
             'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $customer->fcm_token,
             // 'token_type' => 'Bearer',
@@ -399,13 +397,25 @@ return response()->json([
     if (!$customer) {
         return response()->json(['message' => 'User not found.'], 404);
     }
+    Auth::login($customer);
 
+   
     // Delete OTP after successful verification
     $otpRecord->delete();
 
     return response()->json([
         'message' => 'OTP verified successfully',
         'token' => $customer->createToken("API Token")->plainTextToken,
+        'user' => [
+        'name' => $customer->name,
+        'email' => $customer->email,
+        'phone' => $customer->phone,
+        'image' => $customer->image, // Assuming there's a profile image field
+        'emarate_id' => $customer->emirate_id,
+        'passport' => $customer->passport,
+        'driving_license' => $customer->driving_license,
+       
+    ]
     ], 200);
 }
 
@@ -494,7 +504,7 @@ public function forgotPassword(Request $request)
 {
     // Validate the email input
     $request->validate([
-        'email' => 'required|email|exists:customers,email',
+        'email' => 'required|email|exists:users,email',
     ]);
 
     $email = $request->email;
@@ -527,7 +537,7 @@ public function forgotverifyOtp(Request $request)
 {
     $request->validate([
         'otp' => 'required|digits:6',
-        'otp_token' => 'required'
+        // 'otp_token' => 'required'
     ]);
 
     // Find OTP record in database
@@ -561,7 +571,8 @@ public function forgotverifyOtp(Request $request)
 
     return response()->json([
         'message' => 'OTP verified successfully',
-        'token' => $user->createToken("API Token")->plainTextToken,
+        'otp_token' => $otpRecord->otp_token,
+        // 'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
 

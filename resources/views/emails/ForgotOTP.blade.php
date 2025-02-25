@@ -5,7 +5,7 @@ Use the OTP below to reset your password:
 
 **{{ $otp }}**
 
-This OTP will expire in 5 minutes.
+If you did not request for OTP, please ignore this email.
 
 Thanks,<br>
 {{ config('app.name') }}

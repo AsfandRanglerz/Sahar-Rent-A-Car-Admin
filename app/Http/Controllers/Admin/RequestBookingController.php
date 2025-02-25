@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Booking;
+use App\Models\Driver;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Models\RequestBooking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class BookingController extends Controller
+class RequestBookingController extends Controller
 {
     public function index()
     {
         // $bookings = Booking::latest()->get();
-        $bookings = Booking::orderBy('status','ASC')->get();
-        return view('admin.booking.index',compact('bookings'));
+        $requestbookings = RequestBooking::orderBy('status','ASC')->get();
+        $drivers = Driver::all();
+        return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
     }
 
-    public function create(){
-        return view('admin.booking.create');
-    }
+    // public function create(){
+    //     return view('admin.booking.create');
+    // }
 
     public function store(Request $request)
     {
@@ -38,14 +40,14 @@ class BookingController extends Controller
         //     $image = 'public/admin/assets/images/avator.png';
         // }
 
-        do {
-            $carId = mt_rand(1000, 9999); //  Can be replaced this with a custom logic for 4-digit IDs
-        } while (Booking::where('car_id', $carId)->exists());
+        // do {
+        //     $carId = mt_rand(1000, 9999); //  Can be replaced this with a custom logic for 4-digit IDs
+        // } while (Booking::where('car_id', $carId)->exists());
 
         $status = 1;
 
         // Create the user
-        $booking = Booking::create([
+        $requestbooking = RequestBooking::create([
             'car_id' => $carId,
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -80,23 +82,23 @@ class BookingController extends Controller
         // }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
-        return redirect()->route('booking.index')->with(['message' => 'Booking Created Successfully']);
+        return redirect()->route('requestbooking.index')->with(['message' => 'Booking Created Successfully']);
     } 
 
     public function destroy(Request $request, $id){
-     $booking = Booking::find($id);
-        $bookingName = $booking->name;
+     $requestbooking = RequestBooking::find($id);
+        $requestbookingName = $requestbooking->name;
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
         $subadminName = $subadmin->name;
         SubAdminLog::create([
             'subadmin_id' => Auth::guard('subadmin')->id(),
-            'section' => 'Bookings',
+            'section' => 'Request Bookings',
             'action' => 'Delete',
-            'message' => "SubAdmin: {$subadminName} deleted booking: {$bookingName}",
+            'message' => "SubAdmin: {$subadminName} deleted request booking: {$requestbookingName}",
         ]);
     }
-    $booking->delete();
-    return redirect()->route('booking.index')->with(['message' => 'Booking Deleted Successfully']);
+    $requestbooking->delete();
+    return redirect()->route('requestbooking.index')->with(['message' => 'Booking Deleted Successfully']);
     }
 }

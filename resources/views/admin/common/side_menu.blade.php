@@ -144,8 +144,8 @@
         
         {{-- Sub Admins --}}
         @if($isAdmin || isset($subadminPermissions['sub_admins']))
-        <li class="{{ request()->is('admin/subadmin*') ? 'active' : '' }}">
-            <a href="{{ route('subadmin.index') }}" class="nav-link">
+        <li class="{{ request()->is('admin/subadmin*')  }}">
+            <a href="{{ route('subadmin.index') }}" class="nav-link  {{ request()->is('admin/subadmin*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="shield"></i>
                 <span>Sub Admins</span>
             </a>
@@ -154,8 +154,8 @@
 
         {{-- Admin Logs --}}
         @if($isAdmin || isset($subadminPermissions['admin_logs']))
-        <li class="{{ request()->is('admin/logs*') ? 'active' : '' }}">
-            <a href="{{ route('admin.logs') }}" class="nav-link">
+        <li class="{{ request()->is('admin/logs*')  }}">
+            <a href="{{ route('admin.logs') }}" class="nav-link {{ request()->is('admin/logs*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="file-text"></i>
                 <span>SubAdmin Logs</span>
             </a>
@@ -227,6 +227,12 @@
             <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">
                 <a href="{{ route('booking.index') }}" class="nav-link"><span><i
                             data-feather="calendar"></i>Bookings</span></a>
+            </li>
+@endif
+@if($isAdmin || (isset($subadminPermissions['requestbookings']) && $subadminPermissions['requestbookings']->view == 1))
+            <li class="dropdown {{ request()->is('admin/requestbooking*') ? 'active' : '' }}">
+                <a href="{{ route('requestbooking.index') }}" class="nav-link"><span><i
+                            data-feather="calendar"></i>Request Bookings</span></a>
             </li>
 @endif
 {{-- @if($isAdmin || isset($subadminPermissions['loyalty_points'])) --}}

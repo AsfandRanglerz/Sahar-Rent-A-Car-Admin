@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\RequestBooking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,17 +28,20 @@ class BookingController extends Controller
         // ]);
 
         // Create the booking
-        $booking = Booking::create([
+        $booking = RequestBooking::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'self_pickup' => $request->self_pickup,
             'pickup_address' => $request->pickup_address,
             'pickup_date' => $request->pickup_date,
             'pickup_time' => $request->pickup_time,
+            'self_dropoff' => $request->self_dropoff,
             'dropoff_address' => $request->dropoff_address,
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
-            'driver_required' => filter_var($request->driver_required, FILTER_VALIDATE_BOOLEAN),
+            // 'driver_required' => filter_var($request->driver_required, FILTER_VALIDATE_BOOLEAN),
+            'driver_required' => $request->driver_required,
         ]);
 
         // Return a JSON response

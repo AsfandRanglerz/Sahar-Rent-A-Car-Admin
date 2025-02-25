@@ -82,7 +82,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>License</label>
                                             <input type="file" placeholder="Enter Document"name="license" value="{{ old('license') }}"
@@ -91,7 +91,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
 
