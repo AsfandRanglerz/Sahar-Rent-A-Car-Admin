@@ -26,7 +26,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            {{-- <th>Car Id</th> --}}
+                                            <th>Car Id</th>
                                             <th>Status</th>
                                             {{-- <th>Driver</th> --}}
                                             <th>Customer</th>
@@ -48,13 +48,15 @@
                                         @foreach ($requestbookings as $requestbooking)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                {{-- <td>{{ $requestbooking->car_id }}</td> --}}
+                                                <td>{{ $requestbooking->car_id }}</td>
                                                 <td>
                                                     {{-- <div class="badge {{ $requestbooking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
                                                         {{ $requestbooking->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
                                                 @if($requestbooking->status == 2)
                                                     <div class="badge badge-warning badge-shadow">Pending</div>
+                                                    @elseif($requestbooking->status == 0)
+                                                    <div class="badge badge-success badge-shadow">Active</div>
                                                 @endif
                                                 </td>
                                                 <td>{{ $requestbooking->full_name }}</td>
@@ -227,7 +229,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="assignDriverForm">
+                <form id="assignDriverForm" action="{{ route('requestbooking.edit', $requestbooking->id) }}" method="POST">
                     @csrf
                     <input type="hidden" id="requestBookingId" name="request_booking_id">
                     
@@ -284,39 +286,42 @@
         });
     </script>
 <script>
-    $(document).ready(function() {
-        // When the Assign button is clicked
-        $('.assign-driver-btn').on('click', function() {
-            let requestBookingId = $(this).data('id');
-            $('#requestBookingId').val(requestBookingId);  // Set the request ID in the modal
-        });
-    
+    $(document).on('click', '.assign-driver-btn', function() {
+    let requestBookingId = $(this).data('id');  // Correct way to get data-id
+    console.log("Clicked Assign - Request Booking ID:", requestBookingId); // Debugging
+    $('#requestBookingId').val(requestBookingId);  // Set the hidden input value
+
+
+
         // AJAX form submission
         $('#assignDriverForm').on('submit', function(e) {
             e.preventDefault();
-    
-            let formData = {
-                _token: $('input[name=_token]').val(),
-                request_booking_id: $('#requestBookingId').val(),
-                driver_id: $('#driver_id').val(),
-            };
-    
+
+            let url = $(this).attr('action'); // Get form action URL
+            let formData = $(this).serialize(); // Serialize form data
+
+            console.log("Generated URL:", url); // Debugging
+
             $.ajax({
-                url: "{{ route('requestbooking.edit') }}",
-                type: "POST",
+                url: url,  
+                type: "POST", // Change to PUT if necessary
                 data: formData,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function(response) {
+                    console.log("Success:", response);
                     alert('Driver Assigned Successfully!');
                     $('#assignDriverModal').modal('hide');
-                    location.reload();  // Reload page to reflect changes
+                    location.reload();
                 },
-                error: function(response) {
-                    alert('Error assigning driver');
+                error: function(xhr, status, error) {
+                    console.error("Error Details:", xhr.responseText);
+                    alert('This driver is already assigned for this date and time. please select another driver');
                 }
             });
         });
     });
-    </script>
+</script>
+
 
 
 @endsection

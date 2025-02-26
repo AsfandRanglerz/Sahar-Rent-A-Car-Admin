@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Booking;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Models\RequestBooking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,8 +14,13 @@ class BookingController extends Controller
     public function index()
     {
         // $bookings = Booking::latest()->get();
-        $bookings = Booking::orderBy('status','ASC')->get();
-        return view('admin.booking.index',compact('bookings'));
+        // $bookings = Booking::orderBy('status','ASC')->get();
+        // $activeBookings = Booking::where('status', 0)->get();
+        // $requestBookings = RequestBooking::where('status', 0)
+        $activeBookings = RequestBooking::where('status', 0) // Fetch only active bookings
+        ->with('driver','booking') 
+        ->get();
+        return view('admin.booking.index',compact('activeBookings'));
     }
 
     public function create(){
@@ -84,7 +90,10 @@ class BookingController extends Controller
     } 
 
     public function destroy(Request $request, $id){
-     $booking = Booking::find($id);
+     $booking = RequestBooking::find($id);
+     if (!$booking) {
+        $booking = Booking::find($id);
+    }
         $bookingName = $booking->name;
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();

@@ -45,21 +45,31 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($bookings as $booking)
+                                        @foreach ($activeBookings as $booking)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $booking->car_id }}</td>
-                                                <td>
-                                                    <div class="badge {{ $booking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
-                                                        {{ $booking->status == 0 ? 'Active' : 'Completed' }}
-                                                    </div>
+                                                {{-- <td>{{ $booking->car_id }}</td> --}}
+                                                <td class="car-id">
+                                                    {{ $booking->car_id ?? '--' }}
                                                 </td>
+                                                
                                                 <td>
-                                                @if($booking->driver_name)    
+                                                    {{-- <div class="badge {{ $booking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
+                                                        {{ $booking->status == 0 ? 'Active' : 'Completed' }}
+                                                    </div> --}}
+                                                    @if($booking->status == 0)
+                                                        <div class="badge badge-success badge-shadow">Active</div>
+                                                        @elseif($booking->status == 1)
+                                                        <div class="badge badge-primary badge-shadow">Completed</div>
+                                                        @endif
+                                                </td>
+                                                <td class="driver-name">
+                                                {{-- @if($booking->driver_name)    
                                                     {{ $booking->driver_name }}
                                                 @else
                                                 <span>--</span>
-                                                @endif
+                                                @endif --}}
+                                                {{ $booking->driver ? $booking->driver->name : '--' }}
                                                 </td>
                                                 <td>{{ $booking->full_name }}</td>
                                                 <td>
@@ -196,7 +206,169 @@
                                             </tr>
                                         @endforeach
 
-                                    </tbody>
+                                    
+                                        {{-- @foreach ($requestBookings as $request)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td> --}}
+                                                {{-- <td>{{ $request->car_id }}</td> --}}
+                                                {{-- <td class="car-id">
+                                                    {{ $request->car_id ?? '--' }}
+                                                </td>
+                                                
+                                                <td> --}}
+                                                    {{-- <div class="badge {{ $request->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
+                                                        {{ $request->status == 0 ? 'Active' : 'Completed' }}
+                                                    </div> --}}
+                                                    {{-- @if($request->status == 0)
+                                                        <div class="badge badge-success badge-shadow">Active</div>
+                                                        @elseif($request->status == 1)
+                                                        <div class="badge badge-primary badge-shadow">Completed</div>
+                                                        @endif
+                                                </td>
+                                                <td class="driver-name"> --}}
+                                                {{-- @if($request->driver_name)    
+                                                    {{ $request->driver_name }}
+                                                @else
+                                                <span>--</span>
+                                                @endif --}}
+                                                {{-- {{ $request->driver ? $request->driver->name : '--' }}
+                                                </td>
+                                                <td>{{ $request->full_name }}</td>
+                                                <td>
+                                                    @if ($request->email)
+                                                        <a href="mailto:{{ $request->email }}">{{ $request->email }}</a>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $request->phone }}</td>
+
+                                                
+                                                <td>{{ $request->self_pickup }}</td> --}}
+                                                {{-- <td>{{ $request->durations }}</td> --}}
+                                                {{-- <td>{{ $request->call_number }}</td>
+                                                <td>{{ $request->whatsapp_number }}</td> --}}
+                                                {{-- <td>
+                                                @if($request->pickup_address)    
+                                                    {{ $request->pickup_address }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>
+                                                @if($request->pickup_date)    
+                                                    {{ $request->pickup_date }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>
+                                                @if($request->pickup_time)    
+                                                    {{ $request->pickup_time }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>{{ $request->self_dropoff }}</td>
+                                                <td>{{ $request->dropoff_address }}</td>
+                                                <td>{{ $request->dropoff_date }}</td>
+                                                <td>{{ $request->dropoff_time }}</td>
+                                                <td>
+                                                @if($request->driver_required) 
+                                                    {{ $request->driver_required }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td> --}}
+                                                 {{-- <td>{!! $request->car_play !!}</td> --}}
+                                                 {{-- <td>
+                                                    @if (!empty($request->car_play))
+                                                        @php
+                                                            $features = explode("\n", $request->car_play); // Assuming features are stored as a comma-separated string
+                                                        @endphp
+                                                        <ul>
+                                                            @foreach ($features as $feature)
+                                                                <li>{{ trim($feature) }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td> --}}
+                                            
+                                                {{--<td>{{ $request->delivery }}</td>
+                                                <td>{{ $request->pickup }}</td>
+                                                <td>{{ $request->travel_distance }}</td> --}} 
+                                                {{-- <td>
+                                                    <div class="badge {{ $request->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $request->status == 0 ? 'Activated' : 'Deactivated' }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <img src="{{ asset($request->image) }}" alt="" height="50"
+                                                        width="50" class="image">
+                                                </td> --}}
+
+                                                {{-- <td>
+                                                    <div class="d-flex gap-4">
+                                                        <div class="gap-3"
+                                                            style="display: flex; align-items: left; justify-content: center; column-gap: 8px"> --}}
+
+
+
+                                                            {{-- @if ($user->status == 1)
+                                                                <a href="javascript:void(0);"
+                                                                    onclick="showDeactivationModal({{ $user->id }})"
+                                                                    class="btn btn-success">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="feather feather-toggle-left">
+                                                                        <rect x="1" y="5" width="22" height="14"
+                                                                            rx="7" ry="7"></rect>
+                                                                        <circle cx="16" cy="12" r="3">
+                                                                        </circle>
+                                                                    </svg>
+                                                                </a>
+                                                            @elseif($user->status == 0)
+                                                                <a href="javascript:void(0);"
+                                                                    onclick="showActivationModal({{ $user->id }})"
+                                                                    class="btn btn-btn btn-danger">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="feather feather-toggle-left">
+                                                                        <rect x="1" y="5" width="22" height="14"
+                                                                            rx="7" ry="7"></rect>
+                                                                        <circle cx="16" cy="12" r="3">
+                                                                        </circle>
+                                                                    </svg>
+                                                                </a>
+                                                            @endif --}}
+
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
+                                                            {{-- <a href="{{ route('car.edit', $booking->id) }}"
+                                                                class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}
+                                                            {{-- @endif --}}
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1))
+                                                                <form action="{{ route('booking.destroy', $request->id) }}"
+                                                                method="POST"
+                                                                style="display:inline-block; margin-left: 1px">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-flat show_confirm"
+                                                                    data-toggle="tooltip">Delete</button>
+                                                            </form>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
+
+                                    </tbody> --}}
                                 </table>
                             </div>
 

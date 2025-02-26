@@ -28,7 +28,31 @@ class BookingController extends Controller
         // ]);
 
         // Create the booking
-        $booking = RequestBooking::create([
+    //     $booking = RequestBooking::create([
+    //         'full_name' => $request->full_name,
+    //         'email' => $request->email,
+    //         'phone' => $request->phone,
+    //         'self_pickup' => $request->self_pickup,
+    //         'pickup_address' => $request->pickup_address,
+    //         'pickup_date' => $request->pickup_date,
+    //         'pickup_time' => $request->pickup_time,
+    //         'self_dropoff' => $request->self_dropoff,
+    //         'dropoff_address' => $request->dropoff_address,
+    //         'dropoff_date' => $request->dropoff_date,
+    //         'dropoff_time' => $request->dropoff_time,
+    //         // 'driver_required' => filter_var($request->driver_required, FILTER_VALIDATE_BOOLEAN),
+    //         'driver_required' => $request->driver_required,
+    //     ]);
+
+    //     // Return a JSON response
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Booking created successfully',
+    //         'data' => $booking,
+    //     ], 200);
+    // }
+    if ($request->self_pickup === "Yes" && $request->self_dropoff === "Yes") {
+        $booking = Booking::create([
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -40,16 +64,38 @@ class BookingController extends Controller
             'dropoff_address' => $request->dropoff_address,
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
-            // 'driver_required' => filter_var($request->driver_required, FILTER_VALIDATE_BOOLEAN),
+            'driver_required' => $request->driver_required,
+            'status' => 0, // Directly set to Active
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Booking created successfully and moved directly to Bookings.',
+            'data' => $booking,
+        ], 200);
+    } 
+    else {
+        // Otherwise, create a request booking
+        $requestBooking = RequestBooking::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'self_pickup' => $request->self_pickup,
+            'pickup_address' => $request->pickup_address,
+            'pickup_date' => $request->pickup_date,
+            'pickup_time' => $request->pickup_time,
+            'self_dropoff' => $request->self_dropoff,
+            'dropoff_address' => $request->dropoff_address,
+            'dropoff_date' => $request->dropoff_date,
+            'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
         ]);
 
-        // Return a JSON response
         return response()->json([
             'status' => true,
-            'message' => 'Booking created successfully',
-            'data' => $booking,
+            'message' => 'Booking request created successfully and sent for approval.',
+            'data' => $requestBooking,
         ], 200);
     }
-
+}
 }
