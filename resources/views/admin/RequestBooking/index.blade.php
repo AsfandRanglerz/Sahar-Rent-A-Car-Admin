@@ -229,8 +229,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="assignDriverForm" action="{{ route('requestbooking.edit', $requestbooking->id) }}" method="POST">
+                {{-- @foreach ($requestbookings as $requestbooking) --}}
+                {{-- @if(isset($requestbooking)) --}}
+                <form id="assignDriverForm" method="POST" action="">
+                   {{-- @endforeach --}}
+                   {{-- @else
+                        <form id="assignDriverForm" action="#" method="POST">
+                    @endif --}}
                     @csrf
+
                     <input type="hidden" id="requestBookingId" name="request_booking_id">
                     
                     <div class="form-group">
@@ -286,40 +293,83 @@
         });
     </script>
 <script>
+    // $(document).on('click', '.assign-driver-btn', function() {
+    // let requestBookingId = $(this).data('id');  // Correct way to get data-id
+    // console.log("Clicked Assign - Request Booking ID:", requestBookingId); // Debugging
+    // $('#requestBookingId').val(requestBookingId);  // Set the hidden input value
+
+
+
+    //     // AJAX form submission
+    //     $('#assignDriverForm').on('submit', function(e) {
+    //         e.preventDefault();
+
+    //         let url = $(this).attr('action'); // Get form action URL
+    //         if (url === "#") {
+    //     alert("Invalid request booking selected.");
+    //     return;
+    // }
+    //         let formData = $(this).serialize(); // Serialize form data
+
+    //         console.log("Generated URL:", url); // Debugging
+
+    //         $.ajax({
+    //             url: url,  
+    //             type: "POST", 
+    //             data: formData,
+    //             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+    //             success: function(response) {
+    //                 console.log("Success:", response);
+    //                 alert('Driver Assigned Successfully!');
+    //                 $('#assignDriverModal').modal('hide');
+    //                 location.reload();
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.error("Error Details:", xhr.responseText);
+    //                 alert('This driver is already assigned for this date and time. please select another driver');
+    //             }
+    //         });
+    //     });
+    // });
+    $(document).ready(function() {
+    // Assign button click - update form action
     $(document).on('click', '.assign-driver-btn', function() {
-    let requestBookingId = $(this).data('id');  // Correct way to get data-id
-    console.log("Clicked Assign - Request Booking ID:", requestBookingId); // Debugging
-    $('#requestBookingId').val(requestBookingId);  // Set the hidden input value
+        let requestBookingId = $(this).data('id');
+        console.log("Clicked Assign - Request Booking ID:", requestBookingId);
 
+        $('#requestBookingId').val(requestBookingId);
+        let baseUrl = "{{ url('admin/requestbooking') }}"; // Get the correct base URL from Laravel
+    let formAction = baseUrl + "/" + requestBookingId + "/edit";
+        $('#assignDriverForm').attr('action', formAction);
+    });
 
+    // Prevent duplicate event binding
+    $('#assignDriverForm').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('action'); // Get updated action URL
+        let formData = $(this).serialize();
 
-        // AJAX form submission
-        $('#assignDriverForm').on('submit', function(e) {
-            e.preventDefault();
+        console.log("Submitting to URL:", url);
 
-            let url = $(this).attr('action'); // Get form action URL
-            let formData = $(this).serialize(); // Serialize form data
-
-            console.log("Generated URL:", url); // Debugging
-
-            $.ajax({
-                url: url,  
-                type: "POST", // Change to PUT if necessary
-                data: formData,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                success: function(response) {
-                    console.log("Success:", response);
-                    alert('Driver Assigned Successfully!');
-                    $('#assignDriverModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error Details:", xhr.responseText);
-                    alert('This driver is already assigned for this date and time. please select another driver');
-                }
-            });
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function(response) {
+                console.log("Success:", response);
+                alert('Driver Assigned Successfully!');
+                $('#assignDriverModal').modal('hide');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error Details:", xhr.responseText);
+                alert('This driver is already assigned for this date and time. Please select another driver.');
+            }
         });
     });
+});
+
 </script>
 
 

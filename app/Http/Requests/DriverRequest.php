@@ -30,7 +30,7 @@ class DriverRequest extends FormRequest
                 'phone' => 'required|string|max:11',
                 'password' => 'required|string|min:8',
                 'image' => 'nullable|file|max:2048',
-                'license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                // 'license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -53,8 +53,8 @@ class DriverRequest extends FormRequest
     'password.string' => 'The Password must be a string.',
     'password.min' => 'The Password must be at least 8 characters.',
 
-    'license.required' => 'The License is required.',
-    'license.mimes' => 'The License must be a file of type: jpeg, png, jpg, gif, svg.',
+    // 'license.required' => 'The License is required.',
+    // 'license.mimes' => 'The License must be a file of type: jpeg, png, jpg, gif, svg.',
    
         ];
     }

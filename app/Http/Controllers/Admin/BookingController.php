@@ -15,17 +15,19 @@ class BookingController extends Controller
     {
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
-        // $activeBookings = Booking::where('status', 0)->get();
-        // $requestBookings = RequestBooking::where('status', 0)
-        $activeBookings = RequestBooking::where('status', 0) // Fetch only active bookings
+        $apiBookings = Booking::where('status', 0) // Only active ones
+        ->get();
+        $requestBookings = RequestBooking::where('status', 0) // Fetch only active bookings
         ->with('driver','booking') 
         ->get();
-        return view('admin.booking.index',compact('activeBookings'));
+        $bookings = $apiBookings->merge($requestBookings);
+        return view('admin.booking.index',compact('bookings'));
     }
 
     public function create(){
         return view('admin.booking.create');
     }
+
 
     public function store(Request $request)
     {
@@ -90,10 +92,14 @@ class BookingController extends Controller
     } 
 
     public function destroy(Request $request, $id){
+        // return $id;
      $booking = RequestBooking::find($id);
      if (!$booking) {
         $booking = Booking::find($id);
     }
+    // if (!$booking) {
+    //     return redirect()->route('booking.index')->with(['error' => "Booking with ID {$id} not found."]);
+    // }
         $bookingName = $booking->name;
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
