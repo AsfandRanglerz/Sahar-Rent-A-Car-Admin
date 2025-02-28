@@ -57,11 +57,21 @@
                                                     {{-- <div class="badge {{ $booking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
                                                         {{ $booking->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
-                                                    @if($booking->status == 0)
+                                                    {{-- @if($booking->status == 0)
                                                         <div class="badge badge-success badge-shadow">Active</div>
                                                         @elseif($booking->status == 1)
                                                         <div class="badge badge-primary badge-shadow">Completed</div>
-                                                        @endif
+                                                        @endif --}}
+                                                        @if($booking->status == 0)
+                                                        <a href="javascript:void(0);" 
+                                                           class="badge badge-success badge-shadow  update-status" 
+                                                           data-id="{{ $booking->id }}" 
+                                                           data-status="1">
+                                                          <span class="text-white">  Active</span>
+                                                        </a>
+                                                    @elseif($booking->status == 1)
+                                                        <div class="badge badge-primary badge-shadow">Completed</div>
+                                                    @endif
                                                 </td>
                                                 <td class="driver-name">
                                                 {{-- @if($booking->driver_name)    
@@ -256,7 +266,39 @@
             });
         });
     </script>
+<script>
+    $(document).on('click', '.update-status', function() {
+    let bookingId = $(this).data('id'); // Get booking ID
+    let newStatus = $(this).data('status'); // New status (1 = Completed)
+    
+    if (!confirm("Are you sure you want to mark this booking as completed?")) {
+        return;
+    }
 
+    $.ajax({
+        url: "{{ url('/admin/booking') }}/" + bookingId + "/update-status", // Laravel route
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}", // CSRF Token for security
+            // booking_id: bookingId,
+            status: newStatus
+        },
+        success: function(response) {
+            if (response.success) {
+                toastr.success('Booking marked as completed!');
+                location.reload(); // Refresh page to update UI
+            } else {
+                toastr.error('Error updating status. Try again.');
+            }
+        },
+        error: function(xhr) {
+            console.error("Error:", xhr.responseText);
+            toastr.error('Something went wrong.');
+        }
+    });
+});
+
+    </script>
 
 
 @endsection

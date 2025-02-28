@@ -15,7 +15,8 @@ class RequestBookingController extends Controller
     public function index()
     {
         // $bookings = Booking::latest()->get();
-        $requestbookings = RequestBooking::orderBy('status','ASC')->get();
+        $requestbookings = RequestBooking::whereIn('status', [0, 2])
+        ->orderBy('status','ASC')->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
     }
@@ -71,6 +72,17 @@ if ($isDriverAssigned) {
     $requestBooking->status = 0; //  '0' means assigned
     $requestBooking->save();
 
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
+    
+        SubAdminLog::create([
+            'subadmin_id' => $subadmin->id,
+            'section' => 'Request Bookings',
+            'action' => 'Assign Driver',
+            'message' => "SubAdmin: {$subadminName} assigned Driver with Car ID: {$requestBooking->car_id} ",
+        ]);
+    }
     return response()->json([
         'success' => true,
         'message' => 'Driver assigned successfully!',
@@ -82,7 +94,8 @@ if ($isDriverAssigned) {
     // public function create(){
     //     return view('admin.booking.create');
     // }
-
+   
+    
     public function store(Request $request)
     {
         

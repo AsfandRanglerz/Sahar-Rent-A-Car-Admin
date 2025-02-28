@@ -142,6 +142,9 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         Route::post('/booking-store',  'store')->name('booking.store');
         Route::get('/booking-edit/{id}',  'edit')->name('booking.edit');
         Route::post('/booking-update/{id}',  'update')->name('booking.update');
+        Route::post('/booking/{id}/update-status',  'updateStatus')
+        ->name('booking.update-status');
+    
         Route::delete('/booking-destroy/{id}',  'destroy')->name('booking.destroy');
     });
     Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings'])->group(function () {
@@ -149,6 +152,9 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
         Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');
+    //     Route::post('/requestbooking/update-status',  'updateStatus')
+    // ->name('requestbooking.update-status');
+
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
         Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
     });

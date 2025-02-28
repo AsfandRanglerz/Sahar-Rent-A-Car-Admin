@@ -15,18 +15,39 @@ class BookingController extends Controller
     {
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
-        $apiBookings = Booking::where('status', 0) // Only active ones
-        ->get();
-        $requestBookings = RequestBooking::where('status', 0) // Fetch only active bookings
-        ->with('driver','booking') 
+        $apiBookings = Booking::orderBy('status','ASC')->get();
+        $requestBookings = RequestBooking::with('driver','booking') 
+        ->orderBy('status','ASC')
         ->get();
         $bookings = $apiBookings->merge($requestBookings);
+        $bookings = $bookings->sortBy('status');
         return view('admin.booking.index',compact('bookings'));
     }
-
+   
     public function create(){
         return view('admin.booking.create');
     }
+    public function updateStatus(Request $request, $id)
+{
+    // First, check if the booking exists in the Booking table
+    $booking = Booking::find($id);
+
+    // If not found in Booking, check in RequestBooking
+    if (!$booking) {
+        $booking = RequestBooking::find($id);
+    }
+
+    // If still not found, return an error
+    if (!$booking) {
+        return response()->json(['success' => false, 'message' => 'Booking not found.']);
+    }
+
+    // Update status to completed
+    $booking->status = $request->status;
+    $booking->save();
+
+    return response()->json(['success' => true, 'message' => 'Status updated successfully.']);
+}
 
 
     public function store(Request $request)
