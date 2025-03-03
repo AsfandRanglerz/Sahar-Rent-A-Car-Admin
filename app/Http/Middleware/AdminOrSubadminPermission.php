@@ -16,7 +16,7 @@ class AdminOrSubadminPermission
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $menuKey)
+    public function handle(Request $request, Closure $next, $menuKey,$action = 'view')
     {
         if (Auth::guard('admin')->check()) {
             return $next($request); // Admins can access everything
@@ -37,7 +37,7 @@ class AdminOrSubadminPermission
             ->keyBy('menu')
             ->toArray();
 
-        if (!isset($permissions[$menuKey]) || !$permissions[$menuKey]->view) {
+        if (!isset($permissions[$menuKey]) || !$permissions[$menuKey]->$action) {
             abort(403, 'You do not have permission to access this page.');
         }
         return $next($request);

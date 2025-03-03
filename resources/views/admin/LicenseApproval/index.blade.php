@@ -13,12 +13,12 @@
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
-                                {{-- @php
+                                @php
                                 $isAdmin = $isAdmin ?? false;
                                $permissions = $subadminPermissions['license_approvals'] ?? null;
                                 // Fetch permissions for this menu
                                @endphp 
-                           @if($isAdmin || ($permissions && $permissions->add == 1))  --}}
+                           {{-- @if($isAdmin || ($permissions && $permissions->add == 1))  --}}
                                 {{--<a class="btn btn-primary mb-3" href="{{ route('license.create') }}">Create</a>--}}
 {{-- @endif --}}
                                 <table class="responsive table" id="table-1">

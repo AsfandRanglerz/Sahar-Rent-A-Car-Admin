@@ -45,7 +45,17 @@ class BookingController extends Controller
     // Update status to completed
     $booking->status = $request->status;
     $booking->save();
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
 
+        SubAdminLog::create([
+            'subadmin_id' => $subadmin->id,
+            'section' => 'Bookings',
+            'action' => 'Update Status',
+            'message' => "SubAdmin: {$subadminName} updated  status.",
+        ]);
+    }
     return response()->json(['success' => true, 'message' => 'Status updated successfully.']);
 }
 
@@ -129,7 +139,7 @@ class BookingController extends Controller
             'subadmin_id' => Auth::guard('subadmin')->id(),
             'section' => 'Bookings',
             'action' => 'Delete',
-            'message' => "SubAdmin: {$subadminName} deleted booking: {$bookingName}",
+            'message' => "SubAdmin: {$subadminName} deleted a booking",
         ]);
     }
     $booking->delete();

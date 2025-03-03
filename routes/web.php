@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubadminController;
+use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\CarDetailsController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\LoyaltyPointsController;
@@ -47,29 +48,60 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
 
 
  // ############ User #################
- Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers'])->group(function () {
+ Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers,view'])->group(function () {
     Route::get('/user',  'index')->name('user.index');
-    Route::get('/user-create',  'create')->name('user.create');
-    Route::post('/user-store',  'store')->name('user.store');
-    Route::get('/user-edit/{id}',  'edit')->name('user.edit');
-    Route::post('/user-update/{id}',  'update')->name('user.update');
+    // Route::get('/user-create',  'create')->name('user.create');
+    // Route::post('/user-store',  'store')->name('user.store');
+    // Route::get('/user-edit/{id}',  'edit')->name('user.edit');
+    // Route::post('/user-update/{id}',  'update')->name('user.update');
     Route::delete('/user-destroy/{id}',  'destroy')->name('user.destroy');
     });
+    Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers,add'])->group(function () {
+        // Route::get('/user',  'index')->name('user.index');
+        Route::get('/user-create',  'create')->name('user.create');
+        Route::post('/user-store',  'store')->name('user.store');
+        // Route::get('/user-edit/{id}',  'edit')->name('user.edit');
+        // Route::post('/user-update/{id}',  'update')->name('user.update');
+        // Route::delete('/user-destroy/{id}',  'destroy')->name('user.destroy');
+        });
+        Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers,edit'])->group(function () {
+            // Route::get('/user',  'index')->name('user.index');
+            // Route::get('/user-create',  'create')->name('user.create');
+            // Route::post('/user-store',  'store')->name('user.store');
+            Route::get('/user-edit/{id}',  'edit')->name('user.edit');
+            Route::post('/user-update/{id}',  'update')->name('user.update');
+            // Route::delete('/user-destroy/{id}',  'destroy')->name('user.destroy');
+            });
 
     Route::post('/activate/{id}', [UserController::class, 'active'])->name('user.activate');
     Route::post('/deactivate/{id}', [UserController::class, 'deactive'])->name('user.deactivate');
 
 
     // ############ Driver #################
-    Route::controller(DriverController::class)->middleware(['admin','adminOrSubadmin:drivers'])->group(function () {
+    Route::controller(DriverController::class)->middleware(['admin','adminOrSubadmin:drivers,view'])->group(function () {
         Route::get('/driver',  'index')->name('driver.index');
-        Route::get('/driver-create',  'create')->name('driver.create');
-        Route::post('/driver-store',  'store')->name('driver.store');
-        Route::get('/driver-edit/{id}',  'edit')->name('driver.edit');
-        Route::post('/driver-update/{id}',  'update')->name('driver.update');
+        // Route::get('/driver-create',  'create')->name('driver.create');
+        // Route::post('/driver-store',  'store')->name('driver.store');
+        // Route::get('/driver-edit/{id}',  'edit')->name('driver.edit');
+        // Route::post('/driver-update/{id}',  'update')->name('driver.update');
         Route::delete('/driver-destroy/{id}',  'destroy')->name('driver.destroy');
     });
-
+    Route::controller(DriverController::class)->middleware(['admin','adminOrSubadmin:drivers,add'])->group(function () {
+        // Route::get('/driver',  'index')->name('driver.index');
+        Route::get('/driver-create',  'create')->name('driver.create');
+        Route::post('/driver-store',  'store')->name('driver.store');
+        // Route::get('/driver-edit/{id}',  'edit')->name('driver.edit');
+        // Route::post('/driver-update/{id}',  'update')->name('driver.update');
+        // Route::delete('/driver-destroy/{id}',  'destroy')->name('driver.destroy');
+    });
+    Route::controller(DriverController::class)->middleware(['admin','adminOrSubadmin:drivers,edit'])->group(function () {
+        // Route::get('/driver',  'index')->name('driver.index');
+        // Route::get('/driver-create',  'create')->name('driver.create');
+        // Route::post('/driver-store',  'store')->name('driver.store');
+        Route::get('/driver-edit/{id}',  'edit')->name('driver.edit');
+        Route::post('/driver-update/{id}',  'update')->name('driver.update');
+        // Route::delete('/driver-destroy/{id}',  'destroy')->name('driver.destroy');
+    });
     Route::post('/driverActivate/{id}', [DriverController::class, 'active'])->name('driver.activate');
     Route::post('/driverDeactivate/{id}', [DriverController::class, 'deactive'])->name('driver.deactivate');
 
@@ -89,20 +121,35 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::post('/subadmin/savePermissions',  'savePermissions')->name('subadmin.savePermissions');
 
     });
-    Route::controller(SubadminController::class)->middleware(['admin','adminOrSubadmin:cars'])->group(function () {
+    Route::controller(SubadminController::class)->middleware(['admin','adminOrSubadmin:sub_admins,view'])->group(function () {
         Route::get('/logs',  'logindex')->name('admin.logs');
         Route::delete('/logs-destroy/{id}',  'logdestroy')->name('logs.destroy');
     });
     // ############ Car Details #################
-    Route::controller(CarDetailsController::class)->middleware(['admin','adminOrSubadmin:user'])->group(function () {
+    Route::controller(CarDetailsController::class)->middleware(['admin','adminOrSubadmin:cars_inventory,view'])->group(function () {
         Route::get('/car',  'index')->name('car.index');
-        Route::get('/car-create',  'create')->name('car.create');
-        Route::post('/car-store',  'store')->name('car.store');
-        Route::get('/car-edit/{id}',  'edit')->name('car.edit');
-        Route::post('/car-update/{id}',  'update')->name('car.update');
+        // Route::get('/car-create',  'create')->name('car.create');
+        // Route::post('/car-store',  'store')->name('car.store');
+        // Route::get('/car-edit/{id}',  'edit')->name('car.edit');
+        // Route::post('/car-update/{id}',  'update')->name('car.update');
         Route::delete('/car-destroy/{id}',  'destroy')->name('car.destroy');
     });
-
+    Route::controller(CarDetailsController::class)->middleware(['admin','adminOrSubadmin:cars_inventory,add'])->group(function () {
+        // Route::get('/car',  'index')->name('car.index');
+        Route::get('/car-create',  'create')->name('car.create');
+        Route::post('/car-store',  'store')->name('car.store');
+        // Route::get('/car-edit/{id}',  'edit')->name('car.edit');
+        // Route::post('/car-update/{id}',  'update')->name('car.update');
+        // Route::delete('/car-destroy/{id}',  'destroy')->name('car.destroy');
+    });
+    Route::controller(CarDetailsController::class)->middleware(['admin','adminOrSubadmin:cars_inventory,edit'])->group(function () {
+        // Route::get('/car',  'index')->name('car.index');
+        // Route::get('/car-create',  'create')->name('car.create');
+        // Route::post('/car-store',  'store')->name('car.store');
+        Route::get('/car-edit/{id}',  'edit')->name('car.edit');
+        Route::post('/car-update/{id}',  'update')->name('car.update');
+        // Route::delete('/car-destroy/{id}',  'destroy')->name('car.destroy');
+    });
     // ############ Notification #################
     Route::controller(NotificationController::class)->middleware(['admin','adminOrSubadmin:notifications'])->group(function () {
         Route::get('/notification',  'index')->name('notification.index');
@@ -124,14 +171,29 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::post('/LicenseApprovalActivate/{id}', [LicenseController::class, 'active'])->name('license.activate');
     Route::post('/LicenseApprovalDeactivate/{id}', [LicenseController::class, 'deactive'])->name('license.deactivate');
 
-    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points'])->group(function () {
+    // Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points'])->group(function () {
+    //     Route::get('/loyaltypoints',  'index')->name('loyaltypoints.index');
+    //     Route::get('/loyaltypoints-create',  'create')->name('loyaltypoints.create');
+    //     Route::post('/loyaltypoints-store',  'store')->name('loyaltypoints.store');
+    //     Route::get('/loyaltypoints-edit/{id}',  'edit')->name('loyaltypoints.edit');
+    //     Route::post('/loyaltypoints-update/{id}',  'update')->name('loyaltypoints.update');
+    //     Route::delete('/loyaltypoints-destroy/{id}',  'destroy')->name('loyaltypoints.destroy');
+    // });
+    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points,view'])->group(function () {
         Route::get('/loyaltypoints',  'index')->name('loyaltypoints.index');
-        Route::get('/loyaltypoints-create',  'create')->name('loyaltypoints.create');
-        Route::post('/loyaltypoints-store',  'store')->name('loyaltypoints.store');
-        Route::get('/loyaltypoints-edit/{id}',  'edit')->name('loyaltypoints.edit');
-        Route::post('/loyaltypoints-update/{id}',  'update')->name('loyaltypoints.update');
         Route::delete('/loyaltypoints-destroy/{id}',  'destroy')->name('loyaltypoints.destroy');
     });
+    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points,add'])->group(function () {
+        
+        Route::get('/loyaltypoints-create',  'create')->name('loyaltypoints.create');
+        Route::post('/loyaltypoints-store',  'store')->name('loyaltypoints.store');
+       
+    });
+    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points,edit'])->group(function () {
+        Route::get('/loyaltypoints-edit/{id}',  'edit')->name('loyaltypoints.edit');
+        Route::post('/loyaltypoints-update/{id}',  'update')->name('loyaltypoints.update');
+    });
+
 
     Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');
     Route::post('/subadminDeactivate/{id}', [SubadminController::class, 'deactive'])->name('subadmin.deactivate');
@@ -157,6 +219,34 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
 
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
         Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
+    });
+    // Route::controller(ContactUsController::class)->middleware(['admin','adminOrSubadmin:ContactUs'])->group(function () {
+    //     Route::get('/ContactUs',  'index')->name('ContactUs.index');
+    //     Route::get('/ContactUs-create',  'create')->name('ContactUs.create');
+    //     Route::post('/ContactUs-store',  'store')->name('ContactUs.store');
+    //     Route::get('/ContactUs-edit/{id}',  'edit')->name('ContactUs.edit');
+    //     Route::post('/ContactUs-update/{id}',  'update')->name('ContactUs.update');
+    //     Route::delete('/ContactUs-destroy/{id}',  'destroy')->name('ContactUs.destroy');
+    // });
+
+    Route::controller(ContactUsController::class)
+    ->middleware(['admin', 'adminOrSubadmin:ContactUs,view'])  // ✅ Restrict View Only
+    ->group(function () {
+        Route::get('/ContactUs', 'index')->name('ContactUs.index');
+    });
+
+Route::controller(ContactUsController::class)
+    ->middleware(['admin', 'adminOrSubadmin:ContactUs,add'])  // ✅ Restrict Add Only
+    ->group(function () {
+        Route::get('/ContactUs-create', 'create')->name('ContactUs.create');
+        Route::post('/ContactUs-store', 'store')->name('ContactUs.store');
+    });
+
+Route::controller(ContactUsController::class)
+    ->middleware(['admin', 'adminOrSubadmin:ContactUs,edit'])  // ✅ Restrict Edit Only
+    ->group(function () {
+        Route::get('/ContactUs-edit/{id}', 'edit')->name('ContactUs.edit');
+        Route::post('/ContactUs-update/{id}', 'update')->name('ContactUs.update');
     });
 });
 

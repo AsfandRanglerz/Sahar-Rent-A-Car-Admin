@@ -243,6 +243,13 @@
             </li>
 @endif
 
+@if($isAdmin || (isset($subadminPermissions['ContactUs']) && $subadminPermissions['ContactUs']->view == 1))
+            <li class="dropdown {{ request()->is('admin/ContactUs*') ? 'active' : '' }}">
+                <a href="{{ route('ContactUs.index') }}" class="nav-link"><span><i
+                            data-feather="mail"></i>Contact Us</span></a>
+            </li>
+@endif
+
 {{-- @if($isAdmin || isset($subadminPermissions['privacy_policy'])) --}}
 @if($isAdmin || (isset($subadminPermissions['privacy_policy']) && $subadminPermissions['privacy_policy']->view == 1))
             <li class="dropdown {{ request()->is('admin/Privacy-policy*') || request()->is('admin/privacy-policy-edit*') ? 'active' : '' }}">

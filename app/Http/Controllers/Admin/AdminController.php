@@ -10,6 +10,7 @@ use App\Models\Subadmin;
 use App\Models\CarDetails;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RequestBooking;
 use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -25,8 +26,12 @@ class AdminController extends Controller
         $carsCount = CarDetails::count();
         $driversCount = Driver::count();
         $bookingsCount = Booking::count();
+        $requestBookingsCount = RequestBooking::count();
+        $totalBookingsCount = $bookingsCount + $requestBookingsCount;
         $activeBookingsCount = Booking::where('status', 0)->count();
-        return view('admin.index', compact('customersCount','carsCount', 'driversCount', 'bookingsCount', 'activeBookingsCount'));
+        $activerequestBookingsCount = RequestBooking::where('status', 0)->count();
+        $activeBookingCount = $activeBookingsCount + $activerequestBookingsCount;
+        return view('admin.index', compact('customersCount','carsCount', 'driversCount', 'totalBookingsCount', 'activeBookingCount'));
     }
     public function getProfile()
     {

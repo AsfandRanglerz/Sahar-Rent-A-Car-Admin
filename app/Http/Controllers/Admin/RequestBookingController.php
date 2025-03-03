@@ -96,16 +96,16 @@ if ($isDriverAssigned) {
     // }
    
     
-    public function store(Request $request)
-    {
+    // public function store(Request $request)
+    // {
         
 
-        return redirect()->route('requestbooking.index')->with(['message' => 'Booking Created Successfully']);
-    } 
+    //     return redirect()->route('requestbooking.index')->with(['message' => 'Booking Created Successfully']);
+    // } 
 
     public function destroy(Request $request, $id){
      $requestbooking = RequestBooking::find($id);
-        $requestbookingName = $requestbooking->name;
+        $requestbookingName = $requestbooking->full_name;
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
         $subadminName = $subadmin->name;

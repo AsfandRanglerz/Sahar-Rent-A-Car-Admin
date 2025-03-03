@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\CarRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class CarDetailsController extends Controller
@@ -213,7 +214,7 @@ if ($editedBy) {
     public function destroy(Request $request, $id)
     {
         $carDetail = CarDetails::find($id);
-        $carDetailName = $carDetail->name;
+        $carDetailName = $carDetail->car_id;
         if (Auth::guard('subadmin')->check()) {
             $subadmin = Auth::guard('subadmin')->user();
             $subadminName = $subadmin->name;

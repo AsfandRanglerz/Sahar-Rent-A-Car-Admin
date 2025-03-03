@@ -12,9 +12,15 @@
                                     <h4>Sub Admins</h4>
                                 </div>
                             </div>
+                            @php
+                            $isAdmin = $isAdmin ?? false;
+                           $permissions = $subadminPermissions['sub_admins'] ?? null;
+// Fetch permissions for this menu
+                           @endphp
                             <div class="card-body table-striped table-bordered table-responsive">
+                                @if($isAdmin || ($permissions && $permissions->add == 1))
                                 <a class="btn btn-primary mb-3" href="{{ route('subadmin.create') }}">Create</a>
-
+@endif
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -88,9 +94,11 @@
                                                                 </a>
                                                             @endif
 
-
+                                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                             <a href="{{ route('subadmin.edit', $subadmin->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
+                                                                @endif
+                                                                @if($isAdmin || ($permissions && $permissions->delete == 1))
                                                             <form action="{{ route('subadmin.destroy', $subadmin->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
@@ -100,6 +108,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>
@@ -209,6 +218,13 @@
                                 <td><input type="checkbox" name="permissions[loyalty_points][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][view]"  ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][delete]"  ></td>
+                            </tr>
+                            <tr>
+                                <td>Contact Us</td>
+                                <td><input type="checkbox" name="permissions[ContactUs][add]" ></td>
+                                <td><input type="checkbox" name="permissions[ContactUs][edit]"  ></td>
+                                <td><input type="checkbox" name="permissions[ContactUs][view]"  ></td>
+                                <td><input type="checkbox" name="permissions[ContactUs][delete]"  ></td>
                             </tr>
                             <tr>
                                 <td>Privacy Policy</td>
