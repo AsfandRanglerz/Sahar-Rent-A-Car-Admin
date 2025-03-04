@@ -53,12 +53,12 @@
                                                 <td>
                                                     {{-- <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
                                                         width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}"> --}}
-                                                        @if ($LicenseApproval->driver && $LicenseApproval->driver->document && $LicenseApproval->driver->document->license)
-                                                        <img src="{{ asset('storage/app/public/' . $LicenseApproval->driver->document->license) }}" 
+                                                        @if ($LicenseApproval->image)
+                                                        <img src="{{ asset('storage/app/public/' . $LicenseApproval->image) }}" 
                                                             alt="License Image" height="45" width="50" class="image"
                                                             style="cursor: pointer;" data-toggle="modal" 
                                                             data-target="#imageModal" 
-                                                            data-image="{{ asset('storage/app/public/' . $LicenseApproval->driver->document->license) }}">
+                                                            data-image="{{ asset('storage/app/public/' . $LicenseApproval->image) }}">
                                                     @else
                                                         N/A
                                                     @endif
@@ -89,25 +89,25 @@
                                                             <!-- Approve Button -->
                                                             <a href="javascript:void(0);" onclick="showActivationModal({{ $LicenseApproval->id }})"
                                                                 class="btn btn-success">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                                     class="feather feather-toggle-left">
                                                                     <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
                                                                     <circle cx="16" cy="12" r="3"></circle>
-                                                                </svg>
-                                                                
+                                                                </svg> --}}
+                                                                Approve
                                                             </a>
                                                     
                                                             <!-- Reject Button -->
                                                             <a href="javascript:void(0);" onclick="showDeactivationModal({{ $LicenseApproval->id }})"
                                                                 class="btn btn-danger">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                                     class="feather feather-toggle-left">
                                                                     <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
                                                                     <circle cx="16" cy="12" r="3"></circle>
-                                                                </svg>
-                                                                
+                                                                </svg> --}}
+                                                                Reject
                                                             </a>
                                                             {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
                                                             {{-- <a href="{{ route('license.edit', $LicenseApproval->id) }}"

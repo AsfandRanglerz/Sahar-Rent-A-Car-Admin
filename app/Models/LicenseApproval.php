@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Driver;
 use App\Models\driversregister;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +14,6 @@ class LicenseApproval extends Model
 
     public function driver()
     {
-        return $this->belongsTo(driversregister::class,'driver_id');
+        return $this->belongsTo(Driver::class,'driver_id');
     }
 }

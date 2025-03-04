@@ -34,8 +34,8 @@ class AuthController extends Controller
     $request->all(),
     [
     // 'name' => 'required|string|min:10',
-    'email' => 'required|email|unique:users,email|unique:driversregisters,email',
-    'phone' => 'required|numeric|min:7|unique:users,phone|unique:driversregisters,phone',
+    'email' => 'required|email|unique:users,email|unique:drivers,email',
+    'phone' => 'required|numeric|min:7|unique:users,phone|unique:drivers,phone',
     // 'password' => 'required|min:6|confirmed',
     ]
 );
@@ -150,8 +150,8 @@ $validateUser = Validator::make(
 $request->all(),
 [
 // 'name' => 'required|string|min:10',
-'email' => 'required|email|unique:driversregisters,email|unique:customers,email',
-'phone' => 'required|numeric|min:7|unique:driversregisters,phone|unique:customers,phone',
+'email' => 'required|email|unique:drivers,email|unique:users,email',
+'phone' => 'required|numeric|min:7|unique:drivers,phone|unique:users,phone',
 // 'password' => 'required|min:6|confirmed',
 ]
 );
@@ -179,13 +179,13 @@ LicenseApproval::create([
     // 'document_uploaded' => false, // New field to track document upload
 ]);
 
-if ($request->hasFile('profile_image')) {
-    $file = $request->file('profile_image');
+if ($request->hasFile('image')) {
+    $file = $request->file('image');
     $filename = time() . '_' . $file->getClientOriginalName();
     $file->move(public_path('admin/assets/images/users'), $filename);
     $image = 'public/admin/assets/images/users/' . $filename;
 
-    $driver->update(['profile_image' => $image]);
+    $driver->update(['image' => $image]);
 }
 
 // if(!$customer){
@@ -207,7 +207,7 @@ if ($request->hasFile('profile_image')) {
 // }
        
 // $document->save();
-        
+Mail::to($driver->email)->send(new CustomerRegisteredMail($driver->name, $driver->email, $driver->phone));     
 
 return response()->json([
 // 'status' => true,
@@ -263,12 +263,13 @@ return response()->json([
         $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
 
         if ($request->hasFile('license')) {
-            $document->license = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
+            $licensePath = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
         }
-        LicenseApproval::where('driver_id', $request->driver_id);
-        // ->update(['document_uploaded' => true, 'status' => 'ready']);
-        
+        $document->license = $licensePath;
         $document->save();
+
+        LicenseApproval::where('driver_id', $request->driver_id)
+        ->update(['image' => $licensePath]);
         
 
         return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
@@ -429,10 +430,12 @@ return response()->json([
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
+                'send_otp' => 'required',
             ],
             [
                 'identifier.required' => 'The email or phone number is required.',
                 'password.required' => 'The password is required.',
+                'send_otp.required' => 'The otp field is required.',
             ]
         );
     
@@ -451,11 +454,47 @@ return response()->json([
     
         if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
             // If the identifier is an email
-            $driver = driversregister::where('email', $identifier)->first();
+            $driver = Driver::where('email', $identifier)->first();
         } else {
             // If the identifier is a phone number
-            $driver = driversregister::where('phone', $identifier)->first();
+            $driver = Driver::where('phone', $identifier)->first();
         }
+
+        if (!$driver) {
+            return response()->json([
+                // 'status' => false,
+                'message' => 'Invalid email or phone',
+            ], 404);
+        }
+    
+        if (!Hash::check($request->password, $driver->password)) {
+            return response()->json([
+                // 'status' => false,
+                'message' => 'Invalid password',
+            ], 401);
+        }
+        $otp = rand(100000, 999999);
+        $otpToken = Str::uuid(); // Unique token for OTP verification
+        // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
+    
+        // Store OTP in the database
+        OTP::create([
+            'identifier' => $identifier,
+            'otp' => $otp,
+            'otp_token' => $otpToken,
+            // 'expires_at' => $expiresAt,
+        ]);
+    
+        // Send OTP via email (or SMS)
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            Mail::to($identifier)->send(new OTPMail($otp));
+        }
+    
+       
+        
+            if ($request->fcm_token) {
+                $customer->update(['fcm_token' => $request->fcm_token]);
+            }
     
         // if (!$customer) {
         //     return response()->json([
@@ -473,7 +512,10 @@ return response()->json([
     
         return response()->json([
             // 'status' => true,
-            'message' => 'Logged In successfully',
+            // 'message' => 'Logged In successfully',
+            'message' => 'OTP sent successfully.',
+            'otp_token' => $otpToken, // Send OTP token to frontend 
+            'fcm_token' => $driver->fcm_token,
             'token' => $driver->createToken("API Token")->plainTextToken,
             // 'token_type' => 'Bearer',
         ], 200);
@@ -614,13 +656,16 @@ public function getProfile(Request $request)
         $customer = Auth::user();
 
         return response()->json([
-            'status' => true,
+            // 'status' => true,
             'message' => 'User profile retrieved successfully.',
             'data' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
-                'profile_image' => $customer->profile_image, // Assuming there's a profile image field
+                'image' => $customer->image, 
+                // 'emirate_id' => $customer->emirate_id,
+                // 'passport' => $customer->passport,
+                // 'driving_license' => $customer->driving_license,
             ],
         ], 200);
     }
@@ -634,13 +679,20 @@ public function getProfile(Request $request)
         $customer = Auth::user();
         
         // Validate the request
-        // $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
         //     'name' => 'required|string|max:255',
-        //     'email' => 'required|email|unique:customers,email,' . $customer->id, 
-        //     'phone' => 'nullable|string|unique:customers,phone,' . $customer->id, 
+            'email' => 'nullable|email|unique:users,email|unique:drivers,email,' . $customer->id, 
+            'phone' => 'nullable|string|unique:users,phone|unique:drivers,phone,' . $customer->id, 
         //     'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
-        // ]);
-    
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                // 'status' => false,
+                'message' => $validator->errors()->first(),
+                // 'errors' => $validateUser->errors()->all(),
+            ],401);
+            }
         // // Log the incoming data for debugging
         // \Log::info($request->all());
     
@@ -658,32 +710,131 @@ public function getProfile(Request $request)
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->phone = $request->phone;
-    
+        // $emirate_id = null;
+        // $passport = null;
+        // $driving_license = null;
+        
+        // if ($request->hasFile('emirate_id')) {
+        //     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
+        //     $customer->emirate_id = "{$emirate_id}";
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $passport = $request->file('passport')->store("documents/passport", 'public');
+        //     $customer->passport = "{$passport}";
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
+        //     $customer->driving_license = "{$driving_license}";
+        // }
         // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $path = 'admin/assets/images/users/' . $filename;
-
-            // Store file manually in the public folder
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('admin/assets/images/users'), $filename);
-
-            $customer->profile_image = $path;
+            $image = 'public/admin/assets/images/users/' . $filename;
+        
+            $customer->update(['image' => $image]);
         }
     
         $customer->save();
     
         return response()->json([
-            'status' => true,
+            // 'status' => true,
             'message' => 'Customer profile updated successfully.',
             'data' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
-                'profile_image' => $customer->profile_image ? asset($customer->profile_image) : null,
+                'image' => $customer->image ? asset($customer->image) : null,
+                // 'emirate_id' => $emirate_id,
+                // 'passport' => $passport,
+                // 'driving_license' => $driving_license,
+
             ],
         ], 200);
     }
     
+    public function updateDocument(Request $request)
+    {
+
+
+        // Get the authenticated user
+        $customer = Auth::user();
+        
+        // Validate the request
+        // $validator = Validator::make($request->all(), [
+        // //     'name' => 'required|string|max:255',
+        //     'email' => 'nullable|email|unique:users,email|unique:drivers,email,' . $customer->id, 
+        //     'phone' => 'nullable|string|unique:users,phone|unique:drivers,phone,' . $customer->id, 
+        // //     'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
+        // ]);
+
+        // if($validator->fails()){
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => $validator->errors()->first(),
+        //         // 'errors' => $validateUser->errors()->all(),
+        //     ],401);
+        //     }
+        // // Log the incoming data for debugging
+        // \Log::info($request->all());
+    
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Validation errors.',
+        //         'errors' => $validator->errors(),
+        //     ], 422);
+        // }
+    
+        // Update customer details
+        // return $customer;
+
+        // $customer->name = $request->name;
+        // $customer->email = $request->email;
+        // $customer->phone = $request->phone;
+        $emirate_id = null;
+        $passport = null;
+        $driving_license = null;
+        
+        if ($request->hasFile('emirate_id')) {
+            $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
+            $customer->emirate_id = "{$emirate_id}";
+        }
+        if ($request->hasFile('passport')) {
+            $passport = $request->file('passport')->store("documents/passport", 'public');
+            $customer->passport = "{$passport}";
+        }
+        if ($request->hasFile('driving_license')) {
+            $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
+            $customer->driving_license = "{$driving_license}";
+        }
+        // Handle profile image upload
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $filename = time() . '_' . $file->getClientOriginalName();
+        //     $file->move(public_path('admin/assets/images/users'), $filename);
+        //     $image = 'public/admin/assets/images/users/' . $filename;
+        
+        //     $customer->update(['image' => $image]);
+        // }
+    
+        $customer->save();
+    
+        return response()->json([
+            // 'status' => true,
+            'message' => 'Customer document updated successfully.',
+            'data' => [
+                // 'name' => $customer->name,
+                // 'email' => $customer->email,
+                // 'phone' => $customer->phone,
+                // 'image' => $customer->image ? asset($customer->image) : null,
+                'emirate_id' => $emirate_id,
+                'passport' => $passport,
+                'driving_license' => $driving_license,
+
+            ],
+        ], 200);
+    }
     
 }

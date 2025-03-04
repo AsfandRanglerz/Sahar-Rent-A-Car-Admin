@@ -21,10 +21,10 @@ class LicenseController extends Controller
     {
         
         $LicenseApprovals = LicenseApproval::latest()
-        ->with(['driver.document'])
-        ->whereHas('driver.document', function ($query) {
-            $query->whereNotNull('license'); // Assuming 'license' is the column where license data is stored
-        })  
+        ->with(['driver'])
+        
+        ->whereNotNull('image') // Assuming 'license' is the column where license data is stored
+        
         ->get();
         $pendingCount = LicenseApproval::where('status', 2)->count();
         
