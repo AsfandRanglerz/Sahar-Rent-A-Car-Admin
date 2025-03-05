@@ -43,7 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/bookings',[BookingController::class,'createBooking']);
 
 //#################  Payment  ############################
-Route::post('/deposit', [PaymentController::class, 'processDeposit']);
+Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::class, 'getWalletHistory']);
 
 //#################  ContactUs  ##########################
 Route::post('/contactus',[ContactUsController::class,'contact']);

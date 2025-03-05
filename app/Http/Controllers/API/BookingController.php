@@ -69,7 +69,7 @@ class BookingController extends Controller
         ]);
 
         return response()->json([
-            'status' => true,
+            // 'status' => true,
             'message' => 'Booking created successfully and moved directly to Bookings.',
             'data' => $booking,
         ], 200);
@@ -92,7 +92,7 @@ class BookingController extends Controller
         ]);
 
         return response()->json([
-            'status' => true,
+            // 'status' => true,
             'message' => 'Booking request created successfully and sent for approval.',
             'data' => $requestBooking,
         ], 200);
