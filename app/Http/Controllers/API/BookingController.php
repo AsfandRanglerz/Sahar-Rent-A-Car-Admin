@@ -6,6 +6,7 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\RequestBooking;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -51,8 +52,10 @@ class BookingController extends Controller
     //         'data' => $booking,
     //     ], 200);
     // }
+
     if ($request->self_pickup === "Yes" && $request->self_dropoff === "Yes") {
         $booking = Booking::create([
+        'user_id' => Auth::id(),
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -65,6 +68,7 @@ class BookingController extends Controller
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
+            'car_id' => $request->car_id,
             'status' => 0, // Directly set to Active
         ]);
 
@@ -77,6 +81,7 @@ class BookingController extends Controller
     else {
         // Otherwise, create a request booking
         $requestBooking = RequestBooking::create([
+            // 'user_id' => Auth::id(),
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -89,6 +94,7 @@ class BookingController extends Controller
             'dropoff_date' => $request->dropoff_date,
             'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
+            'car_id' => $request->car_id,
         ]);
 
         return response()->json([

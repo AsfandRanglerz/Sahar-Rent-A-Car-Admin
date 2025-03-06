@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Booking;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
@@ -20,7 +21,8 @@ class LoyaltyPointsController extends Controller
 
     public function create()
     {
-        return view('admin.LoyaltyPoints.create');
+        $bookings = Booking::with('car')->get();
+        return view('admin.LoyaltyPoints.create',compact('bookings'));
     }
 
     public function store(LoyaltyPointRequest $request)
@@ -50,6 +52,7 @@ class LoyaltyPointsController extends Controller
 
         // Create the user
         $loyaltyPoint = LoyaltyPoints::create([
+            'booking_id' => $request->booking_id,
             'on_referal' => $request->on_referal,
             // 'email' => $request->email,
             'on_car' => $request->on_car,

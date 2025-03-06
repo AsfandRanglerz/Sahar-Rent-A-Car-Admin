@@ -38,7 +38,7 @@ class RequestBookingController extends Controller
 
     // Check if the driver is already assigned at the same time
     $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
-    // ->where('id', '!=', $id)
+    ->where('status', '!=', 1) // Exclude completed bookings
     ->where(function ($query) use ($requestBooking) {
         $query->where('pickup_date', $requestBooking->pickup_date) // Same pickup date
               ->where(function ($q) use ($requestBooking) {
@@ -60,17 +60,27 @@ if ($isDriverAssigned) {
 
 
     // Generate a unique 4-digit car_id if it doesn't exist
-    if (!$requestBooking->car_id) {
-        do {
-            $carId = mt_rand(1000, 9999);
-        } while (RequestBooking::where('car_id', $carId)->exists());
+    // if (!$requestBooking->car_id) {
+    //     do {
+    //         $carId = mt_rand(1000, 9999);
+    //     } while (RequestBooking::where('car_id', $carId)->exists());
 
-        $requestBooking->car_id = $carId;
+    //     $requestBooking->car_id = $carId;
+    // }
+    if ($request->car_id) {
+        $requestBooking->car_id = $request->car_id;
     }
 
     $requestBooking->driver_id = $request->driver_id;
     $requestBooking->status = 0; //  '0' means assigned
     $requestBooking->save();
+    $driver->is_available = false;
+    $driver->save();
+// **Check if booking is completed (status = 1), then free the driver**
+    if ($requestBooking->status == 1) {
+        $driver->is_available = true; // Mark driver as available
+        $driver->save();
+    }
 
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();

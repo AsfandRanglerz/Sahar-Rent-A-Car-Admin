@@ -38,9 +38,9 @@ class ContactUsController extends Controller
     $adminEmail = ContactUs::value('email');
     Mail::to($adminEmail)->send(new ContactUsMail($contact->email, $contact->message));
     return response()->json([
-        'status' => true,
-        'message' => 'Contact us successfull',
-        'errors' => $contact
+        // 'status' => true,
+        'message' => 'Your message has been sent successfully.',
+        'data' => $contact
     ],200);
     }
 }

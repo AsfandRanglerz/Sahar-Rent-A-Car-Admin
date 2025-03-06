@@ -14,6 +14,17 @@
                                 <h4 class="text-center my-4">Add Loyalty Point</h4>
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    <div class="form-group mb-2">
+                                        <label for="booking_id">Select Car:</label>
+                                        <select name="booking_id" id="booking_id" class="form-control" required>
+                                            <option value="">-- Select Car --</option>
+                                            @foreach($bookings as $booking)
+                                                <option value="{{ $booking->id }}"> {{ $booking->car->car_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    </div>
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>On Referal Link</label>
                                             <input type="number" placeholder="Points i.e 5" name="on_referal"

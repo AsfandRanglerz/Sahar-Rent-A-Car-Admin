@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ContactUsController;
+use App\Http\Controllers\API\LoyaltyPointController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,13 +35,13 @@ Route::post('/forgot-verify-otp', [AuthController::class, 'forgotverifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/profile', [AuthController::class, 'getProfile']);
+    Route::get('/getprofile', [AuthController::class, 'getProfile']);
     Route::post('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/documentprofile', [AuthController::class, 'updateDocument']);
 });
 
 //#################  Bookings  ###########################
-Route::post('/bookings',[BookingController::class,'createBooking']);
+Route::post('/bookings',[BookingController::class,'createBooking'])->middleware('auth:sanctum');
 
 //#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
@@ -49,7 +50,8 @@ Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::cl
 //#################  ContactUs  ##########################
 Route::post('/contactus',[ContactUsController::class,'contact']);
 
-
+//#################  Loyalty Points  #####################
+Route::middleware('auth:sanctum')->get('/loyalty-points', [LoyaltyPointController::class, 'getLoyaltyPoints']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

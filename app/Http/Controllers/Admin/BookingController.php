@@ -17,6 +17,7 @@ class BookingController extends Controller
         // $bookings = Booking::orderBy('status','ASC')->get();
         $apiBookings = Booking::orderBy('status','ASC')->get();
         $requestBookings = RequestBooking::with('driver','booking') 
+        ->whereIn('status', [0, 1])
         ->orderBy('status','ASC')
         ->get();
         $bookings = $apiBookings->merge($requestBookings);

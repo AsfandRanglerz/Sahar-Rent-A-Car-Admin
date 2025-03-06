@@ -663,9 +663,9 @@ public function getProfile(Request $request)
                 'email' => $customer->email,
                 'phone' => $customer->phone,
                 'image' => $customer->image, 
-                // 'emirate_id' => $customer->emirate_id,
-                // 'passport' => $customer->passport,
-                // 'driving_license' => $customer->driving_license,
+                'emirate_id' => $customer->emirate_id,
+                'passport' => $customer->passport,
+                'driving_license' => $customer->driving_license,
             ],
         ], 200);
     }
