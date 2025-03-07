@@ -52,6 +52,8 @@ Route::post('/contactus',[ContactUsController::class,'contact']);
 
 //#################  Loyalty Points  #####################
 Route::middleware('auth:sanctum')->get('/loyalty-points', [LoyaltyPointController::class, 'getLoyaltyPoints']);
+Route::post('/share-referral', [LoyaltyPointController::class, 'earnLoyaltyPoints'])->middleware('auth:sanctum');
+Route::get('/redeem-points', [LoyaltyPointController::class, 'getUserLoyaltyPoints'])->middleware('auth:sanctum');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Booking;
+use App\Models\CarDetails;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,4 +19,8 @@ class LoyaltyPoints extends Authenticatable
     return $this->belongsTo(Booking::class, 'booking_id', 'id');
 }
 
+public function car()
+{
+    return $this->belongsTo(CarDetails::class, 'car_id', 'id');
+}
 }

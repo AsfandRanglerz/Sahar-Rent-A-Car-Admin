@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Driver;
 use App\Models\Booking;
+use App\Models\CarDetails;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,4 +24,13 @@ class RequestBooking extends Model
     return $this->hasOne(Booking::class, 'car_id', 'car_id');
 }
 
+public function car()
+{
+    return $this->belongsTo(CarDetails::class, 'car_id', 'car_id');
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

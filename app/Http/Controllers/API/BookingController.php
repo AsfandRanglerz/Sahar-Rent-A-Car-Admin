@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +72,18 @@ class BookingController extends Controller
             'car_id' => $request->car_id,
             'status' => 0, // Directly set to Active
         ]);
-
+        
+// Assign loyalty points if available for this car
+$loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
+if ($loyaltyPoints) {
+    LoyaltyPoints::create([
+        'car_id' => $request->car_id,
+        'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
+        'on_car' => $loyaltyPoints->on_car,
+        'discount' => $loyaltyPoints->discount,
+        'user_id' => Auth::id(),
+    ]);
+}
         return response()->json([
             // 'status' => true,
             'message' => 'Booking created successfully and moved directly to Bookings.',
@@ -81,7 +93,7 @@ class BookingController extends Controller
     else {
         // Otherwise, create a request booking
         $requestBooking = RequestBooking::create([
-            // 'user_id' => Auth::id(),
+            'user_id' => Auth::id(),
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -96,7 +108,18 @@ class BookingController extends Controller
             'driver_required' => $request->driver_required,
             'car_id' => $request->car_id,
         ]);
-
+        
+// Assign loyalty points if available for this car
+    $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
+    if ($loyaltyPoints) {
+        LoyaltyPoints::create([
+            'car_id' => $request->car_id,
+            'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
+            'on_car' => $loyaltyPoints->on_car,
+            'discount' => $loyaltyPoints->discount,
+            'user_id' => Auth::id(),
+        ]);
+    }
         return response()->json([
             // 'status' => true,
             'message' => 'Booking request created successfully and sent for approval.',

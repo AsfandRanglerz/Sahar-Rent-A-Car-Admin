@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Booking;
+use App\Models\CarDetails;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
@@ -14,15 +15,16 @@ class LoyaltyPointsController extends Controller
 {
     public function index()
     {
-        $loyaltypoints = LoyaltyPoints::latest()->get();
+        $loyaltypoints = LoyaltyPoints::with('car')->latest()->get();
 
         return view('admin.LoyaltyPoints.index',compact('loyaltypoints'));
     }
 
     public function create()
     {
-        $bookings = Booking::with('car')->get();
-        return view('admin.LoyaltyPoints.create',compact('bookings'));
+        // $bookings = Booking::with('car')->get();
+        $cars = CarDetails::all();
+        return view('admin.LoyaltyPoints.create',compact('cars'));
     }
 
     public function store(LoyaltyPointRequest $request)
@@ -52,14 +54,12 @@ class LoyaltyPointsController extends Controller
 
         // Create the user
         $loyaltyPoint = LoyaltyPoints::create([
-            'booking_id' => $request->booking_id,
+            // 'booking_id' => $request->booking_id,
+            'car_id' => $request->car_id,
             'on_referal' => $request->on_referal,
             // 'email' => $request->email,
             'on_car' => $request->on_car,
             'discount' => $request->discount,
-            // 'password' => Hash::make($generatedPassword),
-            // 'image' => $image,
-            // 'status' => $status
             'added_by_subadmin' => Auth::guard('subadmin')->id(),
         ]);
         if (Auth::guard('subadmin')->check()) {

@@ -25,6 +25,8 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
+                                            <th>Car ID</th>
+                                            <th>Car Name</th>
                                             <th>Referal Link</th>
                                             <th>Car Rental</th>
                                             {{-- <th>Phone</th> --}}
@@ -38,6 +40,8 @@
                                         @foreach ($loyaltypoints as $loyaltypoint)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id -->
+                                                <td>{{ $loyaltypoint->car->car_name ?? 'N/A' }}</td>
                                                 <td>{{ $loyaltypoint->on_referal }}</td>
                                                 {{-- <td>
                                                     @if ($loyaltypoint->email)
