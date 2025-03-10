@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group mb-0">
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block btn-login" tabindex="4">
                                         Login
                                     </button>
                                 </div>
@@ -79,6 +79,13 @@
             this.classList.toggle('fa-eye-slash');
             this.classList.toggle('fa-eye');
         });
+        document.querySelector('.btn-login').addEventListener('click', function () {
+        const eyeIcon = document.getElementById('togglePassword');
+
+        if (eyeIcon) {
+            eyeIcon.classList.add('d-none'); // Hide the eye icon when login is clicked
+        }
+    });
     </script>
 
 @endsection

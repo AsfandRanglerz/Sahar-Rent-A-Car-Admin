@@ -24,7 +24,7 @@ class LoyaltyPointRequest extends FormRequest
     public function rules()
     {
         return [
-            'on_referal' => 'required',
+            // 'on_referal' => 'required',
             'on_car' => 'required',
             'discount' => 'required',
         ];
@@ -33,7 +33,7 @@ class LoyaltyPointRequest extends FormRequest
     public function messages()
     {
         return [
-            'on_referal.required' => 'Referal Point is required',
+            // 'on_referal.required' => 'Referal Point is required',
             'on_car.required' => 'Car Rental Point is required',
             'discount.required' => 'Discount is required',
         ];

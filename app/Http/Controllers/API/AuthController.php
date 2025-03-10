@@ -679,20 +679,20 @@ public function getProfile(Request $request)
         $customer = Auth::user();
         
         // Validate the request
-        $validator = Validator::make($request->all(), [
+        // $validator = Validator::make($request->all(), [
         //     'name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:users,email|unique:drivers,email,' . $customer->id, 
-            'phone' => 'nullable|string|unique:users,phone|unique:drivers,phone,' . $customer->id, 
+            // 'email' => 'nullable|email|unique:users,email|unique:drivers,email,' . $customer->id, 
+            // 'phone' => 'nullable|string|unique:users,phone|unique:drivers,phone,' . $customer->id, 
         //     'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
-        ]);
+        // ]);
 
-        if($validator->fails()){
-            return response()->json([
-                // 'status' => false,
-                'message' => $validator->errors()->first(),
-                // 'errors' => $validateUser->errors()->all(),
-            ],401);
-            }
+        // if($validator->fails()){
+        //     return response()->json([
+        //         // 'status' => false,
+        //         'message' => $validator->errors()->first(),
+        //         // 'errors' => $validateUser->errors()->all(),
+        //     ],401);
+        //     }
         // // Log the incoming data for debugging
         // \Log::info($request->all());
     
@@ -727,6 +727,10 @@ public function getProfile(Request $request)
         //     $customer->driving_license = "{$driving_license}";
         // }
         // Handle profile image upload
+        $customer->name = $request->name ?? $customer->name;
+        $customer->email = $request->email ?? $customer->email;
+        $customer->phone = $request->phone ?? $customer->phone; // Keep existing phone if not provided
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();

@@ -236,13 +236,43 @@
             </li>
 @endif
 {{-- @if($isAdmin || isset($subadminPermissions['loyalty_points'])) --}}
-@if($isAdmin || (isset($subadminPermissions['loyalty_points']) && $subadminPermissions['loyalty_points']->view == 1))
+{{-- @if($isAdmin || (isset($subadminPermissions['loyalty_points']) && $subadminPermissions['loyalty_points']->view == 1))
             <li class="dropdown {{ request()->is('admin/loyaltypoints*') ? 'active' : '' }}">
                 <a href="{{ route('loyaltypoints.index') }}" class="nav-link"><span><i
                             data-feather="gift"></i>Loyalty Points</span></a>
             </li>
-@endif
+@endif --}}
+@if($isAdmin || isset($subadminPermissions['loyalty_points']) || isset($subadminPermissions['referal_links']))
+<li class="dropdown">
+    <a href="#" class="menu-toggle nav-link has-dropdown">
+        <i data-feather="gift"></i> <!-- Icon for header section -->
+        <span>Loyalty Points</span>
+    </a>
+    <ul class="dropdown-menu {{ request()->is('admin/loyaltypoints*') || request()->is('admin/referals*') ? 'show' : '' }}">
+        
+        {{-- Sub Admins --}}
+        @if($isAdmin || isset($subadminPermissions['loyalty_points']))
+        <li class="{{ request()->is('admin/loyaltypoints*')  }}">
+            <a href="{{ route('loyaltypoints.index') }}" class="nav-link  {{ request()->is('admin/loyaltypoints*') ? 'active bg-primary text-white' : '' }}">
+                <i data-feather="gift"></i>
+                <span>Car Rental Points</span>
+            </a>
+        </li>
+        @endif
 
+        {{-- Admin Logs --}}
+        @if($isAdmin || isset($subadminPermissions['referal_links']))
+        <li class="{{ request()->is('admin/referals*')  }}">
+            <a href="{{ route('referals.index') }}" class="nav-link {{ request()->is('admin/referals*') ? 'active bg-primary text-white' : '' }}">
+                <i data-feather="gift"></i>
+                <span>Referal Link Points</span>
+            </a>
+        </li>
+        @endif
+        
+    </ul>
+</li>
+@endif
 @if($isAdmin || (isset($subadminPermissions['ContactUs']) && $subadminPermissions['ContactUs']->view == 1))
             <li class="dropdown {{ request()->is('admin/ContactUs*') ? 'active' : '' }}">
                 <a href="{{ route('ContactUs.index') }}" class="nav-link"><span><i

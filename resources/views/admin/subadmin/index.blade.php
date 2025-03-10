@@ -213,11 +213,18 @@
                                 <td><input type="checkbox" name="permissions[requestbookings][delete]"></td>
                             </tr>
                             <tr>
-                                <td>Loyalty Points</td>
+                                <td>Car Rental Points</td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][add]" ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][view]"  ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][delete]"  ></td>
+                            </tr>
+                            <tr>
+                                <td>Referal Link Points</td>
+                                <td><input type="checkbox" name="permissions[referal_links][add]" ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][edit]"  ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][view]"  ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][delete]"  ></td>
                             </tr>
                             <tr>
                                 <td>Contact Us</td>

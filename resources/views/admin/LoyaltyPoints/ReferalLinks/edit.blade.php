@@ -5,16 +5,16 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ route('loyaltypoints.index')}}">Back</a>
-                <form id="edit_subadmin" action="{{ route('loyaltypoints.update', $loyaltyPoint->id) }}" method="POST" enctype="multipart/form-data">
+                <a class="btn btn-primary mb-3" href="{{ route('referals.index')}}">Back</a>
+                <form id="edit_subadmin" action="{{ route('referals.update', $loyaltyPoint->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
-                                <h4 class="text-center my-4">Edit Loyalty Point</h4>
+                                <h4 class="text-center my-4">Edit Referal Link</h4>
                                 <div class="row mx-0 px-4">
-                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>On Referal Link</label>
                                             <input type="number" placeholder="Points i.e 5" name="on_referal"
@@ -23,7 +23,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Email</label>
@@ -34,7 +34,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>On Car Rental</label>
                                             <input type="number" placeholder="Points i.e 5" name="on_car"
@@ -43,7 +43,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Address</label>
@@ -54,7 +54,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Discount</label>
                                             <div class="input-group">
@@ -69,7 +69,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">

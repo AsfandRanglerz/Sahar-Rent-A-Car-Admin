@@ -9,28 +9,28 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Loyalty Points</h4>
+                                    <h4>Referal Link</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
                                 @php
                                 $isAdmin = $isAdmin ?? false;
-                               $permissions = $subadminPermissions['loyalty_points'] ?? null;
+                               $permissions = $subadminPermissions['referal_links'] ?? null;
                                 // Fetch permissions for this menu
                                @endphp 
-                           @if($isAdmin || ($permissions && $permissions->add == 1)) 
+                           {{-- @if($isAdmin || ($permissions && $permissions->add == 1)) 
                                 <a class="btn btn-primary mb-3" href="{{ route('loyaltypoints.create') }}">Create</a>
-@endif
+@endif --}}
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Car ID</th>
-                                            <th>Car Name</th>
-                                            {{-- <th>Referal Link</th> --}}
-                                            <th>Car Rental</th>
+                                            {{-- <th>Car ID</th>
+                                            <th>Car Name</th> --}}
+                                            <th>Referal Link</th>
+                                            {{-- <th>Car Rental</th> --}}
                                             {{-- <th>Phone</th> --}}
-                                            <th>Discount</th>
+                                            {{-- <th>Discount</th> --}}
                                             {{-- <th>Availability</th> --}}
                                             {{-- <th>Status</th> --}}
                                             <th>Actions</th>
@@ -40,16 +40,16 @@
                                         @foreach ($loyaltypoints as $loyaltypoint)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id -->
-                                                <td>{{ $loyaltypoint->car->car_name ?? 'N/A' }}</td>
-                                                {{-- <td>{{ $loyaltypoint->on_referal }}</td> --}}
+                                                {{-- <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id -->
+                                                <td>{{ $loyaltypoint->car->car_name ?? 'N/A' }}</td> --}}
+                                                <td>{{ $loyaltypoint->on_referal }}</td>
                                                 {{-- <td>
                                                     @if ($loyaltypoint->email)
                                                         <a href="mailto:{{ $loyaltypoint->email }}">{{ $loyaltypoint->email }}</a>
                                                     @endif
                                                 </td> --}}
-                                                <td>{{ $loyaltypoint->on_car }}</td>
-                                                <td>{{ $loyaltypoint->discount }}%</td>
+                                                {{-- <td>{{ $loyaltypoint->on_car }}</td>
+                                                <td>{{ $loyaltypoint->discount }}%</td> --}}
                                                 {{-- <td>
                                                     <img src="{{ asset($loyaltypoint->image) }}" alt="" height="50"
                                                         width="50" class="image">
@@ -103,11 +103,11 @@
                                                                 </a>
                                                             @endif --}}
                                                             @if($isAdmin || ($permissions && $permissions->edit == 1))
-                                                            <a href="{{ route('loyaltypoints.edit', $loyaltypoint->id) }}"
+                                                            <a href="{{ route('referals.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
                                                             @endif
                                                             @if($isAdmin || ($permissions && $permissions->delete == 1)) 
-                                                                <form action="{{ route('loyaltypoints.destroy', $loyaltypoint->id) }}"
+                                                                <form action="{{ route('referals.destroy', $loyaltypoint->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf

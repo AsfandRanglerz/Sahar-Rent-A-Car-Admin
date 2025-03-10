@@ -15,7 +15,11 @@ class LoyaltyPointsController extends Controller
 {
     public function index()
     {
-        $loyaltypoints = LoyaltyPoints::with('car')->latest()->get();
+        $loyaltypoints = LoyaltyPoints::with('car')
+        ->select('id', 'on_car', 'car_id', 'discount') // Exclude on_referal
+        ->whereNull('on_referal')
+        ->latest()
+        ->get();
 
         return view('admin.LoyaltyPoints.index',compact('loyaltypoints'));
     }
@@ -56,7 +60,7 @@ class LoyaltyPointsController extends Controller
         $loyaltyPoint = LoyaltyPoints::create([
             // 'booking_id' => $request->booking_id,
             'car_id' => $request->car_id,
-            'on_referal' => $request->on_referal,
+            // 'on_referal' => $request->on_referal,
             // 'email' => $request->email,
             'on_car' => $request->on_car,
             'discount' => $request->discount,
@@ -111,7 +115,7 @@ class LoyaltyPointsController extends Controller
 
         // Update user details
         $loyaltypoint->update([
-            'on_referal' => $request->on_referal,
+            // 'on_referal' => $request->on_referal,
             // 'email' => $request->email,
             'on_car' => $request->on_car,
             'discount' => $request->discount,
@@ -176,5 +180,112 @@ if ($editedBy) {
         }
 
         return redirect()->route('loyaltypoints.index')->with(['message' => 'LoyaltyPoints Deleted Successfully']);
+    }
+
+    public function referalindex(){
+        $loyaltypoints = LoyaltyPoints::wherenotNull('on_referal')->get();
+
+        return view('admin.LoyaltyPoints.ReferalLinks.index',compact('loyaltypoints'));
+    }
+
+    public function referaledit($id)
+    {
+        $loyaltyPoint = LoyaltyPoints::find($id);
+        // return $user;
+        return view('admin.LoyaltyPoints.ReferalLinks.edit', compact('loyaltyPoint'));
+    }
+
+    public function referalupdate(Request $request, $id)
+    {
+
+        // Validate the incoming request
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     // 'email' => 'required|email|unique:drivers,email,' . $id,
+        //     'phone' => 'required|string|max:15',
+        // ]);
+
+        $loyaltypoint = LoyaltyPoints::findOrFail($id);
+        // Handle image upload
+        // if ($request->hasFile('image')) {
+        //     $destination = 'public/admin/assets/img/users/' . $driver->image;
+        //     if (File::exists($destination)) {
+        //         File::delete($destination);
+        //     }
+
+        //     $file = $request->file('image');
+        //     $extension = $file->getClientOriginalExtension();
+        //     $filename = time() . '.' . $extension;
+        //     $file->move('public/admin/assets/images/users', $filename);
+        //     $image = 'public/admin/assets/images/users/' . $filename;
+        // } else {
+        //     $image = $driver->image;
+        // }
+
+        // Update user details
+        $loyaltypoint->update([
+            'on_referal' => $request->on_referal,
+            // 'email' => $request->email,
+            // 'on_car' => $request->on_car,
+            // 'discount' => $request->discount,
+        ]);
+        // if (Auth::guard('subadmin')->check()) {
+        //     SubAdminLog::create([
+        //         'subadmin_id' => Auth::guard('subadmin')->id(),
+        //         'section' => 'LoyaltyPoints',
+        //         'action' => 'Edit',
+        //         'message' => 'Updated  LoyaltyPoints',
+        //     ]);
+        // }
+        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
+        // $addedBy = $loyaltypoint->added_by_subadmin;
+        
+        // if ($editedBy->id !== $addedBy) {
+        //     $message = "Loyalty Points updated by SubAdmin: " . $editedBy->name ;
+        // } else {
+        //     $message = "Loyalty Points Original updated by SubAdmin: " . $editedBy->name ;
+        // }
+        
+        // // Log the edit
+        // SubAdminLog::create([
+        //     'subadmin_id' => $editedBy->id,
+        //     'section' => 'LoyaltyPoints',
+        //     'action' => 'Edit',
+        //     'message' => $message,
+        // ]);
+        $editedBy = Auth::guard('subadmin')->user();
+
+// Only log if a subadmin is editing
+if ($editedBy) {
+    $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
+
+    SubAdminLog::create([
+        'subadmin_id' => $editedBy->id,
+        'section' => 'Referal Link Points',
+        'action' => 'Edit',
+        'message' => $message,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
+        // Redirect back with a success message
+        return redirect()->route('referals.index')->with(['message' => 'Referal Link Updated Successfully']);
+    }
+
+    public function referaldestroy(Request $request, $id)
+    {
+        LoyaltyPoints::destroy($id);
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'ReferalLinkPoints',
+                'action' => 'Delete',
+                'message' => "SubAdmin: {$subadminName} Deleted  ReferalLinkPoints",
+            ]);
+        }
+
+        return redirect()->route('referals.index')->with(['message' => 'Referal Link Deleted Successfully']);
     }
 }
