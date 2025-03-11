@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\CarController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\PaymentController;
@@ -54,6 +55,15 @@ Route::post('/contactus',[ContactUsController::class,'contact']);
 Route::middleware('auth:sanctum')->get('/loyalty-points', [LoyaltyPointController::class, 'getLoyaltyPoints']);
 Route::post('/share-referral', [LoyaltyPointController::class, 'earnLoyaltyPoints'])->middleware('auth:sanctum');
 Route::get('/redeem-points', [LoyaltyPointController::class, 'getUserLoyaltyPoints'])->middleware('auth:sanctum');
+
+//#################  Redeemed Loyalty Points  ##############################
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/redeem-loyalty-points', [LoyaltyPointController::class, 'redeemLoyaltyPoints']);
+    Route::get('/redemption-history', [LoyaltyPointController::class, 'getRedemptionHistory']);
+});
+
+//#################  Cars  ##############################
+Route::get('/cars', [CarController::class, 'index']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

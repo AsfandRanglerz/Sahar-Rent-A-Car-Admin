@@ -69,14 +69,14 @@ class LoyaltyPointsController extends Controller
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'LoyaltyPoints',
+                'section' => 'Car Rental Points',
                 'action' => 'Add',
-                'message' => 'Added LoyaltyPoints ',
+                'message' => 'Added Car Rental Points ',
             ]);
         }
         // Mail::to($loyaltyPoints->email)->send(new loyaltyPointsCredentials($loyaltyPoints->name, $loyaltyPoints->email, $generatedPassword));
 
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'Loyalty Points Created Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Created Successfully']);
     }
 
     public function edit($id)
@@ -148,11 +148,11 @@ class LoyaltyPointsController extends Controller
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Loyalty Point updated by SubAdmin: " . $editedBy->name . " - Updated Loyalty Point: " . $request->name;
-
+    // $message = "Car Rental Point updated by SubAdmin: " . $editedBy->name . " - Updated Car Rental Point: " . $request->name;
+    $message = "Car Rental Point updated by SubAdmin: " . $editedBy->name;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
-        'section' => 'Loyalty Points',
+        'section' => 'Car Rental Points',
         'action' => 'Edit',
         'message' => $message,
         'created_at' => now(),
@@ -160,7 +160,7 @@ if ($editedBy) {
     ]);
 }
         // Redirect back with a success message
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'Loyalty Points Updated Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Updated Successfully']);
     }
 
 
@@ -173,13 +173,13 @@ if ($editedBy) {
             $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'LoyaltyPoints',
+                'section' => 'Car Rental Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  LoyaltyPoints",
+                'message' => "SubAdmin: {$subadminName} Deleted  Car Rental Points",
             ]);
         }
 
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'LoyaltyPoints Deleted Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Deleted Successfully']);
     }
 
     public function referalindex(){
@@ -199,29 +199,20 @@ if ($editedBy) {
     {
 
         // Validate the incoming request
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     // 'email' => 'required|email|unique:drivers,email,' . $id,
-        //     'phone' => 'required|string|max:15',
-        // ]);
+        $request->validate([
+            // 'name' => 'required|string|max:255',
+            // 'email' => 'required|email|unique:drivers,email,' . $id,
+            // 'phone' => 'required|string|max:15',
+            'on_referal' => 'required|integer',
+        ],[
+            'on_referal.required' => 'Please Enter the Referal Points',
+            'on_referal.integer' => 'Referal Points must be a number',
+        ]
+    );
+        
 
         $loyaltypoint = LoyaltyPoints::findOrFail($id);
-        // Handle image upload
-        // if ($request->hasFile('image')) {
-        //     $destination = 'public/admin/assets/img/users/' . $driver->image;
-        //     if (File::exists($destination)) {
-        //         File::delete($destination);
-        //     }
-
-        //     $file = $request->file('image');
-        //     $extension = $file->getClientOriginalExtension();
-        //     $filename = time() . '.' . $extension;
-        //     $file->move('public/admin/assets/images/users', $filename);
-        //     $image = 'public/admin/assets/images/users/' . $filename;
-        // } else {
-        //     $image = $driver->image;
-        // }
-
+        
         // Update user details
         $loyaltypoint->update([
             'on_referal' => $request->on_referal,
@@ -229,36 +220,13 @@ if ($editedBy) {
             // 'on_car' => $request->on_car,
             // 'discount' => $request->discount,
         ]);
-        // if (Auth::guard('subadmin')->check()) {
-        //     SubAdminLog::create([
-        //         'subadmin_id' => Auth::guard('subadmin')->id(),
-        //         'section' => 'LoyaltyPoints',
-        //         'action' => 'Edit',
-        //         'message' => 'Updated  LoyaltyPoints',
-        //     ]);
-        // }
-        // $editedBy = Auth::guard('subadmin')->user(); // Get the subadmin object
-        // $addedBy = $loyaltypoint->added_by_subadmin;
-        
-        // if ($editedBy->id !== $addedBy) {
-        //     $message = "Loyalty Points updated by SubAdmin: " . $editedBy->name ;
-        // } else {
-        //     $message = "Loyalty Points Original updated by SubAdmin: " . $editedBy->name ;
-        // }
-        
-        // // Log the edit
-        // SubAdminLog::create([
-        //     'subadmin_id' => $editedBy->id,
-        //     'section' => 'LoyaltyPoints',
-        //     'action' => 'Edit',
-        //     'message' => $message,
-        // ]);
+       
         $editedBy = Auth::guard('subadmin')->user();
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
-
+    // $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
+    $message = "Referal Link point updated by SubAdmin: " . $editedBy->name ;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
         'section' => 'Referal Link Points',
@@ -280,12 +248,12 @@ if ($editedBy) {
             $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'ReferalLinkPoints',
+                'section' => 'Referal Link Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  ReferalLinkPoints",
+                'message' => "SubAdmin: {$subadminName} Deleted  Referal Link Points",
             ]);
         }
 
-        return redirect()->route('referals.index')->with(['message' => 'Referal Link Deleted Successfully']);
+        return redirect()->route('referals.index')->with(['message' => 'Referal Link Points Deleted Successfully']);
     }
 }

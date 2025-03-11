@@ -194,11 +194,18 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         Route::post('/loyaltypoints-update/{id}',  'update')->name('loyaltypoints.update');
     });
 
-    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:loyalty_points,view'])->group(function () {
+    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:referal_links,view'])->group(function () {
         Route::get('/referals',  'referalindex')->name('referals.index');
+        // Route::get('/referals-edit/{id}',  'referaledit')->name('referals.edit');
+        // Route::post('/referals-update/{id}',  'referalupdate')->name('referals.update');
+        Route::delete('/referals-destroy/{id}',  'referaldestroy')->name('referals.destroy');
+    });
+
+    Route::controller(LoyaltyPointsController::class)->middleware(['admin','adminOrSubadmin:referal_links,edit'])->group(function () {
+        
         Route::get('/referals-edit/{id}',  'referaledit')->name('referals.edit');
         Route::post('/referals-update/{id}',  'referalupdate')->name('referals.update');
-        Route::delete('/referals-destroy/{id}',  'referaldestroy')->name('referals.destroy');
+        
     });
 
     Route::post('/subadminActivate/{id}', [SubadminController::class, 'active'])->name('subadmin.activate');

@@ -106,7 +106,7 @@
                                                             <a href="{{ route('referals.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
                                                             @endif
-                                                            @if($isAdmin || ($permissions && $permissions->delete == 1)) 
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1)) 
                                                                 <form action="{{ route('referals.destroy', $loyaltypoint->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
@@ -116,7 +116,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
-                                                            @endif
+                                                            @endif --}}
                                                         </div>
                                                     </div>
                                                 </td>
