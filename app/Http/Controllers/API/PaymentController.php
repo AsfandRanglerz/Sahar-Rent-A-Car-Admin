@@ -7,6 +7,7 @@ use Stripe\Charge;
 // use Stripe\Stripe;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -96,11 +97,15 @@ class PaymentController extends Controller
 
     // Fetch all transactions for the logged-in user
     $transactions = Transaction::where('user_id', $userId)
+        ->select(['id', 'amount', 'status'])
         ->orderBy('created_at', 'desc')
-        ->get();
+        ->get()
+        ->map(function ($transaction) {
+            $transaction->created_date = Carbon::parse($transaction->created_at)->format('d:M:Y');
+            return $transaction;});
 
     return response()->json([
-        'wallet_balance' => Transaction::where('user_id', $userId)
+        'available_balance' => Transaction::where('user_id', $userId)
             ->where('status', 'approved')
             ->sum('amount'), // Sum only approved transactions
         'history' => $transactions,

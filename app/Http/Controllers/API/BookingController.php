@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Booking;
+use App\Models\CarDetails;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -126,5 +128,59 @@ if ($loyaltyPoints) {
             'data' => $requestBooking,
         ], 200);
     }
+}
+
+public function getUserBookings()
+{
+    $userId = Auth::id(); // Get authenticated user ID
+
+    $bookings = Booking::where('user_id', $userId)
+        ->where('status', 0) // Fetch only active bookings
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($booking) {
+            // $car = CarDetails::find($booking->car_id);
+            $car = CarDetails::where('car_id', $booking->car_id)->first();
+            return [
+                'car_name' => $car ? $car->car_name : 'Car Not Found',
+                'car_id' => $booking ? $booking->car_id : null,
+                'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
+                'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
+                'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+            ];
+        });
+
+    return response()->json([
+        'bookings' => $bookings
+    ]);
+}
+
+public function UserHistoryBookings()
+{
+    $userId = Auth::id(); // Get authenticated user ID
+
+    $bookings = Booking::where('user_id', $userId)
+        ->where('status', 1) // Fetch only active bookings
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($booking) {
+            // $car = CarDetails::find($booking->car_id);
+            $car = CarDetails::where('car_id', $booking->car_id)->first();
+            return [
+                'car_name' => $car ? $car->car_name : 'Car Not Found',
+                'car_id' => $booking ? $booking->car_id : null,
+                'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
+                'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
+                'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+            ];
+        });
+
+    return response()->json([
+        'history' => $bookings
+    ]);
 }
 }

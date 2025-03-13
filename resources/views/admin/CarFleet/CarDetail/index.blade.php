@@ -31,7 +31,7 @@
                                             {{-- <th>Availability</th> --}}
                                             <th>Price Per Hour (AED)</th>
                                             <th>Price Per Day (AED)</th>
-                                            <th>Price Per Year (AED)</th>
+                                            <th>Price Per Week (AED)</th>
                                             {{-- <th>Durations</th> --}}
                                             {{-- <th>Call Number</th>
                                             <th>Whatsapp Number</th> --}}

@@ -6,8 +6,9 @@ use App\Models\DriverDocument;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Driver extends model
+class Driver extends Authenticatable
 {
     use HasApiTokens, HasFactory;
     protected $guarded=[];

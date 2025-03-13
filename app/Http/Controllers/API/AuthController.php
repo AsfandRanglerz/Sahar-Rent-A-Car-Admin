@@ -283,13 +283,13 @@ return response()->json([
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
-                'send_otp' => 'required',
+                // 'send_otp' => 'required',
                 // 'fcm_token' => 'nullable|string',
             ],
             [
                 'identifier.required' => 'The email or phone number is required.',
                 'password.required' => 'The password is required.',
-                'send_otp.required' => 'The otp field is required.',
+                // 'send_otp.required' => 'The otp field is required.',
             ]
         );
     
@@ -327,22 +327,22 @@ return response()->json([
                 'message' => 'Invalid password',
             ], 401);
         }
-        $otp = rand(100000, 999999);
-    $otpToken = Str::uuid(); // Unique token for OTP verification
+    //     $otp = rand(100000, 999999);
+    // $otpToken = Str::uuid(); // Unique token for OTP verification
     // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
 
     // Store OTP in the database
-    OTP::create([
-        'identifier' => $identifier,
-        'otp' => $otp,
-        'otp_token' => $otpToken,
-        // 'expires_at' => $expiresAt,
-    ]);
+    // OTP::create([
+    //     'identifier' => $identifier,
+    //     'otp' => $otp,
+    //     'otp_token' => $otpToken,
+    //     // 'expires_at' => $expiresAt,
+    // ]);
 
     // Send OTP via email (or SMS)
-    if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        Mail::to($identifier)->send(new OTPMail($otp));
-    }
+    // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+    //     Mail::to($identifier)->send(new OTPMail($otp));
+    // }
 
     // return response()->json([
     //     'message' => 'OTP sent successfully.',
@@ -355,11 +355,15 @@ return response()->json([
 
         return response()->json([
             // 'status' => true,
-            // 'message' => 'Logged In successfully',
-            'message' => 'OTP sent successfully.',
-            // 'token' => $customer->createToken("API Token")->plainTextToken,
-            'otp_token' => $otpToken, // Send OTP token to frontend 
+            'message' => 'Logged In successfully',
+            // 'message' => 'OTP sent successfully.',
+            'token' => $customer->createToken("API Token")->plainTextToken,
+            // 'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $customer->fcm_token,
+            'data' => ([
+                'identifier' => $identifier,
+
+            ])
             // 'token_type' => 'Bearer',
         ], 200);
         
@@ -430,12 +434,12 @@ return response()->json([
                 // 'email' => 'required|email',
                 'identifier' => 'required',
                 'password' => 'required',
-                'send_otp' => 'required',
+                // 'send_otp' => 'required',
             ],
             [
                 'identifier.required' => 'The email or phone number is required.',
                 'password.required' => 'The password is required.',
-                'send_otp.required' => 'The otp field is required.',
+                // 'send_otp.required' => 'The otp field is required.',
             ]
         );
     
@@ -473,22 +477,22 @@ return response()->json([
                 'message' => 'Invalid password',
             ], 401);
         }
-        $otp = rand(100000, 999999);
-        $otpToken = Str::uuid(); // Unique token for OTP verification
+        // $otp = rand(100000, 999999);
+        // $otpToken = Str::uuid(); // Unique token for OTP verification
         // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
     
         // Store OTP in the database
-        OTP::create([
-            'identifier' => $identifier,
-            'otp' => $otp,
-            'otp_token' => $otpToken,
-            // 'expires_at' => $expiresAt,
-        ]);
+        // OTP::create([
+        //     'identifier' => $identifier,
+        //     'otp' => $otp,
+        //     'otp_token' => $otpToken,
+        //     // 'expires_at' => $expiresAt,
+        // ]);
     
         // Send OTP via email (or SMS)
-        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-            Mail::to($identifier)->send(new OTPMail($otp));
-        }
+        // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+        //     Mail::to($identifier)->send(new OTPMail($otp));
+        // }
     
        
         
@@ -512,11 +516,14 @@ return response()->json([
     
         return response()->json([
             // 'status' => true,
-            // 'message' => 'Logged In successfully',
-            'message' => 'OTP sent successfully.',
-            'otp_token' => $otpToken, // Send OTP token to frontend 
+            'message' => 'Logged In successfully',
+            // 'message' => 'OTP sent successfully.',
+            // 'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $driver->fcm_token,
             'token' => $driver->createToken("API Token")->plainTextToken,
+            'data'=> ([
+                'identifier' => $identifier,
+            ])
             // 'token_type' => 'Bearer',
         ], 200);
         

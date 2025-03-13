@@ -54,6 +54,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'driver' => [
+            'driver' => 'session',
+            'provider' => 'drivers',
+        ],
     ],
 
     /*
@@ -87,6 +92,10 @@ return [
             'model' => App\Models\Subadmin::class,
         ],
 
+    'drivers' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Driver::class,
+    ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

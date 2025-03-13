@@ -7,6 +7,7 @@ use App\Models\Driver;
 use App\Models\SubAdminLog;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Models\AdminNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,8 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::latest()->get();
+        $notifications = AdminNotification::latest()->get();
+
         $customers = User::all();
         $drivers = Driver::all();
         return view('admin.Notification.index',compact('notifications','customers','drivers'));
@@ -34,22 +36,27 @@ class NotificationController extends Controller
         $status = '0';
     
         // Check if `customer_name` and `drivers` are arrays
-        // $customerNames = is_array($request->customer_name) ? $request->customer_name : [$request->customer_name];
-        // $drivers = is_array($request->drivers) ? $request->drivers : [$request->drivers];
-    
+        $customerNames = is_array($request->customers) ? $request->customers : [$request->customers];
+        $drivers = is_array($request->drivers) ? $request->drivers : [$request->drivers];
+        
+        $adminNotification = AdminNotification::create([
+            'user_type' => $request->user_type,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
         // Iterate through the arrays and create notifications
-        // foreach ($customerNames as $customerName) {
-        //     foreach ($drivers as $driver) {
+        foreach ($customerNames as $customerName) {
+            foreach ($drivers as $driver) {
                 Notification::create([
                     'user_type' => $request->user_type,
-                    // 'customer_id' => $customerName, // Save as a single value
-                    // 'driver_id' => $driver, // Save as a single value
+                    'customer_id' => $customerName, // Save as a single value
+                    'driver_id' => $driver, // Save as a single value
                     'title' => $request->title,
                     'description' => $request->description,
                     'created_at' => now(),
                 ]);
-        //     }
-        // }
+            }
+        }
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),

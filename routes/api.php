@@ -8,6 +8,7 @@ use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\ContactUsController;
 use App\Http\Controllers\API\LoyaltyPointController;
+use App\Http\Controllers\API\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //#################  Bookings  ###########################
 Route::post('/bookings',[BookingController::class,'createBooking'])->middleware('auth:sanctum');
-
+Route::get('/getbookings',[BookingController::class,'getUserBookings'])->middleware('auth:sanctum');
+Route::get('/historybookings',[BookingController::class,'UserHistoryBookings'])->middleware('auth:sanctum');
 //#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::class, 'getWalletHistory']);
@@ -64,6 +66,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //#################  Cars  ##############################
 Route::get('/cars', [CarController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/price-details', [CarController::class, 'getCarPriceDetails']);
+
+//#################  Notification ##############################
+Route::middleware('auth:sanctum')->get('/notifications', [NotificationController::class, 'getUserNotifications']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

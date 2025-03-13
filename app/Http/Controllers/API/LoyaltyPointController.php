@@ -56,6 +56,48 @@ class LoyaltyPointController extends Controller
 // ]);
 
 // }
+// public function getLoyaltyPoints()
+// {
+//     $userId = Auth::id(); // Get the logged-in user ID
+
+//     if (!$userId) {
+//         return response()->json([
+//             'message' => 'User not authenticated',
+//         ], 401);
+//     }
+
+//     // Fetch existing total points from UserLoyaltyEarning
+//     $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+//     $currentTotalPoints = $userLoyalty ? $userLoyalty->total_points : 0;
+
+//     // Fetch all user bookings and request bookings
+//     $bookings = Booking::with('car')->where('user_id', $userId)->get();
+//     $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->get();
+
+//     // Extract unique car IDs
+//     $carIds = $bookings->pluck('car.id')->merge($requestBookings->pluck('car.id'))->unique();
+
+//     // Fetch loyalty points for booked cars
+//     $loyaltyPoints = LoyaltyPoints::whereIn('car_id', $carIds)->get();
+
+//     // **DO NOT RECALCULATE OR ADD NEW POINTS HERE**  
+//     // This prevents admin updates from affecting total_points.
+
+//     // Format response
+//     $data = $loyaltyPoints->map(function ($point) {
+//         return [
+//             'car_name' => $point->car->car_name ?? 'N/A',
+//             'on_car' => $point->on_car, // Show the current on_car value but don't update total_points
+//             'discount' => $point->discount,
+//         ];
+//     });
+
+//     return response()->json([
+//         'total_points' => $currentTotalPoints, // Show stored total_points, don't recalculate
+//         'history' => $data,
+//     ]);
+// }
+
 public function getLoyaltyPoints()
 {
     $userId = Auth::id(); // Get the logged-in user ID
