@@ -360,10 +360,14 @@ return response()->json([
             'token' => $customer->createToken("API Token")->plainTextToken,
             // 'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $customer->fcm_token,
-            'data' => ([
-                'identifier' => $identifier,
-
-            ])
+            'data' => [
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'phone' => $customer->phone,
+                'emirate_id' => $customer->emirate_id,
+                'passport' => $customer->passport,
+                'driving_license' => $customer->driving_license,
+            ],
             // 'token_type' => 'Bearer',
         ], 200);
         
