@@ -425,6 +425,36 @@
                                     </div>
                             </tr>
                             <tr>
+                                <td>Dropoff Requests</td>
+                                {{-- <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][add]" id="dropoff_requestsAdd">
+                                        <label class="form-check-label" for="dropoff_requestsAdd">Add</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][edit]" id="dropoff_requestsEdit">
+                                        <label class="form-check-label" for="dropoff_requestsEdit">Assign</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][view]" id="dropoff_requestsView">
+                                        <label class="form-check-label" for="dropoff_requestsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][delete]" id="dropoff_requestsDelete">
+                                        <label class="form-check-label" for="dropoff_requestsDelete">Delete</label>
+                                    </div>
+                            </tr>
+                            <tr>
                                 <td>Car Rental Points</td>
                                 {{-- <td><input type="checkbox" name="permissions[loyalty_points][add]" ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][edit]"  ></td>

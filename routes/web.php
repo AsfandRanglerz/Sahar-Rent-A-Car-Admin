@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\TeamAController;
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\DropoffController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubadminController;
@@ -233,6 +234,18 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
         Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
     });
+
+    Route::controller(DropoffController::class)->middleware(['admin','adminOrSubadmin:dropoff_requests'])->group(function () {
+        Route::get('/dropoffrequest',  'index')->name('dropoffs.index');
+        // Route::get('/booking-create',  'create')->name('booking.create');
+        // Route::post('/booking-store',  'store')->name('booking.store');
+        // Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');
+    //     Route::post('/requestbooking/update-status',  'updateStatus')
+    // ->name('requestbooking.update-status');
+
+        // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
+        Route::delete('/dropoffrequest-destroy/{id}',  'destroy')->name('dropoffs.destroy');
+    });    
     // Route::controller(ContactUsController::class)->middleware(['admin','adminOrSubadmin:ContactUs'])->group(function () {
     //     Route::get('/ContactUs',  'index')->name('ContactUs.index');
     //     Route::get('/ContactUs-create',  'create')->name('ContactUs.create');

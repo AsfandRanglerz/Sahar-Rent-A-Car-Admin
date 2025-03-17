@@ -138,7 +138,7 @@
 <li class="dropdown">
     <a href="#" class="menu-toggle nav-link has-dropdown">
         <i data-feather="layout"></i> <!-- Icon for header section -->
-        <span>SubAdmins</span>
+        <span>Sub Admins</span>
     </a>
     <ul class="dropdown-menu {{ request()->is('admin/subadmin*') || request()->is('admin/logs*') ? 'show' : '' }}">
         
@@ -229,11 +229,34 @@
                             data-feather="calendar"></i>Bookings</span></a>
             </li>
 @endif
-@if($isAdmin || (isset($subadminPermissions['requestbookings']) && $subadminPermissions['requestbookings']->view == 1))
-            <li class="dropdown {{ request()->is('admin/requestbooking*') ? 'active' : '' }}">
-                <a href="{{ route('requestbooking.index') }}" class="nav-link"><span><i
-                            data-feather="calendar"></i>Request Bookings</span></a>
-            </li>
+@if($isAdmin || isset($subadminPermissions['requestbookings']) || isset($subadminPermissions['dropoff_requests']))
+<li class="dropdown">
+    <a href="#" class="menu-toggle nav-link has-dropdown">
+        <i data-feather="calendar"></i> <!-- Icon for header section -->
+        <span>Request Bookings</span>
+    </a>
+    <ul class="dropdown-menu {{ request()->is('admin/requestbooking*') || request()->is('admin/dropoff*') ? 'show' : '' }}">
+        
+        @if($isAdmin || isset($subadminPermissions['requestbookings']))
+        <li class="{{ request()->is('admin/requestbooking*')  }}">
+            <a href="{{ route('requestbooking.index') }}" class="nav-link  {{ request()->is('admin/requestbooking*') ? 'active bg-primary text-white' : '' }}">
+                <i data-feather="calendar"></i>
+                <span>Request Bookings</span>
+            </a>
+        </li>
+        @endif
+
+        @if($isAdmin || isset($subadminPermissions['dropoff_requests']))
+        <li class="{{ request()->is('admin/dropoff*')  }}">
+            <a href="{{ route('dropoffs.index') }}" class="nav-link {{ request()->is('admin/dropoff*') ? 'active bg-primary text-white' : '' }}">
+                <i data-feather="calendar"></i>
+                <span>Dropoff Requests</span>
+            </a>
+        </li>
+        @endif
+        
+    </ul>
+</li>
 @endif
 {{-- @if($isAdmin || isset($subadminPermissions['loyalty_points'])) --}}
 {{-- @if($isAdmin || (isset($subadminPermissions['loyalty_points']) && $subadminPermissions['loyalty_points']->view == 1))
@@ -250,7 +273,7 @@
     </a>
     <ul class="dropdown-menu {{ request()->is('admin/loyaltypoints*') || request()->is('admin/referals*') ? 'show' : '' }}">
         
-        {{-- Sub Admins --}}
+        
         @if($isAdmin || isset($subadminPermissions['loyalty_points']))
         <li class="{{ request()->is('admin/loyaltypoints*')  }}">
             <a href="{{ route('loyaltypoints.index') }}" class="nav-link  {{ request()->is('admin/loyaltypoints*') ? 'active bg-primary text-white' : '' }}">

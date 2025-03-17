@@ -9,13 +9,13 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Referal Link Points</h4>
+                                    <h4>Dropoff Requests</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
                                 @php
                                 $isAdmin = $isAdmin ?? false;
-                               $permissions = $subadminPermissions['referal_links'] ?? null;
+                               $permissions = $subadminPermissions['dropoff_requests'] ?? null;
                                 // Fetch permissions for this menu
                                @endphp 
                            {{-- @if($isAdmin || ($permissions && $permissions->add == 1)) 
@@ -25,10 +25,10 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            {{-- <th>Car ID</th>
-                                            <th>Car Name</th> --}}
-                                            <th>Referal Link</th>
-                                            {{-- <th>Car Rental</th> --}}
+                                             {{-- <th>Car ID</th> --}}
+                                            <th>Driver Name</th> 
+                                            <th>Date</th>
+                                            <th>Time</th>
                                             {{-- <th>Phone</th> --}}
                                             {{-- <th>Discount</th> --}}
                                             {{-- <th>Availability</th> --}}
@@ -37,13 +37,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($loyaltypoints as $loyaltypoint)
+                                        @foreach ($dropoffs as $dropoff)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                {{-- <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id -->
-                                                <td>{{ $loyaltypoint->car->car_name ?? 'N/A' }}</td> --}}
-                                                <td>{{ $loyaltypoint->on_referal }}</td>
-                                                {{-- <td>
+                                                 {{-- <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id --> --}}
+                                                <td>{{ $dropoff->driver->name ?? 'N/A' }}</td> 
+                                                <td>{{ $dropoff->dropoff_date }}</td>
+                                                <td>{{ $dropoff->dropoff_time }}</td>
+                                                {{-- <td>   
                                                     @if ($loyaltypoint->email)
                                                         <a href="mailto:{{ $loyaltypoint->email }}">{{ $loyaltypoint->email }}</a>
                                                     @endif
@@ -102,12 +103,12 @@
                                                                     </svg>
                                                                 </a>
                                                             @endif --}}
-                                                            @if($isAdmin || ($permissions && $permissions->edit == 1))
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->edit == 1))
                                                             <a href="{{ route('referals.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
-                                                            @endif
-                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1)) 
-                                                                <form action="{{ route('referals.destroy', $loyaltypoint->id) }}"
+                                                            @endif --}}
+                                                            @if($isAdmin || ($permissions && $permissions->delete == 1)) 
+                                                                <form action="{{ route('dropoffs.destroy', $dropoff->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
                                                                 @csrf
@@ -116,7 +117,7 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
-                                                            @endif --}}
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

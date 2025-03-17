@@ -14,6 +14,7 @@ class RequestBookingController extends Controller
 {
     public function index()
     {
+        
         // $bookings = Booking::latest()->get();
         $requestbookings = RequestBooking::whereIn('status', [0, 2])
         ->orderBy('status','ASC')->get();
