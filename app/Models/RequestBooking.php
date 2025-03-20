@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Driver;
 use App\Models\Booking;
+use App\Models\Dropoff;
 use App\Models\CarDetails;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,5 +33,10 @@ public function car()
 public function user()
 {
     return $this->belongsTo(User::class);
+}
+
+public function dropoff()
+{
+    return $this->hasOne(Dropoff::class, 'id', 'id');
 }
 }

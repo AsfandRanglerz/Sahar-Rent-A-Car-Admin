@@ -116,9 +116,27 @@
                                                 @endif
                                                 </td>
                                                 <td>{{ $booking->self_dropoff }}</td>
-                                                <td>{{ $booking->dropoff_address }}</td>
-                                                <td>{{ $booking->dropoff_date }}</td>
-                                                <td>{{ $booking->dropoff_time }}</td>
+                                                <td>
+                                                    @if($booking->dropoff_address)
+                                                    {{ $booking->dropoff_address }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($booking->dropoff_date)
+                                                    {{ $booking->dropoff_date }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($booking->dropoff_time)
+                                                    {{ $booking->dropoff_time }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                 @if($booking->driver_required) 
                                                     {{ $booking->driver_required }}

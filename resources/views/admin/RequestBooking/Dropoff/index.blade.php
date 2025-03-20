@@ -33,7 +33,7 @@
                                             {{-- <th>Discount</th> --}}
                                             {{-- <th>Availability</th> --}}
                                             {{-- <th>Status</th> --}}
-                                            <th>Actions</th>
+                                            {{-- <th>Actions</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -68,10 +68,10 @@
                                                     </div>
                                                 </td> --}}
                                                 
-                                                <td>
+                                                {{-- <td>
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3"
-                                                            style="display: flex; align-items: center; justify-content: center; column-gap: 8px">
+                                                            style="display: flex; align-items: center; justify-content: center; column-gap: 8px"> --}}
                                                             {{-- @if ($loyaltypoint->action == 1)
                                                                 <a href="javascript:void(0);"
                                                                     onclick="showDeactivationModal({{ $loyaltypoint->id }})"
@@ -107,7 +107,7 @@
                                                             <a href="{{ route('referals.edit', $loyaltypoint->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a>
                                                             @endif --}}
-                                                            @if($isAdmin || ($permissions && $permissions->delete == 1)) 
+                                                            {{-- @if($isAdmin || ($permissions && $permissions->delete == 1)) 
                                                                 <form action="{{ route('dropoffs.destroy', $dropoff->id) }}"
                                                                 method="POST"
                                                                 style="display:inline-block; margin-left: 10px">
@@ -117,10 +117,10 @@
                                                                     class="btn btn-danger btn-flat show_confirm"
                                                                     data-toggle="tooltip">Delete</button>
                                                             </form>
-                                                            @endif
-                                                        </div>
+                                                            @endif --}}
+                                                        {{-- </div>
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -13,14 +13,20 @@ class DropoffController extends Controller
 {
     public function index()
     {
-        $now = Carbon::now();
-        $tomorrow = Carbon::now()->subDay();
-        Log::info('Tomorrow date: ' . $tomorrow->toDateString()); 
-return $tomorrow->toDateString();
-        $crone = RequestBooking::where('assigned_dropoff', 0) // Only update unassigned drop-offs
-            ->whereDate('dropoff_date', $tomorrow->toDateString())->get();
-            return $crone;
-        $dropoffs = RequestBooking::where('assigned_dropoff', 1)->with('driver')->get();
+        
+
+        $dropoffs = RequestBooking::where('assigned_dropoff', 1)
+        ->where('status', 0)
+        ->whereNotNull('driver_id')
+        ->with('driver')
+        ->get();
         return view('admin.RequestBooking.dropoff.index', compact('dropoffs'));
+    }
+
+    public function destroy($id)
+    {
+        $dropoff = RequestBooking::find($id);
+        $dropoff->delete();
+        return redirect()->route('dropoffs.index')->with(['message' => 'Dropoff Deleted Successfully']);
     }
 }
