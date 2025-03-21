@@ -526,7 +526,10 @@ return response()->json([
             'fcm_token' => $driver->fcm_token,
             'token' => $driver->createToken("API Token")->plainTextToken,
             'data'=> ([
-                'identifier' => $identifier,
+                'name' => $driver->name,
+                'email' => $driver->email,
+                'phone' => $driver->phone,
+                'image' => $driver->image, // Assuming there's a profile image field
             ])
             // 'token_type' => 'Bearer',
         ], 200);

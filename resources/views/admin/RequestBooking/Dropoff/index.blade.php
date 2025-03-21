@@ -42,8 +42,8 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                  {{-- <td>{{ $loyaltypoint->car->car_id }}</td> <!-- Display car_id --> --}}
                                                 <td>{{ $dropoff->driver->name ?? 'N/A' }}</td> 
-                                                <td>{{ $dropoff->dropoff_date }}</td>
-                                                <td>{{ $dropoff->dropoff_time }}</td>
+                                                <td>{{ $dropoff->pickup_date }}</td>
+                                                <td>{{ $dropoff->pickup_time }}</td>
                                                 {{-- <td>   
                                                     @if ($loyaltypoint->email)
                                                         <a href="mailto:{{ $loyaltypoint->email }}">{{ $loyaltypoint->email }}</a>

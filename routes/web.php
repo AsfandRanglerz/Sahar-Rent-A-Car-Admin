@@ -164,6 +164,7 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::controller(LicenseController::class)->middleware(['admin','adminOrSubadmin:license_approvals'])->group(function () {
         Route::get('/license',  'index')->name('license.index');
         Route::get('/license-create',  'create')->name('license.create');
+        Route::get('/license/count',  'licenseCounter')->name('license.counter');
         Route::post('/license-store',  'store')->name('license.store');
         Route::get('/license-edit/{id}',  'edit')->name('license.edit');
         Route::post('/license-update/{id}',  'update')->name('license.update');
@@ -225,6 +226,8 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     });
     Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings'])->group(function () {
         Route::get('/requestbooking',  'index')->name('requestbooking.index');
+        Route::get('/requestbooking/count', 'pendingCounter')->name('pending.counter');
+
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
         Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');
@@ -237,6 +240,8 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
 
     Route::controller(DropoffController::class)->middleware(['admin','adminOrSubadmin:dropoff_requests'])->group(function () {
         Route::get('/dropoffrequest',  'index')->name('dropoffs.index');
+        Route::get('/dropoff/count',  'dropoffCounter')->name('dropoff.counter');
+
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
         // Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');

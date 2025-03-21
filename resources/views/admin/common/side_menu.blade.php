@@ -202,16 +202,17 @@
              {{-- @if($isAdmin || isset($subadminPermissions['license_approvals'])) --}}
              @if($isAdmin || (isset($subadminPermissions['license_approvals']) && $subadminPermissions['license_approvals']->view == 1))
             <li class="dropdown {{ request()->is('admin/license*') ? 'active' : '' }}">
-                <a href="{{ route('license.index') }}" class="nav-link"><span ><i
-                            data-feather="file-text"></i>License Approvals
+                <a href="{{ route('license.index') }}" class="nav-link"><span>
+                    <i data-feather="file-text"></i>License Approvals</span>
+                    <div id="updatelicenseCounter" 
+                    class="badge {{ request()->is('admin/license*') ? 'bg-white text-dark' : 'bg-primary text-white' }} rounded-circle"
+                    style="display: inline-flex; justify-content: center; align-items: center; 
+                min-width: 22px; height: 22px; border-radius: 50%; 
+                text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
+                   0
+               </div>
+                </a>
                             {{-- @if (isset($pendingCount) && $pendingCount > 0) --}}
-                            @if ($pendingCount > 0)
-                                <span class="badge rounded-pill bg-warning text-dark d-flex justify-content-center align-items-center" 
-                                    style="width: 24px; height: 24px; font-size: 14px;">
-                                    {{ $pendingCount }}
-                                </span>
-                            @endif
-                        </span></a>
             </li>
 @endif
 {{-- @if($isAdmin || isset($subadminPermissions['notifications'])) --}}
@@ -242,6 +243,13 @@
             <a href="{{ route('requestbooking.index') }}" class="nav-link  {{ request()->is('admin/requestbooking*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="calendar"></i>
                 <span>Request Bookings</span>
+                <div id="pendingRequestCounter" 
+                class="badge {{ request()->is('admin/requestbooking*') ? 'bg-white text-dark' : 'bg-primary text-white' }} rounded-circle"
+                style="display: inline-flex; justify-content: center; align-items: center; 
+            min-width: 22px; height: 22px; border-radius: 50%; 
+            text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
+               0
+           </div>
             </a>
         </li>
         @endif
@@ -251,6 +259,14 @@
             <a href="{{ route('dropoffs.index') }}" class="nav-link {{ request()->is('admin/dropoff*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="calendar"></i>
                 <span>Dropoff Requests</span>
+                <div id="dropoffCounter" 
+     class="badge {{ request()->is('admin/dropoff*') ? 'bg-white text-dark' : 'bg-primary text-white' }}"
+     style="display: inline-flex; justify-content: center; align-items: center; 
+            min-width: 22px; height: 22px; border-radius: 50%; 
+            text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
+    0
+</div>
+
             </a>
         </li>
         @endif

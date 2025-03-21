@@ -16,7 +16,7 @@ use App\Mail\LicenseApprovalDeActivated;
 
 class LicenseController extends Controller
 {
-    
+
     public function index()
     {
         
@@ -26,11 +26,19 @@ class LicenseController extends Controller
         ->whereNotNull('image') // Assuming 'license' is the column where license data is stored
         
         ->get();
-        $pendingCount = LicenseApproval::where('status', 2)->count();
+        // $pendingCount = LicenseApproval::where('status', 2)->count();
         
-        return view('admin.LicenseApproval.index',compact('LicenseApprovals','pendingCount'));
+        return view('admin.LicenseApproval.index',compact('LicenseApprovals'));
     }
 
+    public function licenseCounter()
+    {
+        $pendingCount = LicenseApproval::where('status', 2)
+        ->whereNotNull('image')
+        ->count();
+    
+        return response()->json(['count' => $pendingCount]);
+    }
     public function create()
     {
         return view('admin.LicenseApproval.create');

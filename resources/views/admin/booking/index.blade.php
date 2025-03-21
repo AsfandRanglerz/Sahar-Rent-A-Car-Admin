@@ -284,7 +284,7 @@
             });
         });
     </script>
-<script>
+{{-- <script>
     $(document).on('click', '.update-status', function() {
     let bookingId = $(this).data('id'); // Get booking ID
     let newStatus = $(this).data('status'); // New status (1 = Completed)
@@ -316,7 +316,46 @@
     });
 });
 
+    </script> --}}
+    <script>
+        $(document).on('click', '.update-status', function() {
+            let bookingId = $(this).data('id'); // Get booking ID
+            let newStatus = $(this).data('status'); // New status (1 = Completed)
+    
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to mark this booking as completed?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, complete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('/admin/booking') }}/" + bookingId + "/update-status", // Laravel route
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}", // CSRF Token for security
+                            status: newStatus
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire("Success!", "Booking marked as completed!", "success")
+                                    .then(() => location.reload()); // Reload after confirmation
+                            } else {
+                                Swal.fire("Error!", "Error updating status. Try again.", "error");
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error("Error:", xhr.responseText);
+                            Swal.fire("Oops!", "Something went wrong.", "error");
+                        }
+                    });
+                }
+            });
+        });
     </script>
-
+    
 
 @endsection

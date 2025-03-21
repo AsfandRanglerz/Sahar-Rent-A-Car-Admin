@@ -23,6 +23,16 @@ class DropoffController extends Controller
         return view('admin.RequestBooking.dropoff.index', compact('dropoffs'));
     }
 
+    public function dropoffCounter()
+{
+    $dropoffCount = RequestBooking::where('assigned_dropoff', 1)
+        ->where('status', 0)
+        ->whereNotNull('driver_id')
+        ->count();
+
+    return response()->json(['count' => $dropoffCount]);
+}
+
     public function destroy($id)
     {
         $dropoff = RequestBooking::find($id);

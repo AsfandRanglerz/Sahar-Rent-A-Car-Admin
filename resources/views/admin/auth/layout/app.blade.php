@@ -23,6 +23,7 @@
 
 <body>
 <div class="loader"></div>
+
 <div id="app">
 @yield('content')
 </div>
@@ -38,6 +39,7 @@
  <script src="{{ asset('public/admin/toastr/toastr.js') }}"></script>
 
 </body>
+
 <!-- auth-login.html  21 Nov 2019 03:49:32 GMT -->
 @yield('script')
 <script>

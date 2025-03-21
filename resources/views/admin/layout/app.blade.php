@@ -40,6 +40,72 @@
             @include('admin.common.footer')
         </div>
     </div>
+    <!-- Add this BEFORE your script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function updatependingRequestCounter() {
+              $.ajax({
+                  url: "{{ route('pending.counter') }}",
+                  type: 'GET',
+                  success: function(response) {
+                       // Ensure response.count exists and handle counts over 99
+                      let count = response.count || 0; // Default to 0 if no count is returned
+                      $('#pendingRequestCounter').text(count > 99 ? '99+' : count);
+                      // $('#orderCounter').text(response.count);
+                  },
+                  error: function(xhr, status, error) {
+                      console.log(error);
+                  }
+              });
+          }
+          updatependingRequestCounter();
+          setInterval(updatependingRequestCounter, 1000);
+  </script>
+
+<script>
+    function updateDropoffCounter() {
+        $.ajax({
+            url: "{{ route('dropoff.counter') }}",
+            type: 'GET',
+            success: function(response) {
+                let count = response.count || 0;
+                $('#dropoffCounter').text(count > 99 ? '99+' : count);
+            },
+            error: function(xhr, status, error) {
+                console.error("Dropoff Counter Error:", error);
+            }
+        });
+    }
+
+    // Run once on page load
+    updateDropoffCounter();
+
+    // Update every 10 seconds
+    setInterval(updateDropoffCounter, 10000);
+</script>
+
+<script>
+    function updatelicenseCounter() {
+        $.ajax({
+            url: "{{ route('license.counter') }}",
+            type: 'GET',
+            success: function(response) {
+                let count = response.count || 0;
+                $('#updatelicenseCounter').text(count > 99 ? '99+' : count);
+            },
+            error: function(xhr, status, error) {
+                console.error("License Approval Counter Error:", error);
+            }
+        });
+    }
+
+    // Run once on page load
+    updatelicenseCounter();
+
+    // Update every 10 seconds
+    setInterval(updatelicenseCounter, 10000);
+</script>
     <!-- General JS Scripts -->
     <script src="{{ asset('public/admin/assets/js/app.min.js') }}"></script>
     <!-- JS Libraies -->
