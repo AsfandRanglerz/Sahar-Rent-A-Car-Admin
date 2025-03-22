@@ -30,6 +30,7 @@
                                             <th>Phone</th>
                                             {{-- <th>Document (License)</th> --}}
                                             <th>Image</th>
+                                            <th>License</th>
                                             <th>Availability</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Actions</th>
@@ -103,6 +104,11 @@
                                                         @else
                                                         <span>No Image</span>
                                                         @endif
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-primary" href="
+                                                    {{ route('license.show', $driver->id) }}
+                                                     ">View</a>
                                                 </td>
                                                 <td>
                                                     <div class="badge {{ $driver->availability == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">

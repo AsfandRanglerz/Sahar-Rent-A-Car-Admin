@@ -12,11 +12,20 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\LicenseRequest;
 use App\Mail\LicenseApprovalActivated;
 use App\Mail\LicenseApprovalDeActivated;
+use App\Models\Driver;
 
 
 class LicenseController extends Controller
 {
 
+    public function show($driverId)
+    {
+        // Fetch the driver with license details
+        $drivers = Driver::with('license')->findOrFail($driverId);
+        $licenseApprovals = LicenseApproval::where('driver_id', $driverId)->first();
+        return view('admin.LicenseApproval.show', compact('drivers','licenseApprovals'));
+    }
+    
     public function index()
     {
         

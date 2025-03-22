@@ -44,18 +44,74 @@ class RequestBookingController extends Controller
     }
 
     // Check if the driver is already assigned at the same time
+    // $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
+    // ->where('status', '!=', 1) // Exclude completed bookings
+    // ->where(function ($query) use ($requestBooking) {
+    //     $query->where('pickup_date', $requestBooking->pickup_date) // Same pickup date
+    //           ->where(function ($q) use ($requestBooking) {
+    //               $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+    //                 ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+    //                 ->orWhere(function ($subQuery) use ($requestBooking) {
+    //                     $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
+    //                              ->where('dropoff_time', '>', $requestBooking->dropoff_time);
+    //                 });
+    //           });
+    // })
+    // ->exists();
     $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
     ->where('status', '!=', 1) // Exclude completed bookings
+    ->where('id', '!=', $requestBooking->id) // Prevent checking the same booking
     ->where(function ($query) use ($requestBooking) {
-        $query->where('pickup_date', $requestBooking->pickup_date) // Same pickup date
-              ->where(function ($q) use ($requestBooking) {
-                  $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
-                    ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
-                    ->orWhere(function ($subQuery) use ($requestBooking) {
-                        $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
-                                 ->where('dropoff_time', '>', $requestBooking->dropoff_time);
-                    });
-              });
+        // Case 1: Both Pickup and Dropoff Dates Exist
+        if (!empty($requestBooking->pickup_date) && !empty($requestBooking->dropoff_date)) {
+            $query->where(function ($q) use ($requestBooking) {
+                $q->whereBetween('pickup_date', [$requestBooking->pickup_date, $requestBooking->dropoff_date])
+                  ->orWhereBetween('dropoff_date', [$requestBooking->pickup_date, $requestBooking->dropoff_date])
+                  ->orWhere(function ($subQuery) use ($requestBooking) {
+                      $subQuery->where('pickup_date', '<', $requestBooking->pickup_date)
+                               ->where('dropoff_date', '>', $requestBooking->dropoff_date);
+                  });
+            })->where(function ($q) use ($requestBooking) {
+                if (!empty($requestBooking->pickup_time) && !empty($requestBooking->dropoff_time)) {
+                    $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                      ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                      ->orWhere(function ($subQuery) use ($requestBooking) {
+                          $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
+                                   ->where('dropoff_time', '>', $requestBooking->dropoff_time);
+                      });
+                }
+            });
+        }
+        // Case 2: Only Pickup Date Exists
+        elseif (!empty($requestBooking->pickup_date)) {
+            $query->where('pickup_date', $requestBooking->pickup_date)
+                  ->whereNotNull('pickup_date')
+                  ->where(function ($q) use ($requestBooking) {
+                      if (!empty($requestBooking->pickup_time) && !empty($requestBooking->dropoff_time)) {
+                          $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                            ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                            ->orWhere(function ($subQuery) use ($requestBooking) {
+                                $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
+                                         ->where('dropoff_time', '>', $requestBooking->dropoff_time);
+                            });
+                      }
+                  });
+        }
+        // Case 3: Only Dropoff Date Exists
+        elseif (!empty($requestBooking->dropoff_date)) {
+            $query->where('dropoff_date', $requestBooking->dropoff_date)
+                  ->whereNotNull('dropoff_date')
+                  ->where(function ($q) use ($requestBooking) {
+                      if (!empty($requestBooking->pickup_time) && !empty($requestBooking->dropoff_time)) {
+                          $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                            ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+                            ->orWhere(function ($subQuery) use ($requestBooking) {
+                                $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
+                                         ->where('dropoff_time', '>', $requestBooking->dropoff_time);
+                            });
+                      }
+                  });
+        }
     })
     ->exists();
 

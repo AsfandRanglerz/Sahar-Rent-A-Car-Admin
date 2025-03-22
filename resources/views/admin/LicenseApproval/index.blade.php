@@ -87,28 +87,40 @@
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3" style="display: flex; align-items: center; justify-content: center; column-gap: 8px">
                                                             <!-- Approve Button -->
-                                                            <a href="javascript:void(0);" onclick="showActivationModal({{ $LicenseApproval->id }})"
-                                                                class="btn btn-success">
+                                                            {{-- <a href="javascript:void(0);" onclick="showActivationModal({{ $LicenseApproval->id }})"
+                                                                class="btn btn-success"> --}}
                                                                 {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                                     class="feather feather-toggle-left">
                                                                     <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
                                                                     <circle cx="16" cy="12" r="3"></circle>
                                                                 </svg> --}}
-                                                                Approve
-                                                            </a>
+                                                                {{-- Approve
+                                                            </a> --}}
                                                     
                                                             <!-- Reject Button -->
-                                                            <a href="javascript:void(0);" onclick="showDeactivationModal({{ $LicenseApproval->id }})"
-                                                                class="btn btn-danger">
+                                                            {{-- <a href="javascript:void(0);" onclick="showDeactivationModal({{ $LicenseApproval->id }})"
+                                                                class="btn btn-danger"> --}}
                                                                 {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                                     class="feather feather-toggle-left">
                                                                     <rect x="1" y="5" width="22" height="14" rx="7" ry="7"></rect>
                                                                     <circle cx="16" cy="12" r="3"></circle>
                                                                 </svg> --}}
-                                                                Reject
-                                                            </a>
+                                                                {{-- Reject
+                                                            </a> --}}
+                                                            <a href="javascript:void(0);" 
+   onclick="showActivationModal({{ $LicenseApproval->id }})"
+   class="btn btn-success {{ $LicenseApproval->status == 1 ? 'disabled' : '' }}">
+   Approve
+</a>
+
+<a href="javascript:void(0);" 
+   onclick="showDeactivationModal({{ $LicenseApproval->id }})"
+   class="btn btn-danger {{ $LicenseApproval->status == 0 ? 'disabled' : '' }}">
+   Reject
+</a>
+
                                                             {{-- @if($isAdmin || ($permissions && $permissions->edit == 1)) --}}
                                                             {{-- <a href="{{ route('license.edit', $LicenseApproval->id) }}"
                                                                 class="btn btn-primary" style="margin-left: 10px">Edit</a> --}}

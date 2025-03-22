@@ -162,6 +162,8 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     });
 
     Route::controller(LicenseController::class)->middleware(['admin','adminOrSubadmin:license_approvals'])->group(function () {
+        Route::get('/license/{driver}', 'show')->name('license.show');
+
         Route::get('/license',  'index')->name('license.index');
         Route::get('/license-create',  'create')->name('license.create');
         Route::get('/license/count',  'licenseCounter')->name('license.counter');
