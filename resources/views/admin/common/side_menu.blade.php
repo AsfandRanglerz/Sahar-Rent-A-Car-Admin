@@ -265,7 +265,7 @@
             min-width: 22px; height: 22px; border-radius: 50%; 
             text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
     0
-</div>
+            </div>
 
             </a>
         </li>
