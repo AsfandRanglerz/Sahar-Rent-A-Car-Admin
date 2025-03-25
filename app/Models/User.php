@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\UserDocument;
+use App\Models\UserLoyaltyEarning;
+use Laravel\Sanctum\HasApiTokens; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens; 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -17,5 +18,9 @@ class User extends Authenticatable
     public function documents()
 {
     return $this->hasOne(UserDocument::class);
+}
+public function loyaltyEarnings()
+{
+    return $this->hasOne(UserLoyaltyEarning::class, 'user_id');
 }
 }

@@ -237,7 +237,7 @@ if ($editedBy) {
     ]);
 }
         // Redirect back with a success message
-        return redirect()->route('referals.index')->with(['message' => 'Referal Link Updated Successfully']);
+        return redirect()->route('referals.index')->with(['message' => 'Referal Link Points Updated Successfully']);
     }
 
     public function referaldestroy(Request $request, $id)

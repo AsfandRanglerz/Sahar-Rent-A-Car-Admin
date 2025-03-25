@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Driver;
+use App\Models\Booking;
 use App\Models\RequestBooking;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,5 +17,13 @@ class Dropoff extends Model
 {
     return $this->belongsTo(RequestBooking::class, 'id', 'id');
 }
+public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id');
+    }
 
+    public function booking()
+{
+    return $this->hasOne(Booking::class, 'car_id', 'car_id');
+}
 }

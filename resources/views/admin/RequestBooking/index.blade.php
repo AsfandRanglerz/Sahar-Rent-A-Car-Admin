@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Request Bookings</h4>
+                                    <h4>Pickup Requests</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -36,10 +36,10 @@
                                             <th>Pickup Address</th>
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th>
-                                            <th>Self Drop Off</th>
+                                            {{-- <th>Self Drop Off</th>
                                             <th>Drop Off Address</th>
                                             <th>Drop Off Date</th>
-                                            <th>Drop Off Time</th>
+                                            <th>Drop Off Time</th> --}}
                                             <th>Additional Notes</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -102,10 +102,28 @@
                                                 <span>--</span>
                                                 @endif
                                                 </td>
-                                                <td>{{ $requestbooking->self_dropoff }}</td>
-                                                <td>{{ $requestbooking->dropoff_address }}</td>
-                                                <td>{{ $requestbooking->dropoff_date }}</td>
-                                                <td>{{ $requestbooking->dropoff_time }}</td>
+                                                {{-- <td>{{ $requestbooking->self_dropoff }}</td>
+                                                <td>
+                                                    @if($requestbooking->dropoff_address)
+                                                    {{ $requestbooking->dropoff_address }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($requestbooking->dropoff_date)
+                                                    {{ $requestbooking->dropoff_date }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($requestbooking->dropoff_time)
+                                                    {{ $requestbooking->dropoff_time }}
+                                                @else
+                                                <span>--</span>
+                                                @endif
+                                                </td> --}}
                                                 <td>
                                                 @if($requestbooking->driver_required) 
                                                     {{ $requestbooking->driver_required }}
@@ -185,9 +203,9 @@
                                                             {{-- <a href="{{ route('requestbooking.edit', $requestbooking->id) }}" 
                                                                 class="btn btn-primary" style="margin-left: 10px">Assign</a>  --}}
                                                                 <a href="javascript:void(0);" class="btn btn-primary assign-driver-btn" 
-                                                                data-id="{{ $requestbooking->id }}" style="margin-left: 10px" data-toggle="modal" 
+                                                                data-id="{{ $requestbooking->id }}" data-toggle="modal" 
                                                                 data-target="#assignDriverModal">
-                                                                    Assign
+                                                                    Assign Driver
                                                                 </a>
 
                                                            @endif
@@ -252,7 +270,13 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Assign Driver</button>
+                    {{-- <button type="submit" class="btn btn-primary">Assign Driver</button> --}}
+                    <button type="submit" class="btn btn-primary" id="assignDriverBtn">
+                        <span id="assignDriverBtnText">Assign Driver</span>
+                        <span id="assignDriverSpinner" style="display: none;">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -351,6 +375,9 @@
         let url = $(this).attr('action'); // Get updated action URL
         let formData = $(this).serialize();
 
+        $("#assignDriverSpinner").show();
+        $("#assignDriverBtnText").hide();
+        $("#assignDriverBtn").prop("disabled", true);
         console.log("Submitting to URL:", url);
 
         $.ajax({
@@ -367,6 +394,12 @@
             error: function(xhr, status, error) {
                 console.error("Error Details:", xhr.responseText);
                 alert('This driver is already assigned for this date and time. Please select another driver.');
+            },
+            complete: function() {
+                // Hide spinner, show text, enable button after request completes
+                $("#assignDriverSpinner").hide();
+                $("#assignDriverBtnText").show();
+                $("#assignDriverBtn").prop("disabled", false);
             }
         });
     });

@@ -230,7 +230,7 @@
                             data-feather="calendar"></i>Bookings</span></a>
             </li>
 @endif
-@if($isAdmin || isset($subadminPermissions['requestbookings']) || isset($subadminPermissions['dropoff_requests']))
+@if($isAdmin || isset($subadminPermissions['requestbookings']) || isset($subadminPermissions['requestbookings']))
 <li class="dropdown">
     <a href="#" class="menu-toggle nav-link has-dropdown">
         <i data-feather="calendar"></i> <!-- Icon for header section -->
@@ -242,7 +242,7 @@
         <li class="{{ request()->is('admin/requestbooking*')  }}">
             <a href="{{ route('requestbooking.index') }}" class="nav-link  {{ request()->is('admin/requestbooking*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="calendar"></i>
-                <span>Request Bookings</span>
+                <span>Pickup Requests</span>
                 <div id="pendingRequestCounter" 
                 class="badge {{ request()->is('admin/requestbooking*') ? 'bg-white text-dark' : 'bg-primary text-white' }} rounded-circle"
                 style="display: inline-flex; justify-content: center; align-items: center; 
@@ -254,7 +254,7 @@
         </li>
         @endif
 
-        @if($isAdmin || isset($subadminPermissions['dropoff_requests']))
+        @if($isAdmin || isset($subadminPermissions['requestbookings']))
         <li class="{{ request()->is('admin/dropoff*')  }}">
             <a href="{{ route('dropoffs.index') }}" class="nav-link {{ request()->is('admin/dropoff*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="calendar"></i>
@@ -294,7 +294,7 @@
         <li class="{{ request()->is('admin/loyaltypoints*')  }}">
             <a href="{{ route('loyaltypoints.index') }}" class="nav-link  {{ request()->is('admin/loyaltypoints*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="gift"></i>
-                <span>Car Rental Points</span>
+                <span>Rental Reward Points</span>
             </a>
         </li>
         @endif
@@ -304,7 +304,7 @@
         <li class="{{ request()->is('admin/referals*')  }}">
             <a href="{{ route('referals.index') }}" class="nav-link {{ request()->is('admin/referals*') ? 'active bg-primary text-white' : '' }}">
                 <i data-feather="gift"></i>
-                <span>Referal Link Points</span>
+                <span>Referral Bonus Points</span>
             </a>
         </li>
         @endif
@@ -319,8 +319,8 @@
             </li>
 @endif
 
-{{-- @if($isAdmin || isset($subadminPermissions['privacy_policy'])) --}}
-@if($isAdmin || (isset($subadminPermissions['privacy_policy']) && $subadminPermissions['privacy_policy']->view == 1))
+            {{-- @if($isAdmin || isset($subadminPermissions['privacy_policy'])) --}}
+                @if($isAdmin || (isset($subadminPermissions['privacy_policy']) && $subadminPermissions['privacy_policy']->view == 1))
             <li class="dropdown {{ request()->is('admin/Privacy-policy*') || request()->is('admin/privacy-policy-edit*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/Privacy-policy') }}" class="nav-link"><i
                         data-feather="monitor"></i><span>Privacy Policy</span></a>
@@ -332,7 +332,13 @@
                 <a href="{{ url('/admin/term-condition') }}" class="nav-link"><i
                         data-feather="clipboard"></i><span>Terms & Conditions</span></a>
             </li>
-@endif
+            @endif
+            @if($isAdmin || (isset($subadminPermissions['about_us']) && $subadminPermissions['about_us']->view == 1))
+            <li class="dropdown {{ request()->is('admin/About-us*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
+                <a href="{{ url('/admin/About-us') }}" class="nav-link"><i
+                        data-feather="info"></i><span>About Us</span></a>
+            </li>
+            @endif
         </ul>
     </aside>
 </div> 

@@ -175,7 +175,13 @@
                     <input type="hidden" id="action" name="action" value="0">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Reject</button>
+                        {{-- <button type="submit" class="btn btn-primary">Reject</button> --}}
+                        <button type="submit" class="btn btn-primary" id="rejectBtn">
+                            <span id="rejectBtnText">Reject</span>
+                            <span id="rejectSpinner" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -200,7 +206,13 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Approve</button>
+                        {{-- <button type="submit" class="btn btn-primary">Approve</button> --}}
+                        <button type="submit" class="btn btn-primary" id="approveBtn">
+                            <span id="approveBtnText">Approve</span>
+                            <span id="approveSpinner" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -255,6 +267,24 @@
             $('#activationModal').modal('show');
         }
 
+// Handle form submissions with spinner
+$(document).ready(function () {
+    // Deactivation form submission
+    $('#deactivationForm').submit(function () {
+        // Show spinner, hide text, disable button
+        $("#rejectSpinner").show();
+        $("#rejectBtnText").hide();
+        $("#rejectBtn").prop("disabled", true);
+    });
+
+    // Activation form submission
+    $('#activationForm').submit(function () {
+        // Show spinner, hide text, disable button
+        $("#approveSpinner").show();
+        $("#approveBtnText").hide();
+        $("#approveBtn").prop("disabled", true);
+    });
+});
         $(document).ready(function() {
             $('#imageModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);

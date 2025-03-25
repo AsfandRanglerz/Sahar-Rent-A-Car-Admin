@@ -7,6 +7,7 @@ use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Favorite;
 
 class CarDetails extends Model
 {
@@ -26,5 +27,10 @@ class CarDetails extends Model
     public function loyaltyPoints()
     {
         return $this->hasOne(LoyaltyPoints::class, 'car_id', 'car_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'car_id');
     }
 }

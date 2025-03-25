@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
+use App\Models\About;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\PrivacyPolicy;
@@ -69,7 +70,7 @@ class SecurityController extends Controller
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Terms & Conditions',
+                'section' => 'Terms&Conditions',
                 'action' => 'Add',
                 'message' => 'Added Terms & Conditions',
             ]);
@@ -77,5 +78,40 @@ class SecurityController extends Controller
         // $data=TermCondition::first();
         // TermCondition::find($data->id)->update($request->all());
         return redirect('/admin/term-condition')->with(['status'=>true, 'message' => 'Terms & Conditions Updated Successfully']);
+    }
+
+    public function AboutUs(){
+        $data=About::first();
+        return view('admin.AboutUs.index',compact('data'));
+    }
+    public function AboutUsEdit(){
+        $data=About::first();
+        return view('admin.AboutUs.edit',compact('data'));
+    }
+    public function AboutUsUpdate(Request $request){
+        $request->validate([
+            'description'=>'required'
+        ]);
+        $data = About::first();
+        if (!$data) {
+            // If no record exists, create a new one
+            $data = About::create([
+                'description' => $request->description
+            ]);
+        } else {
+            // Update the existing record
+            $data->update($request->all());
+        }
+        if (Auth::guard('subadmin')->check()) {
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'AboutUs',
+                'action' => 'Add',
+                'message' => 'Added About Us',
+            ]);
+        } 
+        // $data=PrivacyPolicy::first();
+        // PrivacyPolicy::find($data->id)->update($request->all());
+        return redirect('/admin/About-us')->with(['status'=>true, 'message' => 'About Us Updated Successfully']);
     }
 }

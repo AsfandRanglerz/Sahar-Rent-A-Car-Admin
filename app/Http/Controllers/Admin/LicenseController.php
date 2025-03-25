@@ -192,6 +192,16 @@ class LicenseController extends Controller
         $licenseApproval->update([
             'status' => 1  // Set status to Approved when action is taken
         ]);
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+            SubAdminLog::create([
+                'subadmin_id' => Auth::guard('subadmin')->id(),
+                'section' => 'License Approvals',
+                'action' => 'Approve',
+                'message' => "SubAdmin: {$subadminName} Approved License: {$data->name}",
+            ]);
+        }
         try {
             Mail::to($data->email)->send(new LicenseApprovalActivated($message));
 
@@ -232,6 +242,16 @@ class LicenseController extends Controller
     $licenseApproval->update([
         'status' => 0  // Set status to Rejected when action is taken
     ]);
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
+        SubAdminLog::create([
+            'subadmin_id' => Auth::guard('subadmin')->id(),
+            'section' => 'License Approvals',
+            'action' => 'Reject',
+            'message' => "SubAdmin: {$subadminName} Rejected License: {$data->name}",
+        ]);
+    }
     try {
         Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
 

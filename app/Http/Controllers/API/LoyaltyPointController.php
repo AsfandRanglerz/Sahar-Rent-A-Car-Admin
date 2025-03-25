@@ -13,91 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoyaltyPointController extends Controller
 {
-//     public function getLoyaltyPoints()
-// {
-//     $userId = Auth::id(); // Get the logged-in user ID
-
-//     if (!$userId) {
-//         return response()->json([
-//             'message' => 'User not authenticated',
-//         ], 401);
-//     }
-
-//     // Join loyalty_points → bookings → car_inventory
-//     $loyaltyPoints = LoyaltyPoints::with('booking.car')
-//     ->whereHas('booking', function ($query) use ($userId) {
-//         $query->where('user_id', $userId);
-//     })->get();
-
-//     $requestBookings = RequestBooking::where('user_id', $userId)->get();
-
-// $data = $loyaltyPoints->map(function ($point) {
-//     return [
-//         'car_name' => $point->booking->car->car_name ?? 'N/A',
-//         'on_car' => $point->on_car,
-//         'discount' => $point->discount,
-//     ];
-// });
-
-// $requestBookingData = $requestBookings->map(function ($requestBooking) {
-//     return [
-//         'car_name' => $requestBooking->car->car_name ?? 'N/A',
-//         'on_car' => $requestBooking->on_car, // No loyalty points for request bookings
-//         'discount' => $requestBooking->discount, // No discount unless linked to loyalty points
-//     ];
-// });
-
-// // Combine both results
-// $history = $data->merge($requestBookingData);
-
-// return response()->json([
-//     'total_points' => $loyaltyPoints->sum('earned_points'),
-//     'history' => $history,
-// ]);
-
-// }
-// public function getLoyaltyPoints()
-// {
-//     $userId = Auth::id(); // Get the logged-in user ID
-
-//     if (!$userId) {
-//         return response()->json([
-//             'message' => 'User not authenticated',
-//         ], 401);
-//     }
-
-//     // Fetch existing total points from UserLoyaltyEarning
-//     $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
-//     $currentTotalPoints = $userLoyalty ? $userLoyalty->total_points : 0;
-
-//     // Fetch all user bookings and request bookings
-//     $bookings = Booking::with('car')->where('user_id', $userId)->get();
-//     $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->get();
-
-//     // Extract unique car IDs
-//     $carIds = $bookings->pluck('car.id')->merge($requestBookings->pluck('car.id'))->unique();
-
-//     // Fetch loyalty points for booked cars
-//     $loyaltyPoints = LoyaltyPoints::whereIn('car_id', $carIds)->get();
-
-//     // **DO NOT RECALCULATE OR ADD NEW POINTS HERE**  
-//     // This prevents admin updates from affecting total_points.
-
-//     // Format response
-//     $data = $loyaltyPoints->map(function ($point) {
-//         return [
-//             'car_name' => $point->car->car_name ?? 'N/A',
-//             'on_car' => $point->on_car, // Show the current on_car value but don't update total_points
-//             'discount' => $point->discount,
-//         ];
-//     });
-
-//     return response()->json([
-//         'total_points' => $currentTotalPoints, // Show stored total_points, don't recalculate
-//         'history' => $data,
-//     ]);
-// }
-
+//    
 public function getLoyaltyPoints()
 {
     $userId = Auth::id(); // Get the logged-in user ID
@@ -108,35 +24,78 @@ public function getLoyaltyPoints()
         ], 401);
     }
 
-    // Get all bookings and request bookings for the user
-    // $bookings = Booking::where('user_id', $userId)->pluck('car_id');
-    // $requestBookings = RequestBooking::where('user_id', $userId)->pluck('car_id');
+    // Fetch existing total points from UserLoyaltyEarning
+    $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+    $currentTotalPoints = $userLoyalty ? $userLoyalty->total_points : 0;
 
-    // // Merge both car_ids (avoid duplicates)
-    // $carIds = $bookings->merge($requestBookings)->unique();
+    // Fetch all user bookings and request bookings
     $bookings = Booking::with('car')->where('user_id', $userId)->get();
     $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->get();
 
     // Extract unique car IDs
     $carIds = $bookings->pluck('car.id')->merge($requestBookings->pluck('car.id'))->unique();
 
-    // Get loyalty points for these cars
-    $loyaltyPoints = LoyaltyPoints::with('car')->whereIn('car_id', $carIds)->get();
+    // Fetch loyalty points for booked cars
+    $loyaltyPoints = LoyaltyPoints::whereIn('car_id', $carIds)->get();
+
+    // **DO NOT RECALCULATE OR ADD NEW POINTS HERE**  
+    // This prevents admin updates from affecting total_points.
+    $loyaltyHistory = UserLoyaltyEarning::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
 
     // Format response
     $data = $loyaltyPoints->map(function ($point) {
         return [
             'car_name' => $point->car->car_name ?? 'N/A',
-            'on_car' => $point->on_car,
+            'on_car' => $point->on_car, // Show the current on_car value but don't update total_points
             'discount' => $point->discount,
         ];
     });
 
     return response()->json([
-        'total_points' => $loyaltyPoints->sum('on_car'),
+        'total_points' => $currentTotalPoints, // Show stored total_points, don't recalculate
         'history' => $data,
     ]);
 }
+
+// public function getLoyaltyPoints()
+// {
+//     $userId = Auth::id(); // Get the logged-in user ID
+
+//     if (!$userId) {
+//         return response()->json([
+//             'message' => 'User not authenticated',
+//         ], 401);
+//     }
+
+//     // Get all bookings and request bookings for the user
+//     // $bookings = Booking::where('user_id', $userId)->pluck('car_id');
+//     // $requestBookings = RequestBooking::where('user_id', $userId)->pluck('car_id');
+
+//     // // Merge both car_ids (avoid duplicates)
+//     // $carIds = $bookings->merge($requestBookings)->unique();
+//     $bookings = Booking::with('car')->where('user_id', $userId)->get();
+//     $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->get();
+
+//     // Extract unique car IDs
+//     $carIds = $bookings->pluck('car.id')->merge($requestBookings->pluck('car.id'))->unique();
+
+//     // Get loyalty points for these cars
+//     $loyaltyPoints = LoyaltyPoints::with('car')->whereIn('car_id', $carIds)->get();
+
+//     // Format response
+//     $data = $loyaltyPoints->map(function ($point) {
+//         return [
+//             'car_name' => $point->car->car_name ?? 'N/A',
+//             'on_car' => $point->on_car,
+//             'discount' => $point->discount,
+//         ];
+//     });
+
+//     return response()->json([
+//         'total_points' => $loyaltyPoints->sum('on_car'),
+//         'history' => $data,
+//     ]);
+// }
 
 // public function earnLoyaltyPoints(Request $request)
 // {

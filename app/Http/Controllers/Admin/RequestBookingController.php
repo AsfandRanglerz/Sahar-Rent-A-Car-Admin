@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Auth;
 class RequestBookingController extends Controller
 {
     public function pendingCounter(){
-        $orderCount = RequestBooking::where('status', 2)->count();
+        $orderCount = RequestBooking::where('status', 2)
+        ->whereNotNull('pickup_address')
+        ->count();
          return response()->json(['count' => $orderCount]);
     }
 
@@ -23,7 +25,9 @@ class RequestBookingController extends Controller
         
         // $bookings = Booking::latest()->get();
         $requestbookings = RequestBooking::whereIn('status', [0, 2])
-        ->orderBy('status','ASC')->get();
+        ->orderBy('status','ASC')
+        ->whereNotNull('pickup_address')
+        ->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
     }
@@ -121,6 +125,7 @@ class RequestBookingController extends Controller
     
 $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
     ->where('status', '!=', 1) // Exclude completed bookings
+    ->where('status', '!=', 2) // Exclude Pending bookings
     ->where('id', '!=', $requestBooking->id) // Prevent checking the same booking
     ->where(function ($query) use ($requestBooking) {
         // ✅ Case 1: Only Pickup Date & Pickup Time Exist (dropoff_date & dropoff_time are NULL)
@@ -233,7 +238,7 @@ if ($isDriverAssigned) {
     
         SubAdminLog::create([
             'subadmin_id' => $subadmin->id,
-            'section' => 'Request Bookings',
+            'section' => 'Ride Requests',
             'action' => 'Assign Driver',
             'message' => "SubAdmin: {$subadminName} assigned Driver with Car ID: {$requestBooking->car_id} ",
         ]);
@@ -266,12 +271,12 @@ if ($isDriverAssigned) {
         $subadminName = $subadmin->name;
         SubAdminLog::create([
             'subadmin_id' => Auth::guard('subadmin')->id(),
-            'section' => 'Request Bookings',
+            'section' => 'Ride Requests',
             'action' => 'Delete',
-            'message' => "SubAdmin: {$subadminName} deleted request booking: {$requestbookingName}",
+            'message' => "SubAdmin: {$subadminName} Deleted Request Booking: {$requestbookingName}",
         ]);
     }
     $requestbooking->delete();
-    return redirect()->route('requestbooking.index')->with(['message' => 'Booking Deleted Successfully']);
+    return redirect()->route('requestbooking.index')->with(['message' => 'Ride Request Deleted Successfully']);
     }
 }

@@ -35,7 +35,7 @@ Route::post('/admin-reset-password-link',[AdminController::class,'adminResetPass
 Route::get('/change_password/{id}',[AdminController::class,'change_password']);
 Route::post('/admin-reset-password',[AdminController::class,'ResetPassword']);
 
-Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOrSubadmin:privacy_policy','adminOrSubadmin:terms_conditions'])->group(function (){
+Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOrSubadmin:privacy_policy','adminOrSubadmin:terms_conditions','adminOrSubadmin:about_us'])->group(function (){
     Route::get('dashboard',[AdminController::class,'getdashboard']);
     Route::get('profile',[AdminController::class,'getProfile']);
     Route::post('update-profile',[AdminController::class,'update_profile']);
@@ -45,6 +45,9 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::get('term-condition',[SecurityController::class,'TermCondition']);
     Route::get('term-condition-edit',[SecurityController::class,'TermConditionEdit']);
     Route::post('term-condition-update',[SecurityController::class,'TermConditionUpdate']);
+    Route::get('About-us',[SecurityController::class,'AboutUs']);
+    Route::get('About-us-edit',[SecurityController::class,'AboutUsEdit']);
+    Route::post('About-us-update',[SecurityController::class,'AboutUsUpdate']);
     Route::get('logout',[AdminController::class,'logout']);
 
 
@@ -226,9 +229,23 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     
         Route::delete('/booking-destroy/{id}',  'destroy')->name('booking.destroy');
     });
-    Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings'])->group(function () {
+    Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings,view'])->group(function () {
         Route::get('/requestbooking',  'index')->name('requestbooking.index');
         Route::get('/requestbooking/count', 'pendingCounter')->name('pending.counter');
+
+        // Route::get('/booking-create',  'create')->name('booking.create');
+        // Route::post('/booking-store',  'store')->name('booking.store');
+        // Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');
+    //     Route::post('/requestbooking/update-status',  'updateStatus')
+    // ->name('requestbooking.update-status');
+
+        // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
+        Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
+    });
+
+Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings,edit'])->group(function () {
+        // Route::get('/requestbooking',  'index')->name('requestbooking.index');
+        // Route::get('/requestbooking/count', 'pendingCounter')->name('pending.counter');
 
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
@@ -237,10 +254,9 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     // ->name('requestbooking.update-status');
 
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
-        Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
+        // Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
     });
-
-    Route::controller(DropoffController::class)->middleware(['admin','adminOrSubadmin:dropoff_requests'])->group(function () {
+    Route::controller(DropoffController::class)->middleware(['admin','adminOrSubadmin:requestbookings,view'])->group(function () {
         Route::get('/dropoffrequest',  'index')->name('dropoffs.index');
         Route::get('/dropoff/count',  'dropoffCounter')->name('dropoff.counter');
 
@@ -251,7 +267,7 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     // ->name('requestbooking.update-status');
 
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
-        Route::delete('/dropoffrequest-destroy/{id}',  'destroy')->name('dropoffs.destroy');
+        Route::delete('/dropoffrequest-destroy/{id}',  'destroy')->name('dropoff.destroy');
     });    
     // Route::controller(ContactUsController::class)->middleware(['admin','adminOrSubadmin:ContactUs'])->group(function () {
     //     Route::get('/ContactUs',  'index')->name('ContactUs.index');

@@ -45,7 +45,7 @@
                                                 <td>{{ $notification->drivers }}</td> --}}
                                                 <td>{{ $notification->title }}</td>
                                                 <td>{{ $notification->description }}</td>
-                                                <td>{{ $notification->created_at }}</td>
+                                                <td>{{ $notification->created_at->format('d M Y') }}</td>
                                                 {{-- <td>{{ $notification->additional_services}}</td>
                                                 @if($notification->packages == null)
                                                     <td class="text-danger">
@@ -186,7 +186,13 @@
     
                         <!-- Submit Button -->
                         <div class="text-right">
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            {{-- <button type="submit" class="btn btn-primary">Create</button> --}}
+                            <button type="submit" class="btn btn-primary" id="createBtn">
+                                <span id="createBtnText">Create</span>
+                                <span id="createSpinner" style="display: none;">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -266,6 +272,12 @@
              $('#drivers').on('change', function () {
                  $('#select_all_drivers').prop('checked', $('#drivers option:selected').length === $('#drivers option').length);
              });
+             $('form').submit(function () {
+        // Show spinner and disable button
+        $("#createSpinner").show();
+        $("#createBtnText").hide();
+        $("#createBtn").prop("disabled", true);
+    });
          });
 </script>
 @endsection

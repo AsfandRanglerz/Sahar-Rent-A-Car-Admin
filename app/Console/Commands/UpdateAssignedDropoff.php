@@ -47,7 +47,7 @@ class UpdateAssignedDropoff extends Command
     Log::info("Total Pending Bookings: " . $bookings->count());
 
     foreach ($bookings as $booking) {
-        $dropOffDate = Carbon::parse($booking->pickup_date);
+        $dropOffDate = Carbon::parse($booking->dropoff_date);
         Log::info("Checking Booking ID: {$booking->id}, Dropoff Date: {$dropOffDate->toDateString()}");
 
         if ($currentDate->diffInDays($dropOffDate) === 1 && $currentDate->lessThan($dropOffDate)) {

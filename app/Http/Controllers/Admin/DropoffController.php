@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Log;
 use Carbon\Carbon;
+use App\Models\Driver;
 use App\Models\Dropoff;
 use Illuminate\Http\Request;
 use App\Models\RequestBooking;
@@ -15,19 +16,19 @@ class DropoffController extends Controller
     {
         
 
-        $dropoffs = RequestBooking::where('assigned_dropoff', 1)
-        ->where('status', 0)
-        ->whereNotNull('driver_id')
+        $dropoffs = RequestBooking::whereIn('status', [0, 2])
+        ->whereNotNull('dropoff_address')
         ->with('driver')
         ->get();
-        return view('admin.RequestBooking.dropoff.index', compact('dropoffs'));
+        $drivers = Driver::all();
+        return view('admin.RequestBooking.dropoff.index', compact('dropoffs','drivers'));
     }
 
     public function dropoffCounter()
 {
-    $dropoffCount = RequestBooking::where('assigned_dropoff', 1)
-        ->where('status', 0)
-        ->whereNotNull('driver_id')
+    $dropoffCount = RequestBooking::
+        where('status', 2)
+        ->whereNotNull('dropoff_address')
         ->count();
 
     return response()->json(['count' => $dropoffCount]);

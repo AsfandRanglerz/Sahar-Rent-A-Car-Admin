@@ -138,7 +138,7 @@
                 <form id="permissionsForm">
                     <input type="hidden" name="subadmin_id" id="subadmin_id">
                     
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Side Menus</th>
@@ -303,159 +303,10 @@
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[cars_inventory][delete]" id="cars_inventoryDelete">
                                         <label class="form-check-label" for="cars_inventoryDelete">Delete</label>
                                     </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td>License Approvals</td>
-                                {{-- <td><input type="checkbox" name="permissions[license_approvals][add]"  ></td>
-                                <td><input type="checkbox" name="permissions[license_approvals][edit]"  ></td>
-                                <td><input type="checkbox" name="permissions[license_approvals][view]"  ></td>
-                                <td><input type="checkbox" name="permissions[license_approvals][delete]"  ></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][add]" id="license_approvalsAdd">
-                                        <label class="form-check-label" for="license_approvalsAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][edit]" id="license_approvalsEdit">
-                                        <label class="form-check-label" for="license_approvalsEdit">Edit</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][view]" id="license_approvalsView">
-                                        <label class="form-check-label" for="license_approvalsView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][delete]" id="license_approvalsDelete">
-                                        <label class="form-check-label" for="license_approvalsDelete">Delete</label>
-                                    </div>
-                            </tr>
-                            <tr>
-                                <td>Notifications</td>
-                                {{-- <td><input type="checkbox" name="permissions[notifications][add]" ></td>
-                                <td><input type="checkbox" name="permissions[notifications][edit]" ></td>
-                                <td><input type="checkbox" name="permissions[notifications][view]" ></td>
-                                <td><input type="checkbox" name="permissions[notifications][delete]" ></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][add]" id="notificationsAdd">
-                                        <label class="form-check-label" for="notificationsAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][edit]" id="notificationsEdit">
-                                        <label class="form-check-label" for="notificationsEdit">Edit</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][view]" id="notificationsView">
-                                        <label class="form-check-label" for="notificationsView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][delete]" id="notificationsDelete">
-                                        <label class="form-check-label" for="notificationsDelete">Delete</label>
-                                    </div>
-                            </tr>
-                            <tr>
-                                <td>Bookings</td>
-                                {{-- <td><input type="checkbox" name="permissions[bookings][add]"></td>
-                                <td><input type="checkbox" name="permissions[bookings][edit]"></td>
-                                <td><input type="checkbox" name="permissions[bookings][view]"></td>
-                                <td><input type="checkbox" name="permissions[bookings][delete]"></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][add]" id="bookingsAdd">
-                                        <label class="form-check-label" for="bookingsAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][edit]" id="bookingsEdit">
-                                        <label class="form-check-label" for="bookingsEdit">Edit</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][view]" id="bookingsView">
-                                        <label class="form-check-label" for="bookingsView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][delete]" id="bookingsDelete">
-                                        <label class="form-check-label" for="bookingsDelete">Delete</label>
-                                    </div>
-                            </tr>
-                            <tr>
-                                <td>Request Bookings</td>
-                                {{-- <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][add]" id="requestbookingsAdd">
-                                        <label class="form-check-label" for="requestbookingsAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][edit]" id="requestbookingsEdit">
-                                        <label class="form-check-label" for="requestbookingsEdit">Assign</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][view]" id="requestbookingsView">
-                                        <label class="form-check-label" for="requestbookingsView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][delete]" id="requestbookingsDelete">
-                                        <label class="form-check-label" for="requestbookingsDelete">Delete</label>
-                                    </div>
-                            </tr>
-                            <tr>
-                                <td>Dropoff Requests</td>
-                                {{-- <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
-                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][add]" id="dropoff_requestsAdd">
-                                        <label class="form-check-label" for="dropoff_requestsAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][edit]" id="dropoff_requestsEdit">
-                                        <label class="form-check-label" for="dropoff_requestsEdit">Assign</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][view]" id="dropoff_requestsView">
-                                        <label class="form-check-label" for="dropoff_requestsView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][delete]" id="dropoff_requestsDelete">
-                                        <label class="form-check-label" for="dropoff_requestsDelete">Delete</label>
-                                    </div>
-                            </tr>
-                            <tr>
-                                <td>Car Rental Points</td>
+                                <td>Rental Reward Points</td>
                                 {{-- <td><input type="checkbox" name="permissions[loyalty_points][add]" ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[loyalty_points][view]"  ></td>
@@ -483,9 +334,10 @@
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[loyalty_points][delete]" id="loyalty_pointsDelete">
                                         <label class="form-check-label" for="loyalty_pointsDelete">Delete</label>
                                     </div>
+                                </td>
                             </tr>
                             <tr>
-                                <td>Referal Link Points</td>
+                                <td>Referral Bonus Points</td>
                                 {{-- <td><input type="checkbox" name="permissions[referal_links][add]" ></td>
                                 <td><input type="checkbox" name="permissions[referal_links][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[referal_links][view]"  ></td>
@@ -513,19 +365,177 @@
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][delete]" id="referal_linksDelete">
                                         <label class="form-check-label" for="referal_linksDelete">Delete</label>
                                     </div>
+                                </td>
                             </tr>
+                            <tr>
+                                <td>Notifications</td>
+                                {{-- <td><input type="checkbox" name="permissions[notifications][add]" ></td>
+                                <td><input type="checkbox" name="permissions[notifications][edit]" ></td>
+                                <td><input type="checkbox" name="permissions[notifications][view]" ></td>
+                                <td><input type="checkbox" name="permissions[notifications][delete]" ></td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][add]" id="notificationsAdd">
+                                        <label class="form-check-label" for="notificationsAdd">Add</label>
+                                    </div>
+                                </td>
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][edit]" id="notificationsEdit">
+                                        <label class="form-check-label" for="notificationsEdit">Edit</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][view]" id="notificationsView">
+                                        <label class="form-check-label" for="notificationsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[notifications][delete]" id="notificationsDelete">
+                                        <label class="form-check-label" for="notificationsDelete">Delete</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Request Bookings</td>
+                                {{-- <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][add]" id="requestbookingsAdd">
+                                        <label class="form-check-label" for="requestbookingsAdd">Add</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][edit]" id="requestbookingsEdit">
+                                        <label class="form-check-label" for="requestbookingsEdit">Assign</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][view]" id="requestbookingsView">
+                                        <label class="form-check-label" for="requestbookingsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[requestbookings][delete]" id="requestbookingsDelete">
+                                        <label class="form-check-label" for="requestbookingsDelete">Delete</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>License Approvals</td>
+                                {{-- <td><input type="checkbox" name="permissions[license_approvals][add]"  ></td>
+                                <td><input type="checkbox" name="permissions[license_approvals][edit]"  ></td>
+                                <td><input type="checkbox" name="permissions[license_approvals][view]"  ></td>
+                                <td><input type="checkbox" name="permissions[license_approvals][delete]"  ></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][add]" id="license_approvalsAdd">
+                                        <label class="form-check-label" for="license_approvalsAdd">Add</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][edit]" id="license_approvalsEdit">
+                                        <label class="form-check-label" for="license_approvalsEdit">Edit</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][view]" id="license_approvalsView">
+                                        <label class="form-check-label" for="license_approvalsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[license_approvals][delete]" id="license_approvalsDelete">
+                                        <label class="form-check-label" for="license_approvalsDelete">Delete</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Bookings</td>
+                                {{-- <td><input type="checkbox" name="permissions[bookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[bookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[bookings][view]"></td>
+                                <td><input type="checkbox" name="permissions[bookings][delete]"></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][add]" id="bookingsAdd">
+                                        <label class="form-check-label" for="bookingsAdd">Add</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][edit]" id="bookingsEdit">
+                                        <label class="form-check-label" for="bookingsEdit">Edit</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][view]" id="bookingsView">
+                                        <label class="form-check-label" for="bookingsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[bookings][delete]" id="bookingsDelete">
+                                        <label class="form-check-label" for="bookingsDelete">Delete</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            {{-- <tr>
+                                <td>Dropoff Requests</td> --}}
+                                {{-- <td><input type="checkbox" name="permissions[requestbookings][add]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][edit]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][view]"></td>
+                                <td><input type="checkbox" name="permissions[requestbookings][delete]"></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][add]" id="dropoff_requestsAdd">
+                                        <label class="form-check-label" for="dropoff_requestsAdd">Add</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][edit]" id="dropoff_requestsEdit">
+                                        <label class="form-check-label" for="dropoff_requestsEdit">Assign</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][view]" id="dropoff_requestsView">
+                                        <label class="form-check-label" for="dropoff_requestsView">View</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[dropoff_requests][delete]" id="dropoff_requestsDelete">
+                                        <label class="form-check-label" for="dropoff_requestsDelete">Delete</label>
+                                    </div>
+                            </tr> --}}
+                            
                             <tr>
                                 <td>Contact Us</td>
                                 {{-- <td><input type="checkbox" name="permissions[ContactUs][add]" ></td>
                                 <td><input type="checkbox" name="permissions[ContactUs][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[ContactUs][view]"  ></td>
                                 <td><input type="checkbox" name="permissions[ContactUs][delete]"  ></td> --}}
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[ContactUs][add]" id="ContactUsAdd">
                                         <label class="form-check-label" for="ContactUsAdd">Add</label>
                                     </div>
-                                </td>
+                                </td> --}}
                                 <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[ContactUs][edit]" id="ContactUsEdit">
@@ -538,11 +548,12 @@
                                         <label class="form-check-label" for="ContactUsView">View</label>
                                     </div>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[ContactUs][delete]" id="ContactUsDelete">
                                         <label class="form-check-label" for="ContactUsDelete">Delete</label>
                                     </div>
+                                </td> --}}
                             </tr>
                             <tr>
                                 <td>Privacy Policy</td>
@@ -550,12 +561,12 @@
                                 <td><input type="checkbox" name="permissions[privacy_policy][edit]"  ></td>
                                 <td><input type="checkbox" name="permissions[privacy_policy][view]"  ></td>
                                 <td><input type="checkbox" name="permissions[privacy_policy][delete]"  ></td> --}}
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[privacy_policy][add]" id="privacy_policyAdd">
                                         <label class="form-check-label" for="privacy_policyAdd">Add</label>
                                     </div>
-                                </td>
+                                </td> --}}
                                 <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[privacy_policy][edit]" id="privacy_policyEdit">
@@ -568,11 +579,12 @@
                                         <label class="form-check-label" for="privacy_policyView">View</label>
                                     </div>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[privacy_policy][delete]" id="privacy_policyDelete">
                                         <label class="form-check-label" for="privacy_policyDelete">Delete</label>
                                     </div>
+                                </td> --}}
                             </tr>
                             <tr>
                                 <td>Terms & Conditions</td>
@@ -580,12 +592,12 @@
                                 <td><input type="checkbox" name="permissions[terms_conditions][edit]" ></td>
                                 <td><input type="checkbox" name="permissions[terms_conditions][view]" ></td>
                                 <td><input type="checkbox" name="permissions[terms_conditions][delete]" ></td> --}}
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][add]" id="terms_conditionsAdd">
                                         <label class="form-check-label" for="terms_conditionsAdd">Add</label>
                                     </div>
-                                </td>
+                                </td> --}}
                                 <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][edit]" id="terms_conditionsEdit">
@@ -598,18 +610,56 @@
                                         <label class="form-check-label" for="terms_conditionsView">View</label>
                                     </div>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     <div class="form-check d-flex align-items-center">
                                         <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][delete]" id="terms_conditionsDelete">
                                         <label class="form-check-label" for="terms_conditionsDelete">Delete</label>
                                     </div>
+                                </td> --}}
+                            </tr>
+                            <tr>
+                                <td>About Us</td>
+                                {{-- <td><input type="checkbox" name="permissions[terms_conditions][add]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][edit]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][view]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][delete]" ></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][add]" id="terms_conditionsAdd">
+                                        <label class="form-check-label" for="terms_conditionsAdd">Add</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[about_us][edit]" id="about_usEdit">
+                                        <label class="form-check-label" for="about_usEdit">Edit</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[about_us][view]" id="about_usView">
+                                        <label class="form-check-label" for="about_usView">View</label>
+                                    </div>
+                                </td>
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][delete]" id="terms_conditionsDelete">
+                                        <label class="form-check-label" for="terms_conditionsDelete">Delete</label>
+                                    </div>
+                                </td> --}}
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Permissions</button>
+                        {{-- <button type="submit" class="btn btn-primary">Save Permissions</button> --}}
+                        <button type="submit" class="btn btn-primary" id="savePermissionsBtn">
+                            <span id="savePermissionsText">Save Permissions</span>
+                            <span id="permissionsSpinner" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -773,9 +823,9 @@
 
                 $("#permissionsModal").modal("show"); // Show the modal
             },
-            error: function() {
-                alert("Error fetching permissions.");
-            }
+            // error: function() {
+            //     alert("Error fetching permissions.");
+            // }
         });
     });
 
@@ -784,18 +834,28 @@
         e.preventDefault();
         let formData = $(this).serialize();
 
+        $("#permissionsSpinner").show();
+    $("#savePermissionsText").hide();
+    $("#savePermissionsBtn").prop("disabled", true);
+
         $.ajax({
             url: "{{ route('subadmin.savePermissions') }}",
             type: "POST",
             data: formData,
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
             success: function(response) {
-                alert(response.message);
+                // alert(response.message);
                 $("#permissionsModal").modal("hide");
             },
-            error: function() {
-                alert("Error saving permissions.");
-            }
+            // error: function() {
+            //     alert("Error saving permissions.");
+            // },
+              complete: function() {
+            // Hide spinner and enable button after request completes
+            $("#permissionsSpinner").hide();
+            $("#savePermissionsText").show();
+            $("#savePermissionsBtn").prop("disabled", false);
+        }
         });
     });
 });

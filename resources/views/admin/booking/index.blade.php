@@ -28,7 +28,8 @@
                                             <th>Sr.</th>
                                             <th>Car Id</th>
                                             <th>Status</th>
-                                            <th>Driver</th>
+                                            <th>Pickup Driver</th>
+                                            <th>Dropoff Driver</th>
                                             <th>Customer</th>
                                             <th>Email Address</th>
                                             <th>Phone Number</th>
@@ -80,6 +81,9 @@
                                                 <span>--</span>
                                                 @endif --}}
                                                 {{ $booking->driver ? $booking->driver->name : '--' }}
+                                                </td>
+                                                <td>
+                                                    {{ $booking->dropdriver ? $booking->dropdriver->name : '--' }}
                                                 </td>
                                                 <td>{{ $booking->full_name }}</td>
                                                 <td>

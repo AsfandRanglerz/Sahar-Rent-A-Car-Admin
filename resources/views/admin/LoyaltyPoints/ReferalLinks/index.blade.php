@@ -9,7 +9,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Referal Link Points</h4>
+                                    <h4>Referral Bonus Points</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -27,7 +27,7 @@
                                             <th>Sr.</th>
                                             {{-- <th>Car ID</th>
                                             <th>Car Name</th> --}}
-                                            <th>Referal Link</th>
+                                            <th>Referral Points</th>
                                             {{-- <th>Car Rental</th> --}}
                                             {{-- <th>Phone</th> --}}
                                             {{-- <th>Discount</th> --}}

@@ -53,4 +53,51 @@ class CarController extends Controller
             // 'weekly_price' => $carDetails->car_feature, // Assuming JSON format
         ]);
     }
+
+    public function filterCars(Request $request)
+{
+    $userId = Auth::id(); // Get logged-in user ID
+    // $user = User::find($userId); // Fetch user details
+
+    // if (!$user) {
+    //     return response()->json(['success' => false, 'message' => 'User not found'], 404);
+    // }
+
+    $query = CarDetails::select([
+        'id', 'car_id', 'car_name', 'pricing', 'passengers', 'luggage', 
+        'doors', 'car_type', 'car_play', 'sanitized', 'car_feature', 'image'
+    ]);
+
+    // Get input from FormData
+    $location = $request->input('location');
+    // $vehicleType = $request->input('vehicle_type');
+    $vehicleType = $request->input('car_name');
+    $minPrice = $request->input('min_price');
+    $maxPrice = $request->input('max_price');
+
+    // Apply filters if provided
+    if (!empty($location)) {
+        $query->where('location', 'LIKE', '%' . $location . '%');
+    }
+
+    // if (!empty($vehicleType)) {
+    //     $query->where('vehicle_type', $vehicleType);
+    // }
+    if (!empty($vehicleType)) {
+        $query->where('car_name', $vehicleType);
+    }
+
+    if (!empty($minPrice) && !empty($maxPrice)) {
+        $query->whereBetween('pricing', [(int)$minPrice, (int)$maxPrice]);
+    }
+
+    // Fetch filtered cars
+    $cars = $query->get();
+
+    return response()->json([
+        'success' => true,
+        // 'user_id' => $userId,
+        'data' => $cars
+    ]);
+}
 }

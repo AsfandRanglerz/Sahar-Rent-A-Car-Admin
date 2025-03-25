@@ -105,8 +105,8 @@ class NotificationController extends Controller
 
     public function destroy(Request $request, $id)
     {
-         $notification = Notification::find($id);
-        $notificationName = $notification->name;
+         $notification = AdminNotification::find($id);
+        // $notificationName = $notification->name;
         if (Auth::guard('subadmin')->check()) {
             $subadmin = Auth::guard('subadmin')->user();
             $subadminName = $subadmin->name;
@@ -114,7 +114,7 @@ class NotificationController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Notifications',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} deleted Notification: {$notificationName}",
+                'message' => "SubAdmin: {$subadminName} Deleted Notification",
             ]);
         }
         $notification->delete();

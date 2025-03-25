@@ -98,7 +98,7 @@ class UserController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Customers',
                 'action' => 'Add',
-                'message' => 'Added customer: ' . $user->name,
+                'message' => 'Added Customer: ' . $user->name,
             ]);
         }
 
@@ -207,7 +207,7 @@ $editedBy = Auth::guard('subadmin')->user();
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Customer updated by SubAdmin: " . $editedBy->name . " - Updated Customer: " . $request->name;
+    $message = "SubAdmin: " . $editedBy->name . "Updated Customer: " . $request->name;
 
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
@@ -237,7 +237,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Customers',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} deleted customer: {$customerName}",
+                'message' => "SubAdmin: {$subadminName} Deleted Customer: {$customerName}",
             ]);
         }
         $user->delete();

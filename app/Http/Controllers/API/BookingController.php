@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use Illuminate\Support\Carbon;
+use App\Models\UserLoyaltyEarning;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -76,16 +78,52 @@ class BookingController extends Controller
         ]);
         
 // Assign loyalty points if available for this car
-$loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
-if ($loyaltyPoints) {
-    LoyaltyPoints::create([
-        'car_id' => $request->car_id,
-        'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
-        'on_car' => $loyaltyPoints->on_car,
-        'discount' => $loyaltyPoints->discount,
-        'user_id' => Auth::id(),
-    ]);
+// $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
+// if ($loyaltyPoints) {
+//     LoyaltyPoints::create([
+//         'car_id' => $request->car_id,
+//         'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
+//         'on_car' => $loyaltyPoints->on_car,
+//         'discount' => $loyaltyPoints->discount,
+//         'user_id' => Auth::id(),
+//     ]);
+// }
+$userId = Auth::id();
+
+// Fetch the actual ID from car_details using the car_id provided in the request
+$carDetails = CarDetails::where('car_id', $request->car_id)->first();
+
+if ($carDetails) {
+    // Now, use the correct ID to find loyalty points
+    $loyaltyPoints = LoyaltyPoints::where('car_id', $carDetails->id)->first();
+    Log::info("Loyalty Points Lookup for Car ID: {$carDetails->id}", ['loyaltyPoints' => $loyaltyPoints]);
+
+    if ($loyaltyPoints) {
+        // Find user's existing record
+        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+
+        if ($userLoyalty) {
+            // Update existing record
+            Log::info("User exists. Adding points: " . $loyaltyPoints->on_car);
+            $userLoyalty->increment('total_points', $loyaltyPoints->on_car);
+            Log::info("Updated total points: " . $userLoyalty->total_points);
+        } else {
+            // Create a new record if not exists
+            Log::info("User does not exist. Creating new entry with points: " . $loyaltyPoints->on_car);
+            UserLoyaltyEarning::create([
+                'user_id' => $userId,
+                'total_points' => $loyaltyPoints->on_car,
+                'earned_points' => $loyaltyPoints->on_car,
+            ]);
+        }
+        
+    } else {
+        Log::info("No Loyalty Points found for car_id: {$carDetails->id}");
+    }
+} else {
+    Log::info("No car found in car_details for car_id: " . $request->car_id);
 }
+
         return response()->json([
             // 'status' => true,
             'message' => 'Booking created successfully and moved directly to Bookings.',

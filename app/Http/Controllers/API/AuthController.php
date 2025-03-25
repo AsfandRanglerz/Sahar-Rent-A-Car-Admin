@@ -15,6 +15,7 @@ use App\Models\UserDocument;
 use Illuminate\Http\Request;
 use App\Models\DriverDocument;
 use Illuminate\Support\Carbon;
+use App\Models\DriverForgotOTP;
 use App\Models\driversregister;
 use App\Models\LicenseApproval;
 use Illuminate\Support\Facades\DB;
@@ -665,6 +666,114 @@ public function resetPassword(Request $request)
     ], 200);
 }
 
+public function driverforgotPassword(Request $request)
+{
+    // Validate the email input
+    $request->validate([
+        'email' => 'required|email|exists:drivers,email',
+    ]);
+
+    $email = $request->email;
+
+    // Generate a unique token
+    $otp = rand(100000, 999999);
+    $otpToken = Str::uuid(); // Unique token for OTP verification
+    // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
+
+    // Store OTP in the database
+    DriverForgotOTP::create([
+        'identifier' => $request->email,
+        'otp' => $otp,
+        'otp_token' => $otpToken,
+        // 'expires_at' => $expiresAt,
+    ]);
+
+    // Send OTP via email (or SMS)
+    // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+        Mail::to($email)->send(new ForgotOTPMail($otp));
+    // }
+
+    return response()->json([
+        'message' => 'OTP sent successfully.',
+        'otp_token' => $otpToken, // Send OTP token to frontend
+    ], 200);
+}
+
+public function driverforgotverifyOtp(Request $request)
+{
+    $request->validate([
+        'otp' => 'required|digits:6',
+        // 'otp_token' => 'required'
+    ]);
+
+    // Find OTP record in database
+    $otpRecord = DriverForgotOTP::where('otp_token', $request->otp_token)->first();
+
+    if (!$otpRecord) {
+        return response()->json(['message' => 'Invalid OTP token.'], 400);
+    }
+
+    // Check if OTP is valid
+    if ($otpRecord->otp !== $request->otp) {
+        return response()->json(['message' => 'Invalid OTP.'], 401);
+    }
+
+    // Check if OTP has expired
+    // if (Carbon::now()->gt($otpRecord->expires_at)) {
+    //     return response()->json(['message' => 'OTP has expired.'], 401);
+    // }
+
+    // Retrieve user (optional: if logging in)
+    $user = User::where('email', $otpRecord->identifier)
+                        // ->orWhere('phone', $otpRecord->identifier)
+                        ->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found.'], 404);
+    }
+
+    
+    $otpRecord->update(['verified' => true]);
+
+    return response()->json([
+        'message' => 'OTP verified successfully',
+        'otp_token' => $otpRecord->otp_token,
+        // 'token' => $user->createToken("API Token")->plainTextToken,
+    ], 200);
+}
+
+public function driverresetPassword(Request $request)
+{
+    // Validate the input
+    $request->validate([
+        'otp_token' => 'required|uuid',
+        'new_password' => 'required|string|min:6|confirmed',
+    ]);
+
+    // Fetch OTP record using otp_token
+    $otpRecord = DriverForgotOTP::where('otp_token', $request->otp_token)->first();
+
+    if (!$otpRecord || !$otpRecord->verified) {
+        return response()->json(['message' => 'Invalid or unverified OTP token'], 400);
+    }
+
+    // Find the user
+    $user = Driver::where('email', $otpRecord->identifier)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    // Update password
+    $user->update(['password' => Hash::make($request->new_password)]);
+
+    // Delete OTP record after successful password reset
+    $otpRecord->delete();
+
+    return response()->json([
+        'message' => 'Password reset successfully.',
+    ], 200);
+}
 public function getProfile(Request $request)
     {
         $customer = Auth::user();
