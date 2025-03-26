@@ -51,7 +51,7 @@
                   success: function(response) {
                        // Ensure response.count exists and handle counts over 99
                       let count = response.count || 0; // Default to 0 if no count is returned
-                      $('#pendingRequestCounter').text(count > 99 ? '99+' : count);
+                      $('#pendingRequestCounter').text(count > 10 ? '10+' : count);
                       // $('#orderCounter').text(response.count);
                   },
                   error: function(xhr, status, error) {
@@ -70,7 +70,7 @@
             type: 'GET',
             success: function(response) {
                 let count = response.count || 0;
-                $('#dropoffCounter').text(count > 99 ? '99+' : count);
+                $('#dropoffCounter').text(count > 10 ? '10+' : count);
             },
             error: function(xhr, status, error) {
                 console.error("Dropoff Counter Error:", error);
@@ -92,7 +92,7 @@
             type: 'GET',
             success: function(response) {
                 let count = response.count || 0;
-                $('#updatelicenseCounter').text(count > 99 ? '99+' : count);
+                $('#updatelicenseCounter').text(count > 10 ? '10+' : count);
             },
             error: function(xhr, status, error) {
                 console.error("License Approval Counter Error:", error);
@@ -106,6 +106,30 @@
     // Update every 10 seconds
     setInterval(updatelicenseCounter, 10000);
 </script>
+
+<script>
+    function updateActiveBookingCounter() {
+        $.ajax({
+            url: "{{ route('booking.activeCount') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                let count = response.count || 0;
+                $('#bookingCounter').text(count > 10 ? '10+' : count);
+            },
+            error: function(xhr, status, error) {
+                console.error("Booking Counter Error:", error);
+            }
+        });
+    }
+
+    // Run once on page load
+    $(document).ready(function () {
+        updateActiveBookingCounter();
+        setInterval(updateActiveBookingCounter, 10000); // Update every 10 seconds
+    });
+</script>
+
     <!-- General JS Scripts -->
     <script src="{{ asset('public/admin/assets/js/app.min.js') }}"></script>
     <!-- JS Libraies -->

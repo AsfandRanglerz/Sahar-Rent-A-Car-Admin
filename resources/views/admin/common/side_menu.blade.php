@@ -227,7 +227,24 @@
 @if($isAdmin || (isset($subadminPermissions['bookings']) && $subadminPermissions['bookings']->view == 1))
             <li class="dropdown {{ request()->is('admin/booking*') ? 'active' : '' }}">
                 <a href="{{ route('booking.index') }}" class="nav-link"><span><i
-                            data-feather="calendar"></i>Bookings</span></a>
+                            data-feather="calendar"></i>Bookings</span>
+                            <span id="activeBookingCounter" 
+                            class="badge {{ request()->is('admin/booking*') ? 'bg-success text-dark' : 'bg-success text-white' }}"
+                            style="display: inline-flex; align-items: center; 
+             justify-content: center; min-width: 2px; max-width:99px; 
+             height: 22px; font-size: 12px; 
+             margin-left: 5px; padding: 17px; 
+             border-radius: 4px; position: relative;">
+      Active 
+      <span id="bookingCounter" 
+            style="margin-left: 8px; font-weight: bold; 
+                   background-color: white; color: black; 
+                   border-radius: 50%; width: 22px; height: 22px; 
+                   display: flex; align-items: center; justify-content: center; 
+                   font-size: 12px; font-weight: bold;">
+          0</span>
+                      </span>
+                        </a>
             </li>
 @endif
 @if($isAdmin || isset($subadminPermissions['requestbookings']) || isset($subadminPermissions['requestbookings']))

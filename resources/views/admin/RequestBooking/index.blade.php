@@ -59,6 +59,8 @@
                                                     <div class="badge badge-success badge-shadow">Active</div>
                                                     @elseif($requestbooking->status == 1)
                                                     <div class="badge badge-primary badge-shadow">Completed</div>
+                                                    @elseif($requestbooking->status == 3)
+                                                    <div class="badge badge-warning badge-shadow">Requested</div>
                                                 @endif
                                                 </td>
                                                 <td>{{ $requestbooking->full_name }}</td>

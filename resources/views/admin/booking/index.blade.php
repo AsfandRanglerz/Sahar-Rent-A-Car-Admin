@@ -7,9 +7,18 @@
                 <div class="row">
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="card">
-                            <div class="card-header">
-                                <div class="col-12">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
                                     <h4>Bookings</h4>
+                                </div>
+                                <div class="text-end">
+                                    <h5>Total Income: <span id="totalIncome">0.00</span></h5>
+                                    <div class="d-flex mt-2 me-3">
+                                        <input  id="startDate" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;">
+                                        <input  id="endDate" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;">
+                                        <button class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
+                                        <button class="btn btn-primary" style="margin-bottom:15px;">Print</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -65,9 +74,9 @@
                                                         @endif --}}
                                                         @if($booking->status == 0)
                                                         <a href="javascript:void(0);" 
-                                                           class="badge badge-success badge-shadow  update-status" 
+                                                           class="btn btn-success btn-sm update-status" 
                                                            data-id="{{ $booking->id }}" 
-                                                           data-status="1">
+                                                           data-status="1" style="height:38px;">
                                                           <span class="text-white">  Active</span>
                                                         </a>
                                                     @elseif($booking->status == 1)

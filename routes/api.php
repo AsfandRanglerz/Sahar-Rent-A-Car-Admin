@@ -28,8 +28,13 @@ Route::post('/driversregister',[AuthController::class,'driverregister']);
 Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
 
 Route::post('/driverforgot-password', [AuthController::class, 'driverforgotPassword']);
-Route::post('/driverforgot-verify-otp', [AuthController::class, 'driverforgotverifyOtp']);
-Route::post('/driverreset-password', [AuthController::class, 'driverresetPassword']);
+Route::post('/driverforgot', [AuthController::class, 'driverforgotverifyOtp']);
+Route::post('/driverreset', [AuthController::class, 'driverresetPassword']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/getdriverprofile', [AuthController::class, 'getDriverProfile']);
+    Route::post('/driverprofile', [AuthController::class, 'updateDriverProfile']);
+});
 //################# Customer ###########################
 Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);
@@ -53,6 +58,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/bookings',[BookingController::class,'createBooking'])->middleware('auth:sanctum');
 Route::get('/getbookings',[BookingController::class,'getUserBookings'])->middleware('auth:sanctum');
 Route::get('/historybookings',[BookingController::class,'UserHistoryBookings'])->middleware('auth:sanctum');
+
+//#################  DriverBookings  ###########################
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/driverbookings', [BookingController::class, 'getDriverBookings']);
+    Route::post('/bookingupdate', [BookingController::class, 'updateBookingStatus']);
+    Route::get('/bookinghistory', [BookingController::class, 'DriverBookingHistory']);
+});
 //#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::class, 'getWalletHistory']);

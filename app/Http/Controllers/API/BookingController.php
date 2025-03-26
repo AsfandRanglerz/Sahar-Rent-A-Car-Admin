@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\CarDetails;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
-use Illuminate\Support\Carbon;
 use App\Models\UserLoyaltyEarning;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -220,5 +220,76 @@ public function UserHistoryBookings()
     return response()->json([
         'history' => $bookings
     ]);
+}
+
+public function getDriverBookings(Request $request)
+{
+    $driverId = Auth::id(); // Get authenticated driver ID
+
+    // Fetch pending bookings for the driver (status = 3)
+    
+
+    $requestBookings = RequestBooking::where('status', 0)
+                                     ->where('driver_id', $driverId)
+                                     ->select('full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->get();
+
+                                     $requestBookings->transform(function ($booking) {
+                                        $pickupDate = Carbon::parse($booking->pickup_date);
+                                        $dropoffDate = Carbon::parse($booking->dropoff_date);
+                                        $booking->total_days = $dropoffDate->diffInDays($pickupDate) + 1; // Ensure it includes the pickup day
+                                        return $booking;
+                                    });
+
+    return response()->json([
+        'current_bookings' => $requestBookings
+    ], 200);
+}
+
+public function updateBookingStatus(Request $request)
+{
+    $request->validate([
+        'id' => 'required|integer',
+        'status' => 'required|in:0,2', // 0 = Active, 2 = Rejected
+    ]);
+    $driverId = Auth::id();
+    $requestBooking = RequestBooking::find($request->id);
+
+    if (!$requestBooking) {
+        return response()->json(['message' => 'Booking not found'], 404);
+    }
+
+    // Update the status based on driver's action
+    $requestBooking->status = $request->status;
+    $requestBooking->save();
+
+    // If accepted, mark driver as unavailable
+    if ($request->status == 0) {
+        $driver = RequestBooking::find($requestBooking->driver_id);
+        if ($driver) {
+            $driver->is_available = false;
+            $driver->save();
+        }
+    }
+    
+
+    return response()->json(['message' => 'Booking status updated successfully'], 200);
+}
+
+public function DriverBookingHistory(Request $request)
+{
+    $driverId = Auth::id(); // Get authenticated driver ID
+
+    // Fetch pending bookings for the driver (status = 3)
+    
+
+    $requestBookings = RequestBooking::where('status', 1)
+                                     ->where('driver_id', $driverId)
+                                     ->select('full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->get();
+
+    return response()->json([
+        'booking_history' => $requestBookings
+    ], 200);
 }
 }

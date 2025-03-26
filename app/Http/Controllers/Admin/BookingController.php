@@ -24,7 +24,13 @@ class BookingController extends Controller
         $bookings = $bookings->sortBy('status');
         return view('admin.booking.index',compact('bookings'));
     }
-   
+
+    public function activeBookingsCounter()
+    {
+        $activeBookings = Booking::where('status', 0)->count();
+        return response()->json(['count' => $activeBookings]);
+    }
+    
     public function create(){
         return view('admin.booking.create');
     }

@@ -628,7 +628,7 @@ public function forgotverifyOtp(Request $request)
 
     return response()->json([
         'message' => 'OTP verified successfully',
-        'otp_token' => $otpRecord->otp_token,
+        // 'otp_token' => $otpRecord->otp_token,
         // 'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
@@ -723,8 +723,8 @@ public function driverforgotverifyOtp(Request $request)
     //     return response()->json(['message' => 'OTP has expired.'], 401);
     // }
 
-    // Retrieve user (optional: if logging in)
-    $user = User::where('email', $otpRecord->identifier)
+    // Retrieve driver (optional: if logging in)
+    $user = Driver::where('email', $otpRecord->identifier)
                         // ->orWhere('phone', $otpRecord->identifier)
                         ->first();
 
@@ -737,7 +737,7 @@ public function driverforgotverifyOtp(Request $request)
 
     return response()->json([
         'message' => 'OTP verified successfully',
-        'otp_token' => $otpRecord->otp_token,
+        // 'otp_token' => $otpRecord->otp_token,
         // 'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
@@ -761,7 +761,7 @@ public function driverresetPassword(Request $request)
     $user = Driver::where('email', $otpRecord->identifier)->first();
 
     if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
+        return response()->json(['message' => 'Driver not found'], 404);
     }
 
     // Update password
@@ -774,6 +774,8 @@ public function driverresetPassword(Request $request)
         'message' => 'Password reset successfully.',
     ], 200);
 }
+
+
 public function getProfile(Request $request)
     {
         $customer = Auth::user();
@@ -881,6 +883,70 @@ public function getProfile(Request $request)
         ], 200);
     }
     
+    public function getDriverProfile(Request $request)
+    {
+        $driver = Auth::user();
+        $driverLicense = DriverDocument::where('driver_id', $driver->id)
+        ->value('license');
+        return response()->json([
+            // 'status' => true,
+            'message' => 'User profile retrieved successfully.',
+            'data' => [
+                'name' => $driver->name,
+                'email' => $driver->email,
+                'phone' => $driver->phone,
+                'image' => $driver->image, 
+                'license' => $driverLicense
+            ],
+        ], 200);
+    }
+
+    
+    public function updateDriverProfile(Request $request)
+    {
+
+
+        // Get the authenticated user
+        $driver = Auth::user();
+        
+       
+
+        $driver->name = $request->name;
+        $driver->email = $request->email;
+        $driver->phone = $request->phone;
+       
+        // Handle profile image upload
+        $driver->name = $request->name ?? $driver->name;
+        $driver->email = $request->email ?? $driver->email;
+        $driver->phone = $request->phone ?? $driver->phone; // Keep existing phone if not provided
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $image = 'public/admin/assets/images/users/' . $filename;
+        
+            $driver->update(['image' => $image]);
+        }
+    
+        $driver->save();
+    
+        return response()->json([
+            // 'status' => true,
+            'message' => 'driver profile updated successfully.',
+            'data' => [
+                'name' => $driver->name,
+                'email' => $driver->email,
+                'phone' => $driver->phone,
+                'image' => $driver->image ? asset($driver->image) : null,
+                // 'emirate_id' => $emirate_id,
+                // 'passport' => $passport,
+                // 'driving_license' => $driving_license,
+
+            ],
+        ], 200);
+    }
+
     public function updateDocument(Request $request)
     {
 
@@ -963,5 +1029,7 @@ public function getProfile(Request $request)
             ],
         ], 200);
     }
+    
+    
     
 }

@@ -24,9 +24,10 @@ class RequestBookingController extends Controller
     {
         
         // $bookings = Booking::latest()->get();
-        $requestbookings = RequestBooking::whereIn('status', [0, 2])
+        $requestbookings = RequestBooking::whereNotNull('pickup_address')
+        ->whereIn('status', [0, 2, 3])
         ->orderBy('status','ASC')
-        ->whereNotNull('pickup_address')
+        
         ->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
@@ -222,7 +223,7 @@ if ($isDriverAssigned) {
     }
 
     $requestBooking->driver_id = $request->driver_id;
-    $requestBooking->status = 0; //  '0' means assigned
+    $requestBooking->status = 3; //  '3' means requested
     $requestBooking->save();
     $driver->is_available = false;
     $driver->save();

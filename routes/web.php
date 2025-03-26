@@ -220,6 +220,8 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
 
     Route::controller(BookingController::class)->middleware(['admin','adminOrSubadmin:bookings'])->group(function () {
         Route::get('/booking',  'index')->name('booking.index');
+        Route::get('/booking/active-count',  'activeBookingsCounter')->name('booking.activeCount');
+
         Route::get('/booking-create',  'create')->name('booking.create');
         Route::post('/booking-store',  'store')->name('booking.store');
         Route::get('/booking-edit/{id}',  'edit')->name('booking.edit');
