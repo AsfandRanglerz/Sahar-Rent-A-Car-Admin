@@ -51,7 +51,7 @@
                                                 {{-- <td>{{ $driver->phone }}</td> --}}
                                                 <td>
                                                     
-                                                    @if ($licenseApprovals->image)
+                                                    @if ($licenseApprovals && $licenseApprovals->image)
                                                         <img src="{{ asset('storage/app/public/' . $licenseApprovals->image) }}" 
                                                         alt="License Image" height="45" width="50" class="image"
                                                         style="cursor: pointer;" data-toggle="modal" 
