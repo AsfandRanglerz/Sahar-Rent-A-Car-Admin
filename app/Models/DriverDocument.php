@@ -15,4 +15,10 @@ class DriverDocument extends Model
     public function driversregister(){
         return $this->belongsTo(driversregister::class);
     }
+
+    public function licenseApproval()
+{
+    return $this->hasOne(LicenseApproval::class, 'driver_id','driver_id');
+}
+
 }

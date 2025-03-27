@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Log;
 use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\CarDetails;
@@ -9,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\UserLoyaltyEarning;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -150,16 +150,52 @@ if ($carDetails) {
         ]);
         
 // Assign loyalty points if available for this car
-    $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
+    // $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
+    // if ($loyaltyPoints) {
+    //     LoyaltyPoints::create([
+    //         'car_id' => $request->car_id,
+    //         'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
+    //         'on_car' => $loyaltyPoints->on_car,
+    //         'discount' => $loyaltyPoints->discount,
+    //         'user_id' => Auth::id(),
+    //     ]);
+    // }
+    $userId = Auth::id();
+
+// Fetch the actual ID from car_details using the car_id provided in the request
+$carDetails = CarDetails::where('car_id', $request->car_id)->first();
+
+if ($carDetails) {
+    // Now, use the correct ID to find loyalty points
+    $loyaltyPoints = LoyaltyPoints::where('car_id', $carDetails->id)->first();
+    Log::info("Loyalty Points Lookup for Car ID: {$carDetails->id}", ['loyaltyPoints' => $loyaltyPoints]);
+
     if ($loyaltyPoints) {
-        LoyaltyPoints::create([
-            'car_id' => $request->car_id,
-            'earned_points' => $loyaltyPoints->earned_points, // Apply the car's points
-            'on_car' => $loyaltyPoints->on_car,
-            'discount' => $loyaltyPoints->discount,
-            'user_id' => Auth::id(),
-        ]);
+        // Find user's existing record
+        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+
+        if ($userLoyalty) {
+            // Update existing record
+            Log::info("User exists. Adding points: " . $loyaltyPoints->on_car);
+            $userLoyalty->increment('total_points', $loyaltyPoints->on_car);
+            Log::info("Updated total points: " . $userLoyalty->total_points);
+        } else {
+            // Create a new record if not exists
+            Log::info("User does not exist. Creating new entry with points: " . $loyaltyPoints->on_car);
+            UserLoyaltyEarning::create([
+                'user_id' => $userId,
+                'total_points' => $loyaltyPoints->on_car,
+                'earned_points' => $loyaltyPoints->on_car,
+            ]);
+        }
+        
+    } else {
+        Log::info("No Loyalty Points found for car_id: {$carDetails->id}");
     }
+} else {
+    Log::info("No car found in car_details for car_id: " . $request->car_id);
+}
+
         return response()->json([
             // 'status' => true,
             'message' => 'Booking request created successfully and sent for approval.',
@@ -231,7 +267,11 @@ public function getDriverBookings(Request $request)
 
     $requestBookings = RequestBooking::where('status', 0)
                                      ->where('driver_id', $driverId)
-                                     ->select('full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->select('car_id','full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->with(['car' => function ($query) {
+                                        $query->select('car_id', 'pricing', 'sanitized', 'car_feature'); // Ensure 'id' is included for relationship mapping
+                                    }])
+                                    ->whereNotNull('car_id')
                                      ->get();
 
                                      $requestBookings->transform(function ($booking) {
@@ -240,6 +280,7 @@ public function getDriverBookings(Request $request)
                                         $booking->total_days = $dropoffDate->diffInDays($pickupDate) + 1; // Ensure it includes the pickup day
                                         return $booking;
                                     });
+                                    \Log::info($requestBookings);
 
     return response()->json([
         'current_bookings' => $requestBookings
@@ -267,7 +308,7 @@ public function updateBookingStatus(Request $request)
     if ($request->status == 0) {
         $driver = RequestBooking::find($requestBooking->driver_id);
         if ($driver) {
-            $driver->is_available = false;
+            $driver->is_available = 0;
             $driver->save();
         }
     }
@@ -285,7 +326,11 @@ public function DriverBookingHistory(Request $request)
 
     $requestBookings = RequestBooking::where('status', 1)
                                      ->where('driver_id', $driverId)
-                                     ->select('full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->select('car_id','full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
+                                     ->with(['car' => function ($query) {
+                                        $query->select('car_id', 'pricing', 'sanitized', 'car_feature'); // Ensure 'id' is included for relationship mapping
+                                    }])
+                                    ->whereNotNull('car_id')
                                      ->get();
 
     return response()->json([

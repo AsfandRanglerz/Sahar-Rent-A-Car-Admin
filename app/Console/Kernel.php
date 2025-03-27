@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('update:assigned_dropoff')->everyMinute(); // Runs every day at midnight
+        // $schedule->command('update:assigned_dropoff')->everyMinute(); // Runs every day at midnight
+        $schedule->command('delete:inactive-drivers')->everyMinute();
     }
 
     /**

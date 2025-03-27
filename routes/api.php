@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\CarController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\DriverController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\FavoriteController;
@@ -26,15 +27,29 @@ use App\Http\Controllers\API\NotificationController;
 Route::post('/driverdocument',[AuthController::class,'driverdocument'])->middleware('auth:sanctum');
 Route::post('/driversregister',[AuthController::class,'driverregister']);
 Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
+Route::post('/driverlogout',[AuthController::class,'driverlogout'])->middleware('auth:sanctum');
+
+Route::post('/account',[DriverController::class,'deactivateAccount'])->middleware('auth:sanctum');
 
 Route::post('/driverforgot-password', [AuthController::class, 'driverforgotPassword']);
 Route::post('/driverforgot', [AuthController::class, 'driverforgotverifyOtp']);
 Route::post('/driverreset', [AuthController::class, 'driverresetPassword']);
 
+//################ driver availability #####################
+Route::middleware('auth:sanctum')->post('/driveravailability', [DriverController::class, 'updateAvailability']);
+
+//################ licenseStatus ########################
+Route::get('/license-status', [AuthController::class, 'getLicenseStatus'])->middleware('auth:sanctum');
+
+//################ Driver profile #######################
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getdriverprofile', [AuthController::class, 'getDriverProfile']);
     Route::post('/driverprofile', [AuthController::class, 'updateDriverProfile']);
 });
+
+//################## location Management ##################
+Route::middleware('auth:sanctum')->post('/driverlocation', [DriverController::class, 'storeDriverLocation']);
+Route::middleware('auth:sanctum')->get('/getdriverlocation', [DriverController::class, 'getDriverLocation']);
 //################# Customer ###########################
 Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);

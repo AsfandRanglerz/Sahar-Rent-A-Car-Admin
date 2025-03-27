@@ -104,7 +104,7 @@
     updatelicenseCounter();
 
     // Update every 10 seconds
-    setInterval(updatelicenseCounter, 10000);
+    setInterval(updatelicenseCounter, 20000);
 </script>
 
 <script>
@@ -126,7 +126,7 @@
     // Run once on page load
     $(document).ready(function () {
         updateActiveBookingCounter();
-        setInterval(updateActiveBookingCounter, 10000); // Update every 10 seconds
+        setInterval(updateActiveBookingCounter, 20000); // Update every 10 seconds
     });
 </script>
 

@@ -16,4 +16,10 @@ class LicenseApproval extends Model
     {
         return $this->belongsTo(Driver::class,'driver_id');
     }
+
+    public function driverDocument()
+{
+    return $this->belongsTo(DriverDocument::class, 'driver_id');
+}
+
 }

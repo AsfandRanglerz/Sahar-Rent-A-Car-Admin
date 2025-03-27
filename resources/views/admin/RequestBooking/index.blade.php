@@ -267,7 +267,9 @@
                         <select class="form-control" id="driver_id" name="driver_id" required>
                             <option value="">-- Select Driver --</option>
                             @foreach($drivers as $driver)
+                            @if($driver->is_available == 1)
                                 <option value="{{ $driver->id }}">{{ $driver->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

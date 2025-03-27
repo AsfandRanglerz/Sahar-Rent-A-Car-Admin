@@ -21,7 +21,7 @@ class CarDetails extends Model
 
     public function requestBookings()
     {
-        return $this->hasMany(RequestBooking::class, 'car_id', 'id');
+        return $this->hasMany(RequestBooking::class, 'car_id', 'car_id');
     }
 
     public function loyaltyPoints()

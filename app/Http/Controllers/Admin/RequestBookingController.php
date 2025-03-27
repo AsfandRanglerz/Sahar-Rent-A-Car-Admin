@@ -41,7 +41,9 @@ class RequestBookingController extends Controller
         // ]);
     
         $requestBooking = RequestBooking::findOrFail($id);
-    $driver = Driver::find($request->driver_id);
+    $driver = Driver::where('id', $request->driver_id)
+    ->where('is_available', 1) // Ensuring only available drivers are selected
+    ->first();                                                                      //find($request->driver_id);
 
     // Validate if the driver exists
     if (!$driver) {
@@ -225,11 +227,11 @@ if ($isDriverAssigned) {
     $requestBooking->driver_id = $request->driver_id;
     $requestBooking->status = 3; //  '3' means requested
     $requestBooking->save();
-    $driver->is_available = false;
+    $driver->is_available = 0; //false
     $driver->save();
 // **Check if booking is completed (status = 1), then free the driver**
     if ($requestBooking->status == 1) {
-        $driver->is_available = true; // Mark driver as available
+        $driver->is_available = 1; // Mark driver as available true
         $driver->save();
     }
 
