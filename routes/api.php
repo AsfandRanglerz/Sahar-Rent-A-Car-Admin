@@ -29,7 +29,9 @@ Route::post('/driversregister',[AuthController::class,'driverregister']);
 Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
 Route::post('/driverlogout',[AuthController::class,'driverlogout'])->middleware('auth:sanctum');
 
-Route::post('/account',[DriverController::class,'deactivateAccount'])->middleware('auth:sanctum');
+//##################### driver account #####################
+Route::post('/account',[DriverController::class,'deleteAccount'])->middleware('auth:sanctum');
+Route::post('/account-deactivate', [DriverController::class, 'deactivateAccount'])->middleware('auth:sanctum');
 
 Route::post('/driverforgot-password', [AuthController::class, 'driverforgotPassword']);
 Route::post('/driverforgot', [AuthController::class, 'driverforgotverifyOtp']);
@@ -50,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
 //################## location Management ##################
 Route::middleware('auth:sanctum')->post('/driverlocation', [DriverController::class, 'storeDriverLocation']);
 Route::middleware('auth:sanctum')->get('/getdriverlocation', [DriverController::class, 'getDriverLocation']);
+
 //################# Customer ###########################
 Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);
@@ -61,7 +64,9 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/forgot-verify-otp', [AuthController::class, 'forgotverifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
-
+//################# customer account #####################
+Route::post('/customeraccount', [AuthController::class, 'customerdeactivateAccount'])->middleware('auth:sanctum');
+Route::post('/customerdelete',[AuthController::class,'customerdeleteAccount'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getprofile', [AuthController::class, 'getProfile']);

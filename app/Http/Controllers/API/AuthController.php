@@ -14,10 +14,12 @@ use App\Mail\ForgotOTPMail;
 use Illuminate\Support\Str;
 use App\Models\UserDocument;
 use Illuminate\Http\Request;
+use App\Models\DeleteRequest;
 use App\Models\DriverDocument;
 use App\Models\DriverForgotOTP;
 use App\Models\driversregister;
 use App\Models\LicenseApproval;
+use App\Models\DriverNotification;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerRegisteredMail;
@@ -221,6 +223,11 @@ return response()->json([
     //     'otp_token' => $otpToken, // Send OTP token to frontend
     // ], 200);
     
+    $customer->update([
+        'login_date' => Carbon::now(),
+        'availability' => 1,
+    ]);
+
         if ($request->fcm_token) {
             $customer->update(['fcm_token' => $request->fcm_token]);
         }
@@ -315,6 +322,12 @@ return response()->json([
         // ],200);
 
         $customer = $request->user();
+
+        $customer->update([
+            'logout_date' => now()->toDateString(),
+            'availability' => 0, // Stores only the date
+        ]);
+
         $customer->tokens()->delete();      // Revoke all tokens associated with the customer
 
     return response()->json([
@@ -539,6 +552,37 @@ public function getProfile(Request $request)
         ], 200);
     }
 
+    public function customerdeactivateAccount(Request $request)
+    {
+        $customer = Auth::user();
+    
+        // Store notification for admin
+        $notification = new DriverNotification();
+        $notification->user_id = $customer->id;
+        $notification->type = 'deactivation';
+        $notification->message = "Customer {$customer->name} has requested account deactivation.";
+        $notification->save();
+    
+        return response()->json([
+            // 'status' => 'success',
+            'message' => 'Account deactivation request sent to admin.'
+        ]);
+    }
+
+public function customerdeleteAccount(Request $request)
+{
+    $customerId = Auth::id(); // Get authenticated driver
+
+    // Store the deactivation request
+    DeleteRequest::create([
+        'user_id' => $customerId,
+        'deactivation_date' => Carbon::now()->toDateString(), // Store current date
+    ]);
+
+    return response()->json([
+        'message' => 'Your account will be deleted within 14 days.',
+    ], 200);
+}
 
 public function driverregister(Request $request){
     // return "ok";

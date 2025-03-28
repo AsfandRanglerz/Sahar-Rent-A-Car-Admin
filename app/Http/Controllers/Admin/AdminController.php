@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\RequestBooking;
 use App\Mail\ResetPasswordMail;
+use App\Models\DriverNotification;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -191,5 +192,28 @@ class AdminController extends Controller
         return redirect('admin')->with(['message' => 'Logout Successfully']);
     }
 
+    public function getNotifications()
+    {
+        $notifications = DriverNotification::where('is_read', 0)->orderBy('created_at', 'desc')->get();
+        return response()->json(['notifications' => $notifications]);
+    }
     
+    public function markNotificationsRead(Request $request)
+    {
+        $notification = DriverNotification::find($request->id);
+    
+    if ($notification) {
+        $notification->is_read = 1;
+        $notification->save();
+    }  //0 means false and 1 means true
+        return response()->json(['status' => 'success']);
+    }
+    
+    public function markAllNotificationsRead()
+{
+    DriverNotification::where('is_read', 0)->update(['is_read' => 1]);
+
+    return response()->json(['status' => 'success']);
+}
+
 }

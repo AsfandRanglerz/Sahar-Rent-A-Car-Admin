@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use Carbon\Carbon;
 use App\Models\Driver;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\DeleteRequest;
 use App\Models\DriverLocation;
+use App\Models\DriverNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,7 +77,7 @@ class DriverController extends Controller
         ], 200);
     }
 
-    public function deactivateAccount(Request $request)
+    public function deleteAccount(Request $request)
 {
     $driverId = Auth::id(); // Get authenticated driver
 
@@ -86,7 +88,25 @@ class DriverController extends Controller
     ]);
 
     return response()->json([
-        'message' => 'Your account will be deleted in 14 days.',
+        'message' => 'Your account will be deleted within 14 days.',
     ], 200);
 }
+
+public function deactivateAccount(Request $request)
+{
+    $driver = Auth::user();
+
+    // Store notification for admin
+    $notification = new DriverNotification();
+    $notification->driver_id = $driver->id;
+    $notification->type = 'deactivation';
+    $notification->message = "Driver {$driver->name} has requested account deactivation.";
+    $notification->save();
+
+    return response()->json([
+        // 'status' => 'success',
+        'message' => 'Account deactivation request sent to admin.'
+    ]);
+}
+
 }

@@ -41,17 +41,19 @@ class DeleteInactiveDrivers extends Command
     public function handle()
     {
         $today = Carbon::now()->toDateString(); // Get current date
-        $requests = DeleteRequest::whereDate('deactivation_date', '<=', Carbon::now()->subDays(14)->toDateString())->get();
+        $requests = DeleteRequest::whereDate('deactivation_date', '<=', Carbon::now()->addDays(14)->toDateString())->get();
 
         foreach ($requests as $request) {
             $driver = Driver::find($request->driver_id);
 
             if ($driver) {
+                 // Calculate the logout deadline (14 days after deactivation)
+                $logoutDeadline = Carbon::parse($request->deactivation_date)->addDays(14)->toDateString();
                 // Ensure the driver logged out within the 14-day period
                 $logoutWithin14Days = $driver->logout_date >= $request->deactivation_date 
-                                    && $driver->logout_date <= Carbon::now()->subDays(14)->toDateString();
+                                    && $driver->logout_date <= $logoutDeadline;
 
-            if ($driver && $driver->availability == 0) { // Only delete if driver is offline
+            if ($driver->availability == 0 && $logoutWithin14Days) { // Only delete if driver is offline
                 $driver->delete();
                 $request->delete(); // Remove from delete_requests table
                 $this->info("Deleted driver ID: {$driver->id}");

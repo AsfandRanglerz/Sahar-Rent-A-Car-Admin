@@ -49,7 +49,10 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::get('About-us-edit',[SecurityController::class,'AboutUsEdit']);
     Route::post('About-us-update',[SecurityController::class,'AboutUsUpdate']);
     Route::get('logout',[AdminController::class,'logout']);
-
+    Route::get('/adminnotifications', [AdminController::class, 'getNotifications'])->name('admin.notifications');
+    Route::post('/adminnotifications/mark-read', [AdminController::class, 'markNotificationsRead'])->name('admin.notifications.mark-read');
+    Route::post('/adminnotifications/mark-all-read', [AdminController::class, 'markAllNotificationsRead'])
+    ->name('admin.notifications.mark-all-read');
 
  // ############ User #################
  Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers,view'])->group(function () {

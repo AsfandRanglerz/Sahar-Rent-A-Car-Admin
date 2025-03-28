@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->command('update:assigned_dropoff')->everyMinute(); // Runs every day at midnight
         $schedule->command('delete:inactive-drivers')->everyMinute();
+        $schedule->command('delete:inactive-users')->everyMinute();
     }
 
     /**
