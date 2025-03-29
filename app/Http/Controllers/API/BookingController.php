@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use Log;
 use Carbon\Carbon;
+use App\Models\Driver;
 use App\Models\Booking;
 use App\Models\CarDetails;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
+use App\Models\DriverNotification;
 use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -100,23 +102,24 @@ if ($carDetails) {
 
     if ($loyaltyPoints) {
         // Find user's existing record
-        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
+        $totalPoints = $userLoyalty ? $userLoyalty->total_points + $loyaltyPoints->on_car : $loyaltyPoints->on_car;
 
-        if ($userLoyalty) {
-            // Update existing record
-            Log::info("User exists. Adding points: " . $loyaltyPoints->on_car);
-            $userLoyalty->increment('total_points', $loyaltyPoints->on_car);
-            Log::info("Updated total points: " . $userLoyalty->total_points);
-        } else {
-            // Create a new record if not exists
-            Log::info("User does not exist. Creating new entry with points: " . $loyaltyPoints->on_car);
-            UserLoyaltyEarning::create([
-                'user_id' => $userId,
-                'total_points' => $loyaltyPoints->on_car,
-                'earned_points' => $loyaltyPoints->on_car,
-            ]);
-        }
+        // Create a new loyalty record for each booking
+        Log::info("Creating new loyalty entry for user with points: " . $loyaltyPoints->on_car);
+        UserLoyaltyEarning::create([
+            'user_id'       => $userId,
+            'total_points'  => $totalPoints, // Keep adding to total points
+            'earned_points' => $loyaltyPoints->on_car, // Earned points for this booking
+            'car_name'      => $carDetails->car_name,
+            // 'on_car'        => $loyaltyPoints->on_car,
+            'discount'      => $loyaltyPoints->discount
+        ]);
+        Log::info("Previous total: " . ($userLoyalty->total_points ?? 0));
+        Log::info("New on_car points: " . $loyaltyPoints->on_car);
+        Log::info("Calculated total_points: " . $totalPoints);
         
+        Log::info("New loyalty entry created successfully.");   
     } else {
         Log::info("No Loyalty Points found for car_id: {$carDetails->id}");
     }
@@ -173,22 +176,23 @@ if ($carDetails) {
     if ($loyaltyPoints) {
         // Find user's existing record
         $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+        $totalPoints = $userLoyalty ? $userLoyalty->total_points + $loyaltyPoints->on_car : $loyaltyPoints->on_car;
 
-        if ($userLoyalty) {
-            // Update existing record
-            Log::info("User exists. Adding points: " . $loyaltyPoints->on_car);
-            $userLoyalty->increment('total_points', $loyaltyPoints->on_car);
-            Log::info("Updated total points: " . $userLoyalty->total_points);
-        } else {
-            // Create a new record if not exists
-            Log::info("User does not exist. Creating new entry with points: " . $loyaltyPoints->on_car);
-            UserLoyaltyEarning::create([
-                'user_id' => $userId,
-                'total_points' => $loyaltyPoints->on_car,
-                'earned_points' => $loyaltyPoints->on_car,
-            ]);
-        }
+        // Create a new loyalty record for each booking
+        Log::info("Creating new loyalty entry for user with points: " . $loyaltyPoints->on_car);
+        UserLoyaltyEarning::create([
+            'user_id'       => $userId,
+            'total_points'  => $totalPoints, // Keep adding to total points
+            'earned_points' => $loyaltyPoints->on_car, // Earned points for this booking
+            'car_name'      => $carDetails->car_name,
+            // 'on_car'        => $loyaltyPoints->on_car,
+            'discount'      => $loyaltyPoints->discount
+        ]);
+        Log::info("Previous total: " . ($userLoyalty->total_points ?? 0));
+        Log::info("New on_car points: " . $loyaltyPoints->on_car);
+        Log::info("Calculated total_points: " . $totalPoints);
         
+        Log::info("New loyalty entry created successfully.");  
     } else {
         Log::info("No Loyalty Points found for car_id: {$carDetails->id}");
     }
@@ -303,16 +307,32 @@ public function updateBookingStatus(Request $request)
     // Update the status based on driver's action
     $requestBooking->status = $request->status;
     $requestBooking->save();
-
+    $driver = Driver::find($driverId);
     // If accepted, mark driver as unavailable
     if ($request->status == 0) {
-        $driver = RequestBooking::find($requestBooking->driver_id);
+        // $driver = RequestBooking::find($requestBooking->driver_id);
         if ($driver) {
             $driver->is_available = 0;
             $driver->save();
         }
+
+        DriverNotification::create([
+            'driver_id' => $driverId,
+            'type' => 'booking',
+            'message' => "{$driver->name} has accepted booking request.",
+            'is_read' => 0,
+        ]);
     }
     
+    if ($request->status == 2) {
+        //  $driver = RequestBooking::find($requestBooking->driver_id);
+        DriverNotification::create([
+            'driver_id' => $driverId,
+            'type' => 'booking',
+            'message' => "{$driver->name} has rejected booking request.",
+            'is_read' => 0,
+        ]);
+    }
 
     return response()->json(['message' => 'Booking status updated successfully'], 200);
 }

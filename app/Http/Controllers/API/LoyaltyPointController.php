@@ -25,7 +25,7 @@ public function getLoyaltyPoints()
     }
 
     // Fetch existing total points from UserLoyaltyEarning
-    $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+    $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
     $currentTotalPoints = $userLoyalty ? $userLoyalty->total_points : 0;
 
     // Fetch all user bookings and request bookings
@@ -43,10 +43,10 @@ public function getLoyaltyPoints()
     $loyaltyHistory = UserLoyaltyEarning::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
 
     // Format response
-    $data = $loyaltyPoints->map(function ($point) {
+    $data = $loyaltyHistory->map(function ($point) {
         return [
-            'car_name' => $point->car->car_name ?? 'N/A',
-            'on_car' => $point->on_car, // Show the current on_car value but don't update total_points
+            'car_name' => $point->car_name ?? 'N/A',
+            'earned_points' => $point->earned_points, // Show the current on_car value but don't update total_points
             'discount' => $point->discount,
         ];
     });
