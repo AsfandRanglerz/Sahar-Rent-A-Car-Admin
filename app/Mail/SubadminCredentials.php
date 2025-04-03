@@ -14,17 +14,19 @@ class SubadminCredentials extends Mailable
     public $userName;
     public $email;
     public $password;
+    public $type;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($userName, $email, $password)
+    public function __construct($userName, $email, $password, $type = null)
     {
         $this->userName = $userName;
         $this->email = $email;
         $this->password = $password;
+        $this->type = $type;
     }
 
     /**

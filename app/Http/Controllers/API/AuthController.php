@@ -339,11 +339,18 @@ return response()->json([
 public function forgotPassword(Request $request)
 {
     // Validate the email input
-    $request->validate([
-        'email' => 'required|email|exists:users,email',
-    ]);
+    // $request->validate([
+    //     'email' => 'required|email|exists:users,email',
+    // ]);
 
-    $email = $request->email;
+    // $email = $request->email;
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'This email does not exist.'
+        ], 404);
+    }
 
     // Generate a unique token
     $otp = rand(100000, 999999);
@@ -360,7 +367,7 @@ public function forgotPassword(Request $request)
 
     // Send OTP via email (or SMS)
     // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        Mail::to($email)->send(new ForgotOTPMail($otp));
+        Mail::to($request->email)->send(new ForgotOTPMail($otp));
     // }
 
     return response()->json([
@@ -407,7 +414,7 @@ public function forgotverifyOtp(Request $request)
 
     return response()->json([
         'message' => 'OTP verified successfully',
-        // 'otp_token' => $otpRecord->otp_token,
+        'otp_token' => $otpRecord->otp_token,
         // 'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
@@ -420,6 +427,11 @@ public function resetPassword(Request $request)
         'new_password' => 'required|string|min:6|confirmed',
     ]);
 
+    $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
+
+    if (!$otpRecord) {
+        return response()->json(['message' => 'Invalid OTP token.'], 400);
+    }
     // Fetch OTP record using otp_token
     $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
 
@@ -852,12 +864,18 @@ public function driverlogin(Request $request){
 public function driverforgotPassword(Request $request)
 {
     // Validate the email input
-    $request->validate([
-        'email' => 'required|email|exists:drivers,email',
-    ]);
+    // $request->validate([
+    //     'email' => 'required|email|exists:drivers,email',
+    // ]);
 
-    $email = $request->email;
+    // $email = $request->email;
+    $driver = Driver::where('email', $request->email)->first();
 
+    if (!$driver) {
+        return response()->json([
+            'message' => 'This email does not exist.'
+        ], 404);
+    }
     // Generate a unique token
     $otp = rand(100000, 999999);
     $otpToken = Str::uuid(); // Unique token for OTP verification
@@ -873,7 +891,7 @@ public function driverforgotPassword(Request $request)
 
     // Send OTP via email (or SMS)
     // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        Mail::to($email)->send(new ForgotOTPMail($otp));
+        Mail::to($request->email)->send(new ForgotOTPMail($otp));
     // }
 
     return response()->json([

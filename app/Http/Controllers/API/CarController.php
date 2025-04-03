@@ -19,8 +19,13 @@ class CarController extends Controller
     // Fetch cars belonging to the authenticated user
     $cars = CarDetails::where('user_id', $userId) // 'user_id' column exists in 'car_details'
        ->where('status', 0)
-        ->select(['id','car_id', 'car_name', 'pricing',  'passengers', 'luggage', 'doors', 'car_type','car_play','sanitized','car_feature',  'image'])
-        ->get();
+        ->select(['id','car_id', 'car_name', 'pricing',  'passengers', 'luggage', 'doors', 'car_type','car_play','sanitized','car_feature','image'])
+        ->get()
+        ->map(function ($car) {
+            // Remove unwanted characters but keep spaces
+            $car->car_play = preg_replace('/[\r\n\t]+/', ' ', $car->car_play);
+            return $car;
+        });
 
     return response()->json([
         'cars' => $cars

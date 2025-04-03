@@ -15,17 +15,19 @@ class UserCredentials extends Mailable
     public $email;
     public $phone;
     public $password;
+    public $type;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($name, $email, $phone, $password)
+    public function __construct($name, $email, $phone, $password, $type = null)
     {
         $this->name = $name;
         $this->email = $email;
         $this->phone = $phone;
         $this->password = $password;
+        $this->type = $type;
     }
 
     /**

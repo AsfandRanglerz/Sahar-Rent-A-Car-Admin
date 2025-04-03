@@ -19,11 +19,13 @@ class CustomerRegisteredMail extends Mailable
     public $name;
     public $email;
     public $phone;
-    public function __construct($name, $email, $phone)
+    public $type;
+    public function __construct($name, $email, $phone, $type = null)
     {
         $this->name = $name;
         $this->email = $email;
         $this->phone = $phone;
+        $this->type = $type;
     }
 
     /**
