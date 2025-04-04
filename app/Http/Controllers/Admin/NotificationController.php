@@ -8,6 +8,7 @@ use App\Models\SubAdminLog;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\AdminNotification;
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,6 +56,27 @@ class NotificationController extends Controller
                     'description' => $request->description,
                     'created_at' => now(),
                 ]);
+
+                $customer = User::find($customerName); // Fetch customer by ID
+                if ($customer && $customer->fcm_token) {
+                    $data = [
+                        'id' => $notification->id,
+                        'title' => $request->title,
+                        'body' => $request->description,
+                    ];
+                    NotificationHelper::sendFcmNotification($customer->fcm_token, $request->title, $request->description, $data);
+                }
+    
+                // Send FCM Notification to Driver
+                $driverUser = Driver::find($driver); // Fetch driver by ID
+                if ($driverUser && $driverUser->fcm_token) {
+                    $data = [
+                        'id' => $notification->id,
+                        'title' => $request->title,
+                        'body' => $request->description,
+                    ];
+                    NotificationHelper::sendFcmNotification($driverUser->fcm_token, $request->title, $request->description, $data);
+                }
             }
         }
         if (Auth::guard('subadmin')->check()) {

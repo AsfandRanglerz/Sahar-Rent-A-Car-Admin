@@ -938,7 +938,7 @@ public function driverforgotverifyOtp(Request $request)
 
     return response()->json([
         'message' => 'OTP verified successfully',
-        // 'otp_token' => $otpRecord->otp_token,
+        'otp_token' => $otpRecord->otp_token,
         // 'token' => $user->createToken("API Token")->plainTextToken,
     ], 200);
 }
