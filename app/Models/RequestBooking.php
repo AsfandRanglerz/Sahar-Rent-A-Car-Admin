@@ -20,6 +20,10 @@ class RequestBooking extends Model
         return $this->belongsTo(Driver::class, 'driver_id');
     }
 
+    public function dropdriver()
+{
+    return $this->belongsTo(Driver::class, 'dropoff_driver_id');
+}
     public function booking()
 {
     return $this->hasOne(Booking::class, 'car_id', 'car_id');

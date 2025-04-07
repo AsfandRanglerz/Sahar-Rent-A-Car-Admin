@@ -284,6 +284,8 @@
                                                     <div class="badge badge-success badge-shadow">Active</div>
                                                     @elseif($dropoff->status == 1)
                                                     <div class="badge badge-primary badge-shadow">Completed</div>
+                                                    @elseif($dropoff->status == 3)
+                                                    <div class="badge badge-warning badge-shadow">Requested</div>
                                                 @endif
                                                 </td>
                                                 <td>{{ $dropoff->full_name }}</td>
@@ -490,7 +492,9 @@
                         <select class="form-control" id="driver_id" name="driver_id" required>
                             <option value="">-- Select Driver --</option>
                             @foreach($drivers as $driver)
+                            @if($driver->is_available == 1)
                                 <option value="{{ $driver->id }}">{{ $driver->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

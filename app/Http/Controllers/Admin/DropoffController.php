@@ -16,7 +16,7 @@ class DropoffController extends Controller
     {
         
 
-        $dropoffs = RequestBooking::whereIn('status', [0, 2])
+        $dropoffs = RequestBooking::whereIn('status', [0, 2, 3])
         ->whereNotNull('dropoff_address')
         ->with('driver')
         ->get();
@@ -33,6 +33,7 @@ class DropoffController extends Controller
 
     return response()->json(['count' => $dropoffCount]);
 }
+
 
     public function destroy($id)
     {

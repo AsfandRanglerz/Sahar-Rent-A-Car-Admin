@@ -52,6 +52,8 @@ class BookingController extends Controller
     // Update status to completed
     $booking->status = $request->status;
     $booking->save();
+
+    
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
         $subadminName = $subadmin->name;
