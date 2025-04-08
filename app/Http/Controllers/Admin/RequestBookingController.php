@@ -33,16 +33,16 @@ class RequestBookingController extends Controller
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
     }
 
-    public function edit(Request $request, $id)
-    {
+public function edit(Request $request, $id)
+{
         // $request->validate([
         //     'request_booking_id' => 'required|exists:requestbookings,id',
         //     'driver_id' => 'required|exists:drivers,id',
         // ]);
     
-        $requestBooking = RequestBooking::findOrFail($id);
+$requestBooking = RequestBooking::findOrFail($id);
 
-        if ($request->self_pickup === 'No') {
+if ($request->self_pickup === 'No') {
     $driver = Driver::where('id', $request->driver_id)
     ->where('is_available', 1) // Ensuring only available drivers are selected
     ->first();                                                                      //find($request->driver_id);
@@ -158,8 +158,8 @@ if ($isDriverAssigned) {
 }
 
 $requestBooking->driver_id = $request->driver_id;
-$driver->is_available = 0;
-$driver->save();
+// $driver->is_available = 0;
+// $driver->save();
 }
     // Generate a unique 4-digit car_id if it doesn't exist
     // if (!$requestBooking->car_id) {
@@ -265,8 +265,8 @@ if ($isDropoffDriverAssigned) {
 }
 
 $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
-        $dropoffDriver->is_available = 0;
-        $dropoffDriver->save();
+        // $dropoffDriver->is_available = 0;
+        // $dropoffDriver->save();
     }
 
     if ($request->car_id) {
@@ -274,6 +274,7 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     }
 
     // $requestBooking->driver_id = $request->driver_id;
+    
     $requestBooking->status = 3; //  '3' means requested
     $requestBooking->save();
     // $driver->is_available = 0; //false

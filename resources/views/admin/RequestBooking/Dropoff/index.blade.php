@@ -486,10 +486,12 @@
                     @csrf
 
                     <input type="hidden" id="requestBookingId" name="request_booking_id">
+                    <input type="hidden" name="self_dropoff" value="No">
+
                     
                     <div class="form-group">
                         <label for="driver_id">Select Driver</label>
-                        <select class="form-control" id="driver_id" name="driver_id" required>
+                        <select class="form-control" id="dropoff_driver_id" name="dropoff_driver_id" required>
                             <option value="">-- Select Driver --</option>
                             @foreach($drivers as $driver)
                             @if($driver->is_available == 1)

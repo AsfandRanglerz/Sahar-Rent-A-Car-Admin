@@ -446,6 +446,11 @@ public function resetPassword(Request $request)
         return response()->json(['message' => 'User not found'], 404);
     }
 
+    if (Hash::check($request->new_password, $user->password)) {
+        return response()->json([
+            'message' => 'This password is already in use. Please choose a different password.',
+        ], 422);
+    }
     // Update password
     $user->update(['password' => Hash::make($request->new_password)]);
 
@@ -965,6 +970,11 @@ public function driverresetPassword(Request $request)
         return response()->json(['message' => 'Driver not found'], 404);
     }
 
+    if (Hash::check($request->new_password, $user->password)) {
+        return response()->json([
+            'message' => 'This password is already in use. Please choose a different password.',
+        ], 422);
+    }
     // Update password
     $user->update(['password' => Hash::make($request->new_password)]);
 

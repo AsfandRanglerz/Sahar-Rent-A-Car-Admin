@@ -271,6 +271,7 @@ public function getDriverBookings(Request $request)
 
     $requestBookings = RequestBooking::where('status', 0)
                                      ->where('driver_id', $driverId)
+                                     ->orwhere('dropoff_driver_id', $driverId)
                                      ->select('car_id','full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
                                      ->with(['car' => function ($query) {
                                         $query->select('car_id', 'pricing', 'sanitized', 'car_feature'); // Ensure 'id' is included for relationship mapping
@@ -289,6 +290,38 @@ public function getDriverBookings(Request $request)
     return response()->json([
         'current_bookings' => $requestBookings
     ], 200);
+}
+
+
+public function getDriverBookingRequests(Request $request)
+{
+    $driverId = Auth::id();
+
+    $requests = RequestBooking::where(function ($query) use ($driverId) {
+        $query->where('driver_id', $driverId)
+              ->orWhere('dropoff_driver_id', $driverId);
+    })
+    ->where('status', 3) // Requested
+    ->select(
+        'id',
+        'car_id',
+        'full_name',
+        'pickup_address',
+        'dropoff_address',
+        'pickup_date',
+        'pickup_time',
+        'dropoff_date',
+        'dropoff_time'
+    )
+    ->with(['car' => function ($query) {
+        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+    }])
+    ->get();
+
+return response()->json([
+    'message' => 'Pending booking requests fetched successfully',
+    'booking_requests' => $requests
+], 200);
 }
 
 public function updateBookingStatus(Request $request)
@@ -325,6 +358,20 @@ public function updateBookingStatus(Request $request)
     }
     
     if ($request->status == 2) {
+        $driver = Driver::find($driverId);
+        if ($requestBooking->driver_id == $driverId) {
+            $requestBooking->driver_id = null;
+        }
+        if ($requestBooking->dropoff_driver_id == $driverId) {
+            // dropoff driver rejecting
+            $requestBooking->dropoff_driver_id = null;
+        }
+        if ($driver) {
+            $driver->is_available = 1;
+            $driver->save();
+        }
+
+        $requestBooking->save();
         //  $driver = RequestBooking::find($requestBooking->driver_id);
         DriverNotification::create([
             'driver_id' => $driverId,
@@ -346,6 +393,7 @@ public function DriverBookingHistory(Request $request)
 
     $requestBookings = RequestBooking::where('status', 1)
                                      ->where('driver_id', $driverId)
+                                     ->orwhere('dropoff_driver_id', $driverId)
                                      ->select('car_id','full_name', 'pickup_address', 'dropoff_address', 'pickup_date', 'pickup_time','dropoff_date','dropoff_time')
                                      ->with(['car' => function ($query) {
                                         $query->select('car_id', 'pricing', 'sanitized', 'car_feature'); // Ensure 'id' is included for relationship mapping

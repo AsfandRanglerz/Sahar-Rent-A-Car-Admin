@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>Sahar Rent A Car - @yield('title')</title>
+    <!-- Developed By Ranglerz -->
+    <link rel="stylesheet"
+        href="https://www.ranglerz.com/cost-to-make-a-web-ios-or-android-app-and-how-long-does-it-take.php">
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/bootstrap-social/bootstrap-social.css') }}">

@@ -261,7 +261,8 @@
                     @csrf
 
                     <input type="hidden" id="requestBookingId" name="request_booking_id">
-                    
+                    <input type="hidden" name="self_pickup" value="No">
+
                     <div class="form-group">
                         <label for="driver_id">Select Driver</label>
                         <select class="form-control" id="driver_id" name="driver_id" required>

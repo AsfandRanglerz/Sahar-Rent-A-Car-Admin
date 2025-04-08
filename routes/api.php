@@ -84,6 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/driverbookings', [BookingController::class, 'getDriverBookings']);
     Route::post('/bookingupdate', [BookingController::class, 'updateBookingStatus']);
     Route::get('/bookinghistory', [BookingController::class, 'DriverBookingHistory']);
+    Route::get('/driverrequests', [BookingController::class, 'getDriverBookingRequests']);
 });
 //#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
