@@ -279,13 +279,22 @@
                                                         {{ $dropoff->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
                                                 @if($dropoff->status == 2)
+                                                @if(is_null($dropoff->dropoff_driver_id))
                                                     <div class="badge badge-warning badge-shadow">Pending</div>
+                                                    @else
+                                                    <div class="badge badge-warning badge-shadow">Requested</div>
+                                                @endif 
                                                     @elseif($dropoff->status == 0)
                                                     <div class="badge badge-success badge-shadow">Active</div>
                                                     @elseif($dropoff->status == 1)
                                                     <div class="badge badge-primary badge-shadow">Completed</div>
                                                     @elseif($dropoff->status == 3)
+                                                    @if(is_null($dropoff->dropoff_driver_id))
+                                                    <div class="badge badge-warning badge-shadow">Pending</div>
+                                                @else
                                                     <div class="badge badge-warning badge-shadow">Requested</div>
+                                                @endif
+                                                    
                                                 @endif
                                                 </td>
                                                 <td>{{ $dropoff->full_name }}</td>

@@ -18,10 +18,15 @@ class DriverDeActivated extends Mailable
      */
 
      public $message;
-
-    public function __construct($message)
+     public $type;
+     public $headerTitle;
+ 
+    public function __construct($message, $type)
     {
         $this->message = $message;
+        $this->type = $type;
+
+        $this->headerTitle = $type === 'driver' ? 'Sahar Rent a Driver' : 'Sahar Rent a Car';
     }
 
     /**

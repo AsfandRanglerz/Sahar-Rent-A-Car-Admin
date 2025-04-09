@@ -16,9 +16,10 @@ class DropoffController extends Controller
     {
         
 
-        $dropoffs = RequestBooking::whereIn('status', [0, 2, 3])
+        $dropoffs = RequestBooking::whereIn('status', [0, 2, 3, 4, 5, 6])
         ->whereNotNull('dropoff_address')
         ->with('driver')
+        ->latest()
         ->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.dropoff.index', compact('dropoffs','drivers'));

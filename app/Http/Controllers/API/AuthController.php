@@ -161,7 +161,7 @@ return response()->json([
                 // 'fcm_token' => 'nullable|string',
             ],
             [
-                'identifier.required' => 'The email or phone number is required.',
+                'identifier.required' => 'The email is required.',
                 'password.required' => 'The password is required.',
                 // 'send_otp.required' => 'The otp field is required.',
             ]
@@ -191,7 +191,7 @@ return response()->json([
         if (!$customer) {
             return response()->json([
                 // 'status' => false,
-                'message' => 'Invalid email or phone',
+                'message' => 'Invalid email',
             ], 404);
         }
     
@@ -687,7 +687,7 @@ public function driverlogin(Request $request){
             // 'send_otp' => 'required',
         ],
         [
-            'identifier.required' => 'The email or phone number is required.',
+            'identifier.required' => 'The email is required.',
             'password.required' => 'The password is required.',
             // 'send_otp.required' => 'The otp field is required.',
         ]
@@ -717,7 +717,7 @@ public function driverlogin(Request $request){
     if (!$driver) {
         return response()->json([
             // 'status' => false,
-            'message' => 'Invalid email or phone',
+            'message' => 'Invalid email',
         ], 404);
     }
 

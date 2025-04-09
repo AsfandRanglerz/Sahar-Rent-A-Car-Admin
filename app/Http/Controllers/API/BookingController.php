@@ -358,14 +358,20 @@ public function updateBookingStatus(Request $request)
     }
     
     if ($request->status == 2) {
-        $driver = Driver::find($driverId);
-        if ($requestBooking->driver_id == $driverId) {
+        $rejectionRole = $request->input('rejection_role');
+        $selfPickup = $requestBooking->self_pickup;
+        $selfDropoff = $requestBooking->self_dropoff;
+        // $driver = Driver::find($driverId);
+        if ($rejectionRole === 'self_pickup' && $selfPickup === 'No' &&$requestBooking->driver_id == $driverId) {
+            \Log::info("Pickup driver rejecting the booking, setting driver_id to null");
             $requestBooking->driver_id = null;
         }
-        if ($requestBooking->dropoff_driver_id == $driverId) {
+        if ($rejectionRole === 'self_dropoff' && $selfDropoff === 'No' && $requestBooking->dropoff_driver_id == $driverId) {
+            \Log::info("Dropoff driver rejecting the booking, setting dropoff_driver_id to null");
             // dropoff driver rejecting
             $requestBooking->dropoff_driver_id = null;
         }
+        $driver = Driver::find($driverId);
         if ($driver) {
             $driver->is_available = 1;
             $driver->save();

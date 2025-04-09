@@ -14,16 +14,20 @@ Thanks,
 {{ config('app.name') }}
 @endcomponent --}}
 
+@slot('header')
+<span style="font-size: 18px; font-weight: bold;">{{ $headerTitle }}</span>
+@endslot
+
 @component('mail::message')
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="{{ config('app.name') }} Logo"
         style="height: 100px; margin-bottom: 20px;">
-    <h3><strong>Welcome to <span>Sahar Rent a Car</span></strong></h3>
+    <h3><strong>Welcome to <span>Sahar Rent a Driver</span></strong></h3>
 </div>
 
 # Welcome, {{ $name }}!
 
-Your account has been successfully created by the Admin.
+Your account has been successfully created.
 
 ## Your Account Details:
 {{-- - **Name:** {{ $data['name'] }} --}}
@@ -46,5 +50,5 @@ Visit Website
 If you have any questions, feel free to contact us.
 
 Thanks,  
-**Sahar Rent a Car**
+**Sahar Rent a Driver**
 @endcomponent

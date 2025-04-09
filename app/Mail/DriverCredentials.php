@@ -22,6 +22,7 @@ class DriverCredentials extends Mailable
      public $phone;
      public $password;
      public $type;
+     public $headerTitle;
 
     public function __construct($name, $email, $phone, $password, $type = null)
     {
@@ -30,6 +31,8 @@ class DriverCredentials extends Mailable
         $this->phone = $phone;
         $this->password = $password;
         $this->type = $type;
+
+        $this->headerTitle = $type === 'driver' ? 'Sahar Rent a Driver' : 'Sahar Rent a Car';
     }
 
     /**

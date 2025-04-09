@@ -1,3 +1,7 @@
+@slot('header')
+<span style="font-size: 18px; font-weight: bold;">{{ $headerTitle }}</span>
+@endslot
+
 @component('mail::message')
 {{-- <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/images/logo.png') }}" alt="Logo" style="max-width: 100px;">
@@ -9,9 +13,9 @@
 </div>
 
 <h1>Hi {{ $message['name'] }},</h1>
-<p>Congratulations! Your account has been activated by Saher Rent A Car Team as a driver.</p>
+<p>Congratulations! Your account has been activated by Saher Rent A Driver Team as a driver.</p>
 
 Thanks,
-**Sahar Rent a Car**
+**Sahar Rent a Driver**
 {{-- {{ config('app.name') }} --}}
 @endcomponent

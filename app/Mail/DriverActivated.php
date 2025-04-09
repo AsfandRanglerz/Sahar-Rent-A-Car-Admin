@@ -12,16 +12,21 @@ class DriverActivated extends Mailable
     use Queueable, SerializesModels;
 
     public $message;
-
+    public $type;
+    public $headerTitle;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $type)
     {
         $this->message = $message;
+        $this->type = $type;
+    
+    // Set dynamic header title
+     $this->headerTitle = $type === 'driver' ? 'Sahar Rent a Driver' : 'Sahar Rent a Car';
     }
 
     /**

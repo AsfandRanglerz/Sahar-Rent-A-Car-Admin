@@ -17,12 +17,21 @@ class ForgotOTPMail extends Mailable
      * @return void
      */
     public $otp;
-    public function __construct($otp)
+    public $type;
+    public $headerTitle;
+
+    public function __construct($otp, $type = null)
     {
         $this->otp = $otp;
+        $this->type = $type;
+
+        $this->headerTitle = $type === 'driver' ? 'Sahar Rent a Driver' : 'Sahar Rent a Car';
+    }
+    // {
+    //     $this->otp = $otp;
     
         
-    }
+    // }
 
     /**
      * Build the message.

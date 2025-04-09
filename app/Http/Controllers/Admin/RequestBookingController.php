@@ -26,8 +26,8 @@ class RequestBookingController extends Controller
         // $bookings = Booking::latest()->get();
         $requestbookings = RequestBooking::whereNotNull('pickup_address')
         ->whereIn('status', [0, 2, 3])
-        ->orderBy('status','ASC')
-        
+        // ->orderBy('status','ASC')
+        ->latest()
         ->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));

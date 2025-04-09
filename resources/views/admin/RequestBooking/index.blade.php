@@ -54,13 +54,22 @@
                                                         {{ $requestbooking->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
                                                 @if($requestbooking->status == 2)
-                                                    <div class="badge badge-warning badge-shadow">Pending</div>
+                                                @if(is_null($requestbooking->driver_id))
+                                                <div class="badge badge-warning badge-shadow">Pending</div>
+                                                @else
+                                                <div class="badge badge-warning badge-shadow">Requested</div>
+                                            @endif 
                                                     @elseif($requestbooking->status == 0)
                                                     <div class="badge badge-success badge-shadow">Active</div>
                                                     @elseif($requestbooking->status == 1)
                                                     <div class="badge badge-primary badge-shadow">Completed</div>
                                                     @elseif($requestbooking->status == 3)
-                                                    <div class="badge badge-warning badge-shadow">Requested</div>
+                                                    @if(is_null($requestbooking->driver_id))
+                                                        <div class="badge badge-warning badge-shadow">Pending</div>
+                                                    @else
+                                                        <div class="badge badge-warning badge-shadow">Requested</div>
+                                                    @endif
+                                                    
                                                 @endif
                                                 </td>
                                                 <td>{{ $requestbooking->full_name }}</td>

@@ -1,3 +1,6 @@
+@slot('header')
+<span style="font-size: 18px; font-weight: bold;">{{ $headerTitle }}</span>
+@endslot
 @component('mail::message')
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="{{ config('app.name') }} Logo"
@@ -13,6 +16,6 @@ Use the OTP below to reset your password:
 If you did not request for OTP, please ignore this email.
 
 Thanks,
-**Sahar Rent A Car**
+**{{ $headerTitle }}**
 {{-- {{ config('app.name') }} --}}
 @endcomponent

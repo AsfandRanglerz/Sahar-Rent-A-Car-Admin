@@ -20,12 +20,15 @@ class CustomerRegisteredMail extends Mailable
     public $email;
     public $phone;
     public $type;
+     public $headerTitle;
     public function __construct($name, $email, $phone, $type = null)
     {
         $this->name = $name;
         $this->email = $email;
         $this->phone = $phone;
         $this->type = $type;
+
+        $this->headerTitle = $type === 'driver' ? 'Sahar Rent a Driver' : 'Sahar Rent a Car';
     }
 
     /**
@@ -35,6 +38,6 @@ class CustomerRegisteredMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.customer.registered')->subject('Account Created!');
+        return $this->markdown('emails.customer.registered')->subject('Account Created!')->with(['headerTitle' => $this->headerTitle,]);
     }
 }
