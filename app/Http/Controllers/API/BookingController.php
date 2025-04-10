@@ -298,10 +298,34 @@ public function getDriverBookingRequests(Request $request)
     $driverId = Auth::id();
 
     $requests = RequestBooking::where(function ($query) use ($driverId) {
-        $query->where('driver_id', $driverId)
-              ->orWhere('dropoff_driver_id', $driverId);
+    //     $query->where('driver_id', $driverId)
+    //           ->orWhere('dropoff_driver_id', $driverId);
+    // })
+    // ->where('status', 3) // Requested
+    $query->where(function ($q) use ($driverId) {
+        // Case: Driver assigned for both pickup and dropoff
+        $q->where('driver_id', $driverId)
+          ->where('dropoff_driver_id', $driverId);
     })
-    ->where('status', 3) // Requested
+    ->orWhere(function ($q) use ($driverId) {
+        // Case: Driver assigned only for pickup
+        $q->where('driver_id', $driverId)
+        ->where(function ($innerQ) use ($driverId) {
+            $innerQ->whereNull('dropoff_driver_id')->orWhere('dropoff_driver_id', '!=', $driverId);
+        });
+    })
+    ->orWhere(function ($q) use ($driverId) {
+        // Case: Driver assigned only for dropoff
+        $q->where('dropoff_driver_id', $driverId)
+        ->where(function ($innerQ) use ($driverId) {
+            $innerQ->whereNull('driver_id')->orWhere('driver_id', '!=', $driverId);
+        });
+    });
+})
+->where(function ($q) {
+    // Only show bookings that are not fully accepted/rejected
+    $q->where('status', 3); // You might enhance this if you track part-by-part status
+})
     ->select(
         'id',
         'car_id',
@@ -358,18 +382,34 @@ public function updateBookingStatus(Request $request)
     }
     
     if ($request->status == 2) {
-        $rejectionRole = $request->input('rejection_role');
+        // $rejectionRole = $request->input('rejection_role');
         $selfPickup = $requestBooking->self_pickup;
         $selfDropoff = $requestBooking->self_dropoff;
         // $driver = Driver::find($driverId);
-        if ($rejectionRole === 'self_pickup' && $selfPickup === 'No' &&$requestBooking->driver_id == $driverId) {
+        $rejectionRole = null;
+        if ($requestBooking->driver_id == $driverId && $selfPickup === 'No') {
+            $rejectionRole = 'self_pickup';
+        }
+        if ($requestBooking->dropoff_driver_id == $driverId && $selfDropoff === 'No') {
+            $rejectionRole = 'self_dropoff';
+        }
+    
+        // Handle rejection
+        if ($rejectionRole === 'self_pickup') {
             \Log::info("Pickup driver rejecting the booking, setting driver_id to null");
             $requestBooking->driver_id = null;
         }
-        if ($rejectionRole === 'self_dropoff' && $selfDropoff === 'No' && $requestBooking->dropoff_driver_id == $driverId) {
+        if ($rejectionRole === 'self_dropoff') {
             \Log::info("Dropoff driver rejecting the booking, setting dropoff_driver_id to null");
-            // dropoff driver rejecting
             $requestBooking->dropoff_driver_id = null;
+        }
+        
+        if (is_null($requestBooking->driver_id) && is_null($requestBooking->dropoff_driver_id)) {
+            $requestBooking->status = 2;
+            Log::info("Both roles rejected, setting status to 2 (rejected)");
+        }else {
+            // 👇 Prevent premature status override
+            $requestBooking->status = 3; // or whatever "requested" or "partial" is
         }
         $driver = Driver::find($driverId);
         if ($driver) {

@@ -7,6 +7,7 @@ use App\Models\Driver;
 use App\Models\Booking;
 use App\Models\Dropoff;
 use App\Models\CarDetails;
+use App\Models\AssignedRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,5 +43,10 @@ public function user()
 public function dropoff()
 {
     return $this->hasOne(Dropoff::class, 'id', 'id');
+}
+
+public function assign()
+{
+    return $this->hasMany(AssignedRequest::class, 'id', 'request_booking_id');
 }
 }

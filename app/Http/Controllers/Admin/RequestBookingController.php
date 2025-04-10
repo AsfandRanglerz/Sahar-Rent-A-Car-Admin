@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\RequestBooking;
+use App\Models\AssignedRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +25,8 @@ class RequestBookingController extends Controller
     {
         
         // $bookings = Booking::latest()->get();
-        $requestbookings = RequestBooking::whereNotNull('pickup_address')
+        $requestbookings = RequestBooking::with('assign')
+        ->whereNotNull('pickup_address')
         ->whereIn('status', [0, 2, 3])
         // ->orderBy('status','ASC')
         ->latest()
@@ -40,7 +42,7 @@ public function edit(Request $request, $id)
         //     'driver_id' => 'required|exists:drivers,id',
         // ]);
     
-$requestBooking = RequestBooking::findOrFail($id);
+$requestBooking = RequestBooking::with('assign')->findOrFail($id);
 
 if ($request->self_pickup === 'No') {
     $driver = Driver::where('id', $request->driver_id)
@@ -304,6 +306,35 @@ if ($requestBooking->status == 1) {
             'message' => "SubAdmin: {$subadminName} assigned Driver with Car ID: {$requestBooking->car_id} ",
         ]);
     }
+
+    if ($request->self_pickup === 'No') {
+        AssignedRequest::updateOrCreate(
+            [
+                'request_booking_id' => $requestBooking->id,
+                'driver_id' => $request->driver_id,
+                'dropoff_driver_id' => null,
+            ],
+            [
+                // 'booking_id' => $requestBooking->booking_id,
+                'status' => 3
+            ]
+        );
+    }
+    
+    if ($request->self_dropoff === 'No') {
+        AssignedRequest::updateOrCreate(
+            [
+                'request_booking_id' => $requestBooking->id,
+                'driver_id' => null,
+                'dropoff_driver_id' => $request->dropoff_driver_id,
+            ],
+            [
+                // 'booking_id' => $requestBooking->booking_id,
+                'status' => 3
+            ]
+        );
+    }
+    
     return response()->json([
         'success' => true,
         'message' => 'Driver assigned successfully!',
