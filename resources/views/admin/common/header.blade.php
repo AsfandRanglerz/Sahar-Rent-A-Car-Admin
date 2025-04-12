@@ -34,7 +34,7 @@
                 <span id="notificationCounter" class="badge badge-primary" style="padding: 6px 9px">0</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right pullDown">
-                <div id="notificationList">
+                <div id="notificationList" style="max-height: 300px; overflow-y: auto;">
                     <p class="dropdown-item">No new notifications</p>
                 </div>
                 <a href="#" id="markAllRead" class="dropdown-footer text-center" style="margin-left:58px; font-size:11px;">
