@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use DB;
 use Log;
 use Carbon\Carbon;
 use App\Models\Driver;
@@ -10,6 +11,7 @@ use App\Models\CarDetails;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
+use App\Models\AssignedRequest;
 use App\Models\DriverNotification;
 use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
@@ -292,59 +294,69 @@ public function getDriverBookings(Request $request)
     ], 200);
 }
 
-
 public function getDriverBookingRequests(Request $request)
 {
     $driverId = Auth::id();
 
-    $requests = RequestBooking::where(function ($query) use ($driverId) {
-    //     $query->where('driver_id', $driverId)
-    //           ->orWhere('dropoff_driver_id', $driverId);
-    // })
-    // ->where('status', 3) // Requested
-    $query->where(function ($q) use ($driverId) {
-        // Case: Driver assigned for both pickup and dropoff
-        $q->where('driver_id', $driverId)
-          ->where('dropoff_driver_id', $driverId);
+    $pickupRequests = RequestBooking::whereHas('assign', function ($query) use ($driverId) {
+        $query->where('status', 3)
+              ->where('driver_id', $driverId);
     })
-    ->orWhere(function ($q) use ($driverId) {
-        // Case: Driver assigned only for pickup
-        $q->where('driver_id', $driverId)
-        ->where(function ($innerQ) use ($driverId) {
-            $innerQ->whereNull('dropoff_driver_id')->orWhere('dropoff_driver_id', '!=', $driverId);
-        });
-    })
-    ->orWhere(function ($q) use ($driverId) {
-        // Case: Driver assigned only for dropoff
-        $q->where('dropoff_driver_id', $driverId)
-        ->where(function ($innerQ) use ($driverId) {
-            $innerQ->whereNull('driver_id')->orWhere('driver_id', '!=', $driverId);
-        });
-    });
-})
-->where(function ($q) {
-    // Only show bookings that are not fully accepted/rejected
-    $q->where('status', 3); // You might enhance this if you track part-by-part status
-})
-    ->select(
-        'id',
-        'car_id',
-        'full_name',
-        'pickup_address',
-        'dropoff_address',
-        'pickup_date',
-        'pickup_time',
-        'dropoff_date',
-        'dropoff_time'
-    )
-    ->with(['car' => function ($query) {
+    ->with(['assign' => function ($query) use ($driverId) {
+        $query->where('status', 3)->where('driver_id', $driverId);
+    }, 'car' => function ($query) {
         $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
     }])
-    ->get();
+    ->get()
+    ->map(function ($booking) {
+        return [
+            'assigned_id' => optional($booking->assign->first())->id,
+            'id' => $booking->id,
+            'car_id' => $booking->car_id,
+            'full_name' => $booking->full_name,
+            'pickup_address' => $booking->pickup_address,
+            'dropoff_address' => $booking->dropoff_address,
+            'pickup_date' => $booking->pickup_date,
+            'pickup_time' => $booking->pickup_time,
+            'dropoff_date' => $booking->dropoff_date,
+            'dropoff_time' => $booking->dropoff_time,
+            'car' => $booking->car,
+        ];
+    });
+
+// Dropoff Requests
+$dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($driverId) {
+        $query->where('status', 3)
+              ->where('dropoff_driver_id', $driverId);
+    })
+    ->with(['assign' => function ($query) use ($driverId) {
+        $query->where('status', 3)->where('dropoff_driver_id', $driverId);
+    }, 'car' => function ($query) {
+        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+    }])
+    ->get()
+    ->map(function ($booking) {
+        return [
+            'assigned_id' => optional($booking->assign->first())->id,
+            'id' => $booking->id,
+            'car_id' => $booking->car_id,
+            'full_name' => $booking->full_name,
+            'pickup_address' => $booking->pickup_address,
+            'dropoff_address' => $booking->dropoff_address,
+            'pickup_date' => $booking->pickup_date,
+            'pickup_time' => $booking->pickup_time,
+            'dropoff_date' => $booking->dropoff_date,
+            'dropoff_time' => $booking->dropoff_time,
+            'car' => $booking->car,
+        ];
+    });
+
 
 return response()->json([
     'message' => 'Pending booking requests fetched successfully',
-    'booking_requests' => $requests
+    // 'booking_requests' => $requests
+    'pickup_requests' => $pickupRequests,
+        'dropoff_requests' => $dropoffRequests
 ], 200);
 }
 
@@ -352,9 +364,11 @@ public function updateBookingStatus(Request $request)
 {
     $request->validate([
         'id' => 'required|integer',
+        'assigned_id' => 'required|integer',
         'status' => 'required|in:0,2', // 0 = Active, 2 = Rejected
     ]);
     $driverId = Auth::id();
+    $assignedId = $request->assigned_id;
     $requestBooking = RequestBooking::find($request->id);
 
     if (!$requestBooking) {
@@ -363,46 +377,92 @@ public function updateBookingStatus(Request $request)
 
     // Update the status based on driver's action
     $requestBooking->status = $request->status;
-    $requestBooking->save();
     $driver = Driver::find($driverId);
+    $assignedRequest = AssignedRequest::where('id', $assignedId)->first();
     // If accepted, mark driver as unavailable
     if ($request->status == 0) {
         // $driver = RequestBooking::find($requestBooking->driver_id);
+        DB::table('assigned_requests')
+        ->where('id', $assignedId)
+        ->update(['status' => 0]);
+
+        if ($assignedRequest->driver_id == $driverId) {
+            $requestBooking->driver_id = $driverId;
+            \Log::info("Pickup driver accepted, driver_id set to {$driverId}.");
+        }
+
+        if ($assignedRequest->dropoff_driver_id == $driverId) {
+            $requestBooking->dropoff_driver_id = $driverId;
+            \Log::info("Dropoff driver accepted, dropoff_driver_id set to {$driverId}.");
+        }
+        
+        $assignedDrivers = AssignedRequest::where('request_booking_id', $requestBooking->id)
+    ->where('status', 0) // status 0 means accepted
+    ->get();
+
+$pickupAccepted = false;
+$dropoffAccepted = false;
+
+foreach ($assignedDrivers as $assigned) {
+    if ($assigned->driver_id !== null) {
+        $pickupAccepted = true;
+    }
+    if ($assigned->dropoff_driver_id !== null) {
+        $dropoffAccepted = true;
+    }
+}
+
+// Now set the booking status based on both drivers' acceptance
+if ($pickupAccepted && $dropoffAccepted) {
+    $requestBooking->status = 0; // Both drivers accepted
+    \Log::info("Both pickup and dropoff drivers accepted. Booking status set to 0.");
+} else {
+    $requestBooking->status = 3; // Waiting for the other driver
+    \Log::info("One driver accepted. Waiting for the other driver.");
+}
+        
+        $requestBooking->save();
+
         if ($driver) {
             $driver->is_available = 0;
             $driver->save();
         }
+        $roles = [];
+
+        if ($assignedRequest->driver_id == $driverId) {
+            $roles[] = 'Pickup Driver';
+        }
+        if ($assignedRequest->dropoff_driver_id == $driverId) {
+            $roles[] = 'Dropoff Driver';
+        }
+        
+        $roleText = implode(' & ', $roles);
 
         DriverNotification::create([
             'driver_id' => $driverId,
             'type' => 'booking',
-            'message' => "{$driver->name} has accepted booking request.",
+            'message' => "{$driver->name} ({$roleText}) has accepted booking request.",
             'is_read' => 0,
         ]);
     }
     
-    if ($request->status == 2) {
+    elseif ($request->status == 2) {
         // $rejectionRole = $request->input('rejection_role');
-        $selfPickup = $requestBooking->self_pickup;
-        $selfDropoff = $requestBooking->self_dropoff;
-        // $driver = Driver::find($driverId);
-        $rejectionRole = null;
-        if ($requestBooking->driver_id == $driverId && $selfPickup === 'No') {
-            $rejectionRole = 'self_pickup';
-        }
-        if ($requestBooking->dropoff_driver_id == $driverId && $selfDropoff === 'No') {
-            $rejectionRole = 'self_dropoff';
-        }
-    
-        // Handle rejection
-        if ($rejectionRole === 'self_pickup') {
-            \Log::info("Pickup driver rejecting the booking, setting driver_id to null");
-            $requestBooking->driver_id = null;
-        }
-        if ($rejectionRole === 'self_dropoff') {
-            \Log::info("Dropoff driver rejecting the booking, setting dropoff_driver_id to null");
-            $requestBooking->dropoff_driver_id = null;
-        }
+
+        DB::table('assigned_requests')
+        ->where('id', $assignedId)
+        ->delete();
+
+    // Nullify the driver_id or dropoff_driver_id
+    if ($assignedRequest->driver_id == $driverId) {
+        $requestBooking->driver_id = null;
+        \Log::info("Pickup driver rejected, assignment deleted and driver_id set to null.");
+    }
+
+    if ($assignedRequest->dropoff_driver_id == $driverId) {
+        $requestBooking->dropoff_driver_id = null;
+        \Log::info("Dropoff driver rejected, assignment deleted and dropoff_driver_id set to null.");
+    }
         
         if (is_null($requestBooking->driver_id) && is_null($requestBooking->dropoff_driver_id)) {
             $requestBooking->status = 2;
@@ -411,7 +471,7 @@ public function updateBookingStatus(Request $request)
             // 👇 Prevent premature status override
             $requestBooking->status = 3; // or whatever "requested" or "partial" is
         }
-        $driver = Driver::find($driverId);
+        // $driver = Driver::find($driverId);
         if ($driver) {
             $driver->is_available = 1;
             $driver->save();
@@ -419,10 +479,21 @@ public function updateBookingStatus(Request $request)
 
         $requestBooking->save();
         //  $driver = RequestBooking::find($requestBooking->driver_id);
+        $roles = [];
+
+        if ($assignedRequest->driver_id == $driverId) {
+            $roles[] = 'Pickup Driver';
+        }
+        if ($assignedRequest->dropoff_driver_id == $driverId) {
+            $roles[] = 'Dropoff Driver';
+        }
+        
+        $roleText = implode(' & ', $roles);
+
         DriverNotification::create([
             'driver_id' => $driverId,
             'type' => 'booking',
-            'message' => "{$driver->name} has rejected booking request.",
+            'message' => "{$driver->name} ({$roleText}) has rejected booking request.",
             'is_read' => 0,
         ]);
     }
@@ -452,3 +523,57 @@ public function DriverBookingHistory(Request $request)
     ], 200);
 }
 }
+// public function getDriverBookingRequests(Request $request)
+// {
+//     $driverId = Auth::id();
+
+//     $requests = RequestBooking::where(function ($query) use ($driverId) {
+//     //     $query->where('driver_id', $driverId)
+//     //           ->orWhere('dropoff_driver_id', $driverId);
+//     // })
+//     // ->where('status', 3) // Requested
+//     $query->where(function ($q) use ($driverId) {
+//         // Case: Driver assigned for both pickup and dropoff
+//         $q->where('driver_id', $driverId)
+//           ->where('dropoff_driver_id', $driverId);
+//     })
+//     ->orWhere(function ($q) use ($driverId) {
+//         // Case: Driver assigned only for pickup
+//         $q->where('driver_id', $driverId)
+//         ->where(function ($innerQ) use ($driverId) {
+//             $innerQ->whereNull('dropoff_driver_id')->orWhere('dropoff_driver_id', '!=', $driverId);
+//         });
+//     })
+//     ->orWhere(function ($q) use ($driverId) {
+//         // Case: Driver assigned only for dropoff
+//         $q->where('dropoff_driver_id', $driverId)
+//         ->where(function ($innerQ) use ($driverId) {
+//             $innerQ->whereNull('driver_id')->orWhere('driver_id', '!=', $driverId);
+//         });
+//     });
+// })
+// ->where(function ($q) {
+//     // Only show bookings that are not fully accepted/rejected
+//     $q->where('status', 3); // You might enhance this if you track part-by-part status
+// })
+//     ->select(
+//         'id',
+//         'car_id',
+//         'full_name',
+//         'pickup_address',
+//         'dropoff_address',
+//         'pickup_date',
+//         'pickup_time',
+//         'dropoff_date',
+//         'dropoff_time'
+//     )
+//     ->with(['car' => function ($query) {
+//         $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+//     }])
+//     ->get();
+
+// return response()->json([
+//     'message' => 'Pending booking requests fetched successfully',
+//     'booking_requests' => $requests
+// ], 200);
+// }

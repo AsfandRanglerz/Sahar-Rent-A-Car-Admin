@@ -278,7 +278,7 @@
                                                     {{-- <div class="badge {{ $dropoff->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
                                                         {{ $dropoff->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
-                                                @if($dropoff->status == 2)
+                                                {{-- @if($dropoff->status == 2)
                                                 @if(is_null($dropoff->dropoff_driver_id))
                                                     <div class="badge badge-warning badge-shadow">Pending</div>
                                                     @else
@@ -295,7 +295,42 @@
                                                     <div class="badge badge-warning badge-shadow">Requested</div>
                                                 @endif
                                                     
+                                                @endif --}}
+                                                @php
+                                                $assigned = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
+                                            @endphp
+                                            
+                                            @if($dropoff->status == 2)
+                                                {{-- Always show Pending from request_booking table --}}
+                                                <div class="badge badge-warning badge-shadow">Pending</div>
+                                            
+                                                @elseif($dropoff->status == 0)
+                                                <div class="badge badge-success badge-shadow">Active</div>
+
+                                            @elseif($dropoff->status == 3)
+                                                @if($assigned)
+                                                    @if($assigned->status == 0)
+                                                        <div class="badge badge-success badge-shadow">Active</div>
+                                                    @elseif($assigned->status == 1)
+                                                        <div class="badge badge-primary badge-shadow">Completed</div>
+                                                    @elseif($assigned->status == 3)
+                                                        @if(is_null($assigned->dropoff_driver_id))
+                                                            <div class="badge badge-warning badge-shadow">Pending</div>
+                                                        @else
+                                                            <div class="badge badge-warning badge-shadow">Requested</div>
+                                                        @endif
+                                                    @else
+                                                        <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                                    @endif
+                                                @else
+                                                    {{-- Status is 3 but assigned entry not yet made --}}
+                                                    <div class="badge badge-warning badge-shadow">Pending</div>
                                                 @endif
+                                            
+                                            @else
+                                                <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                            @endif
+                                            
                                                 </td>
                                                 <td>{{ $dropoff->full_name }}</td>
                                                 {{-- <td>

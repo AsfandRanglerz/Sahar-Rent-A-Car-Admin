@@ -53,12 +53,12 @@
                                                     {{-- <div class="badge {{ $requestbooking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
                                                         {{ $requestbooking->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
-                                                @if($requestbooking->status == 2)
+                                                {{-- @if($requestbooking->status == 2)
                                                 @if(is_null($requestbooking->driver_id))
                                                 <div class="badge badge-warning badge-shadow">Pending</div>
                                                 @else
                                                 <div class="badge badge-warning badge-shadow">Requested</div>
-                                            @endif 
+                                                @endif 
                                                     @elseif($requestbooking->status == 0)
                                                     <div class="badge badge-success badge-shadow">Active</div>
                                                     @elseif($requestbooking->status == 1)
@@ -70,7 +70,42 @@
                                                         <div class="badge badge-warning badge-shadow">Requested</div>
                                                     @endif
                                                     
-                                                @endif
+                                                @endif --}}
+                                                @php
+                                                    $assigned = $requestbooking->assign->whereNotNull('driver_id')->first();
+                                                @endphp
+
+                                                        @if($requestbooking->status == 2)
+                                                            {{-- Always show Pending from request_booking table --}}
+                                                            <div class="badge badge-warning badge-shadow">Pending</div>
+
+                                                            @elseif($requestbooking->status == 0)
+                                                            <div class="badge badge-success badge-shadow">Active</div>
+                                                            
+                                                        @elseif($requestbooking->status == 3)
+                                                            @if($assigned)
+                                                                @if($assigned->status == 0)
+                                                                    <div class="badge badge-success badge-shadow">Active</div>
+                                                                @elseif($assigned->status == 1)
+                                                                    <div class="badge badge-primary badge-shadow">Completed</div>
+                                                                @elseif($assigned->status == 3)
+                                                                    @if(is_null($assigned->driver_id))
+                                                                        <div class="badge badge-warning badge-shadow">Pending</div>
+                                                                    @else
+                                                                        <div class="badge badge-warning badge-shadow">Requested</div>
+                                                                    @endif
+                                                                @else
+                                                                    <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                                                @endif
+                                                            @else
+                                                                {{-- Status is 3 but assigned entry not yet made --}}
+                                                                <div class="badge badge-warning badge-shadow">Pending</div>
+                                                            @endif
+
+                                                        @else
+                                                            <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                                        @endif
+
                                                 </td>
                                                 <td>{{ $requestbooking->full_name }}</td>
                                                 {{-- <td>

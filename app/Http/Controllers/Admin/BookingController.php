@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use DB;
 use App\Models\Booking;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class BookingController extends Controller
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
         $apiBookings = Booking::orderBy('status','ASC')->get();
-        $requestBookings = RequestBooking::with('driver','booking') 
+        $requestBookings = RequestBooking::with(['driver','booking', 'assign']) 
         ->whereIn('status', [0, 1])
         ->orderBy('status','ASC')
         ->get();
@@ -53,6 +54,11 @@ class BookingController extends Controller
     $booking->status = $request->status;
     $booking->save();
 
+    if ($request->status == 1) {
+        DB::table('assigned_requests')
+            ->where('request_booking_id', $booking->id)
+            ->update(['status' => 1]);  // Mark as completed
+    }
     
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();

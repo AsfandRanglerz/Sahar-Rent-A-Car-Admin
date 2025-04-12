@@ -24,6 +24,11 @@ class AssignedRequest extends Model
 
     public function dropdriver()
     {
-        return $this->belongsTo(Driver::class, 'dropoff_driver_id', 'id');
+        return $this->belongsTo(Driver::class, 'dropoff_driver_id');
+    }
+
+    public function booking()
+    {
+        return $this->hasOne(RequestBooking::class, 'car_id', 'id');
     }
 }

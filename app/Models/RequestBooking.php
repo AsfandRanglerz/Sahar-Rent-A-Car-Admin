@@ -47,6 +47,6 @@ public function dropoff()
 
 public function assign()
 {
-    return $this->hasMany(AssignedRequest::class, 'id', 'request_booking_id');
+    return $this->hasMany(AssignedRequest::class, 'request_booking_id', 'id');
 }
 }
