@@ -28,8 +28,7 @@ class DropoffController extends Controller
 
     public function dropoffCounter()
 {
-    $dropoffCount = RequestBooking::
-        where('status', 2)
+    $dropoffCount = RequestBooking::where('dropoff_driver_id', null)
         ->whereNotNull('dropoff_address')
         ->count();
 

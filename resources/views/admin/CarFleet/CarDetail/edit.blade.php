@@ -26,30 +26,15 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Hour</label>
+                                            <label>Price Per Day</label>
                                             <div class="input-group">
-                                            <input type="number" placeholder="Enter Price Per Hour" name="pricing"
-                                                id="pricing" value="{{ old('pricing', $CarDetail->pricing) }}" class="form-control">
+                                            <input type="number" placeholder="Enter Price Per Day" name="price_per_day"
+                                                id="price_per_day" value="{{ old('price_per_day', $CarDetail->price_per_day) }}" class="form-control">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
                                                 </div>
                                             </div>
-                                                @error('pricing')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label>Price Per Day</label>
-                                        <div class="input-group">
-                                            <input type="number" placeholder="Enter Price Per Day" name="sanitized"
-                                                id="sanitized" value="{{ old('sanitized', $CarDetail->sanitized) }}" class="form-control">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
-                                                </div>
-                                        </div>
-                                                @error('sanitized')
+                                                @error('price_per_day')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -57,14 +42,29 @@
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Price Per Week</label>
+                                        <div class="input-group">
+                                            <input type="number" placeholder="Enter Price Per Week" name="price_per_week"
+                                                id="price_per_week" value="{{ old('price_per_week', $CarDetail->price_per_week) }}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
+                                                </div>
+                                        </div>
+                                                @error('price_per_week')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Price Per Month</label>
                                             <div class="input-group">
-                                            <input type="number" placeholder="Enter Price Per Week" name="car_feature"
-                                                id="car_feature" value="{{ old('car_feature', $CarDetail->car_feature) }}" class="form-control">
+                                            <input type="number" placeholder="Enter Price Per Month" name="price_per_month"
+                                                id="price_per_month" value="{{ old('price_per_month', $CarDetail->price_per_month) }}" class="form-control">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
                                                 </div>
                                             </div>
-                                                @error('car_feature')
+                                                @error('price_per_month')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -271,7 +271,7 @@
                                                 <button type="button" class="btn btn-primary btn-sm mb-3" id="addFeatureBtn" style="margin-top:15px; ">Add Feature</button>
                                                 <div id="featuresContainer">
                                                     @php
-                                                        $existingFeatures = explode("\n", $CarDetail->car_play); // Assuming comma-separated
+                                                        $existingFeatures = explode("\n", $CarDetail->feature); // Assuming comma-separated
                                                     @endphp
                                         
                                                     @if (!empty($existingFeatures))

@@ -68,7 +68,7 @@ class CarDetailsController extends Controller
             'car_id' => $carId,
             'car_name' => $request->car_name,
             'availability' => $request->availability,
-            'pricing' => $request->pricing,
+            'price_per_day' => $request->price_per_day,
             'durations' => $request->durations,
             // 'call_number' => $request->call_number,
             // 'whatsapp_number' => $request->whatsapp_number,
@@ -76,10 +76,10 @@ class CarDetailsController extends Controller
             'luggage' => $request->luggage,
             'doors' => $request->doors,
             'car_type' => $request->car_type,
-            'car_play' => $request->car_play,
-            'car_play' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
-            'sanitized' => $request->sanitized,
-            'car_feature' => $request->car_feature,
+            'feature' => $request->feature,
+            'feature' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
+            'price_per_week' => $request->price_per_week,
+            'price_per_month' => $request->price_per_month,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,
             // 'travel_distance' => $request->travel_distance,
@@ -148,7 +148,7 @@ class CarDetailsController extends Controller
         $CarDetail->update([
             'car_name' => $request->car_name,
             'availability' => $request->availability,
-            'pricing' => $request->pricing,
+            'price_per_day' => $request->price_per_day,
             'durations' => $request->durations,
             // 'call_number' => $request->call_number,
             // 'whatsapp_number' => $request->whatsapp_number,
@@ -156,10 +156,10 @@ class CarDetailsController extends Controller
             'luggage' => $request->luggage,
             'doors' => $request->doors,
             'car_type' => $request->car_type,
-            'car_play' => $request->car_play,
-            'car_play' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
-            'sanitized' => $request->sanitized,
-            'car_feature' => $request->car_feature,
+            'feature' => $request->feature,
+            'feature' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
+            'price_per_week' => $request->price_per_week,
+            'price_per_month' => $request->price_per_month,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,
             // 'travel_distance' => $request->travel_distance,

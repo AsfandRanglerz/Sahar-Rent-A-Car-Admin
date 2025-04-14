@@ -111,8 +111,8 @@
                                                      ">View</a>
                                                 </td>
                                                 <td>
-                                                    <div class="badge {{ $driver->availability == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
-                                                        {{ $driver->availability == 0 ? 'Available' : 'Not Available' }}
+                                                    <div class="badge {{ $driver->availability == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $driver->availability == 1 ? 'Available' : 'Not Available' }}
                                                     </div>
                                                 </td>
                                                 <td>

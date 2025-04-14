@@ -29,7 +29,10 @@ class BookingController extends Controller
     public function activeBookingsCounter()
     {
         $activeBookings = Booking::where('status', 0)->count();
-        return response()->json(['count' => $activeBookings]);
+        $activeRequestBookings = RequestBooking::where('status', 0)->count();
+
+        $totalActive = $activeBookings + $activeRequestBookings;
+        return response()->json(['count' => $totalActive]);
     }
     
     public function create(){

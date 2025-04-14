@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\CarDetails;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
@@ -16,14 +17,38 @@ class CarController extends Controller
     // Optional status filtering
     $status = $request->query('status');
 
+    $favoriteCarIds = DB::table('favorites')
+    ->where('user_id', $userId)
+    ->pluck('car_id')
+    ->toArray();
+
+    $bookedCarIds = DB::table('bookings')
+        ->whereIn('status', [3,0]) // Assuming 2 = ongoing, 3 = upcoming
+        ->pluck('car_id')
+        ->merge(
+            DB::table('request_bookings')
+                ->whereIn('status', [3,0]) // 1 = completed
+                ->pluck('car_id')
+        )
+        ->unique()
+        ->toArray();
     // Fetch cars belonging to the authenticated user
-    $cars = CarDetails::where('user_id', $userId) // 'user_id' column exists in 'car_details'
-       ->where('status', 0)
-        ->select(['id','car_id', 'car_name', 'pricing',  'passengers', 'luggage', 'doors', 'car_type','car_play','sanitized','car_feature','image'])
+    $cars = CarDetails::where('status', 0)
+    ->whereNotIn('car_id', $bookedCarIds)
+     // 'user_id' column exists in 'car_details'
+        ->select(['id','car_id', 'car_name', 'price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
         ->get()
-        ->map(function ($car) {
+        ->map(function ($car) use ($favoriteCarIds) {
             // Remove unwanted characters but keep spaces
-            $car->car_play = preg_replace('/[\r\n\t]+/', ' ', $car->car_play);
+            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature)); // Clean extra spaces
+
+            // Convert to array based on space separation
+            $car->feature = explode(' ', $cleanedFeature);
+
+            $car->is_liked = in_array($car->car_id, $favoriteCarIds, false) ? true : false;
+
+            $car->like_message = $car->is_liked ? "You liked this car!" : "";
             return $car;
         });
 
@@ -41,7 +66,7 @@ class CarController extends Controller
         // }
         $carId = $request->input('id');
         $carDetails = CarDetails::
-        select(['car_id', 'pricing', 'sanitized', 'car_feature'])
+        select(['car_id', 'price_per_day', 'price_per_week', 'price_per_month'])
         ->where('id', $carId)
         ->first();
 
@@ -59,7 +84,131 @@ class CarController extends Controller
         ]);
     }
 
-    public function filterCars(Request $request)
+    public function relatedSearch(Request $request)
+{
+    $userId = Auth::id();
+
+    // Step 1: Get user favorite car_ids
+    $favoriteCarIds = DB::table('favorites')
+        ->where('user_id', $userId)
+        ->pluck('car_id')
+        ->toArray();
+
+    // Step 2: Get completed bookings (status = 1) with timestamps
+    $bookings = DB::table('bookings')
+        ->where('status', 1)
+        ->select('car_id', 'updated_at')
+        ->get();
+
+    $requestBookings = DB::table('request_bookings')
+        ->where('status', 1)
+        ->select('car_id', 'updated_at')
+        ->get();
+
+    // Step 3: Merge and sort by most recent
+    $recentCompleted = $bookings->merge($requestBookings)
+        ->sortByDesc('updated_at')
+        ->pluck('car_id')
+        ->unique()
+        ->take(5)
+        ->toArray();
+
+        $allBookings = DB::table('bookings')
+        ->where('status', 1)
+        ->pluck('car_id')
+        ->toArray();
+
+        $allRequestBookings = DB::table('request_bookings')
+        ->where('status', 1)
+        ->pluck('car_id')
+        ->toArray();
+
+     $mergedCarIds = array_merge($allBookings, $allRequestBookings);
+    $popularCarCounts = array_count_values($mergedCarIds);
+    arsort($popularCarCounts); // Sort descending
+
+    $popularCarIds = array_keys(array_slice($popularCarCounts, 0, 5, true));
+
+    // Step 4: Merge related + popular (no duplicates)
+    $combinedCarIds = array_unique(array_merge($recentCompleted, $popularCarIds));
+
+    // Step 4: Fetch car details
+    $relatedCars = CarDetails::whereIn('car_id', $combinedCarIds)
+        ->where('status', 0)
+        ->select([
+            'id','car_id','car_name','price_per_day','price_per_week','price_per_month',
+            'passengers','luggage','doors','car_type','feature','image'
+        ])
+        ->get()
+        ->map(function ($car) use ($favoriteCarIds) {
+            // Clean and explode feature string
+            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
+            $car->feature = explode(' ', $cleanedFeature);
+
+            // Liked status
+            $car->is_liked = in_array($car->car_id, $favoriteCarIds);
+            $car->like_message = $car->is_liked ? "You liked this car!" : "";
+
+            return $car;
+        });
+
+    // Step 5: Return JSON response
+    return response()->json([
+        'related_cars' => $relatedCars
+    ]);
+}
+
+public function show(Request $request)
+{
+    // $request->validate([
+    //     'car_id' => 'required|integer|exists:car_details,car_id',
+    // ]);
+
+    $userId = Auth::id(); // Get the logged-in user's ID
+
+    $favoriteCarIds = DB::table('favorites')
+    ->where('user_id', $userId)
+    ->pluck('car_id')
+    ->toArray();
+    
+    // Fetch the car details — optionally, you can filter using $userId if needed
+    $car = CarDetails::where('car_id', $request->car_id)
+        ->select([
+            'id',
+            'car_id',
+            'car_name',
+            'price_per_day',
+            'price_per_week',
+            'price_per_month',
+            'passengers',
+            'luggage',
+            'doors',
+            'car_type',
+            'feature',
+            'image',
+        ])
+        ->first();
+
+        if ($car) {
+            // Clean and convert feature string to array
+            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
+            $car->feature = explode(' ', $cleanedFeature);
+    
+            // Add favorite status
+            $car->is_liked = in_array($car->car_id, $favoriteCarIds);
+            $car->like_message = $car->is_liked ? "You liked this car!" : "";
+        }
+
+        return response()->json([
+            // 'status' => true,
+            // 'user_id' => $userId,
+            'data' => $car,
+        ]);
+    
+}
+public function filterCars(Request $request)
 {
     $userId = Auth::id(); // Get logged-in user ID
     // $user = User::find($userId); // Fetch user details

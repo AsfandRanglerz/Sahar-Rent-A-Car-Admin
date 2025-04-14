@@ -25,15 +25,15 @@ class CarRequest extends FormRequest
     {
         return [
             'car_name' => 'required|string|max:255',
-            'sanitized' => 'required|numeric',
-            'car_feature' => 'required|numeric',
+            'price_per_week' => 'required|numeric',
+            'price_per_month' => 'required|numeric',
             'passengers' => 'required|numeric|max:10',
             'luggage' => 'required|numeric|max:255',
             'doors' => 'required|numeric|max:10',
             'car_type' => 'required|string|max:255',
             // 'call_number' => 'required|numeric|digits:11',
             // 'whatsapp_number' => 'required|numeric|digits:11',
-            'pricing' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'price_per_day' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'image' => 'required|file|max:2048',
         ];
     }
@@ -45,13 +45,13 @@ class CarRequest extends FormRequest
     'car_name.string' => 'The car name must be a string.',
     'car_name.max' => 'The car name must not exceed 255 characters.',
     
-    'sanitized.required' => 'Price Per Day is required.',
-    'sanitized.numeric' => 'Price Per Day must be a number.',
-    'sanitized.max' => 'Price Per Day must not exceed 255.',
+    'price_per_week.required' => 'Price Per Day is required.',
+    'price_per_week.numeric' => 'Price Per Day must be a number.',
+    'price_per_week.max' => 'Price Per Day must not exceed 255.',
     
-    'car_feature.required' => 'Price Per Week is required.',
-    'car_feature.numeric' => 'Price Per Week must be a number.',
-    'car_feature.max' => 'Price Per Week value must not exceed 255.',
+    'price_per_month.required' => 'Price Per Week is required.',
+    'price_per_month.numeric' => 'Price Per Week must be a number.',
+    'price_per_month.max' => 'Price Per Week value must not exceed 255.',
     
     'passengers.required' => 'The number of Passengers is required.',
     'passengers.numeric' => 'The number of Passengers must be a number.',
@@ -77,8 +77,8 @@ class CarRequest extends FormRequest
     // 'whatsapp_number.numeric' => 'The WhatsApp number must be a valid number.',
     // 'whatsapp_number.min' => 'The WhatsApp number must be at least 15 digits.',
     
-    'pricing.required' => 'The Price Per Hour is required.',
-    'pricing.regex' => 'The Price Per Hour must be a valid number with up to two decimal places.',
+    'price_per_day.required' => 'The Price Per Hour is required.',
+    'price_per_day.regex' => 'The Price Per Hour must be a valid number with up to two decimal places.',
 
     'image.required' => 'The image is required.',
         ];

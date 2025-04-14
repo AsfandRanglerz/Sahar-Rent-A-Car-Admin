@@ -29,9 +29,9 @@
                                             <th>Car Id </th>
                                             <th>Car Name</th>
                                             {{-- <th>Availability</th> --}}
-                                            <th>Price Per Hour (AED)</th>
                                             <th>Price Per Day (AED)</th>
                                             <th>Price Per Week (AED)</th>
+                                            <th>Price Per Month (AED)</th>
                                             {{-- <th>Durations</th> --}}
                                             {{-- <th>Call Number</th>
                                             <th>Whatsapp Number</th> --}}
@@ -62,9 +62,9 @@
                                                     @endif
                                                 </td> --}}
                                                 {{-- <td>{{ $CarDetail->availability }}</td> --}}
-                                                <td>{{ $CarDetail->pricing }}</td>
-                                                <td>{{ $CarDetail->sanitized }}</td>
-                                                <td>{{ $CarDetail->car_feature }}</td>
+                                                <td>{{ $CarDetail->price_per_day }}</td>
+                                                <td>{{ $CarDetail->price_per_week }}</td>
+                                                <td>{{ $CarDetail->price_per_month }}</td>
                                                 {{-- <td>{{ $CarDetail->durations }}</td> --}}
                                                 {{-- <td>{{ $CarDetail->call_number }}</td>
                                                 <td>{{ $CarDetail->whatsapp_number }}</td> --}}
@@ -74,9 +74,9 @@
                                                 <td>{{ $CarDetail->car_type }}</td>
                                                  {{-- <td>{!! $CarDetail->car_play !!}</td> --}}
                                                  <td>
-                                                    @if (!empty($CarDetail->car_play))
+                                                    @if (!empty($CarDetail->feature))
                                                         @php
-                                                            $features = explode("\n", $CarDetail->car_play); // Assuming features are stored as a comma-separated string
+                                                            $features = explode("\n", $CarDetail->feature); // Assuming features are stored as a comma-separated string
                                                         @endphp
                                                         <ul>
                                                             @foreach ($features as $feature)
