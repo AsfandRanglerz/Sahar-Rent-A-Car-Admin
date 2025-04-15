@@ -85,7 +85,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    {{-- <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone Number</label>
                                             <input type="number" placeholder="Enter Phone Number" name="call_number"
@@ -95,7 +95,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>WhatsApp Number</label>
                                             <input type="number" placeholder="Enter WhatsApp Number" name="whatsapp_number"

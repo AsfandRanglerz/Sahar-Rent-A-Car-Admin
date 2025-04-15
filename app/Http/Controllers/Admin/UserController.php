@@ -62,20 +62,39 @@ class UserController extends Controller
         // $drivingLicense = $request->hasFile('driving_license') ? $request->file('driving_license')->store('documents', 'public') : null;
     
         // $document = User::firstOrCreate();
-        if ($request->hasFile('emirate_id')) {
-            $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
-            // $emirate_id = $path;
-        }
-        if ($request->hasFile('passport')) {
-            $passport = $request->file('passport')->store("documents/", 'public');
-            // $passport = $path;
-        }
-        if ($request->hasFile('driving_license')) {
-            $driving_license = $request->file('driving_license')->store("documents/", 'public');
-            // $document->driving_license = $path;
-        }
+        // if ($request->hasFile('emirate_id')) {
+        //     $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
+        //     // $emirate_id = $path;
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $passport = $request->file('passport')->store("documents/", 'public');
+        //     // $passport = $path;
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $driving_license = $request->file('driving_license')->store("documents/", 'public');
+        //     // $document->driving_license = $path;
+        // }
         // $document->save();
+        if ($request->hasFile('emirate_id')) {
+            $file = $request->file('emirate_id');
+            $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $emirate_id = 'public/admin/assets/images/users/' . $filename;
+        }
         
+        if ($request->hasFile('passport')) {
+            $file = $request->file('passport');
+            $filename = time() . '_passport_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $passport = 'public/admin/assets/images/users/' . $filename;
+        }
+        
+        if ($request->hasFile('driving_license')) {
+            $file = $request->file('driving_license');
+            $filename = time() . '_driving_license_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license = 'public/admin/assets/images/users/' . $filename;
+        }
 
         // Create the user
         $user = User::create([
@@ -151,19 +170,38 @@ class UserController extends Controller
         $passport = $user->passport;
         $driving_license = $user->driving_license;
 
+        // if ($request->hasFile('emirate_id')) {
+        //     $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
+        //     // $emirate_id = $path;
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $passport = $request->file('passport')->store("documents/", 'public');
+        //     // $passport = $path;
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $driving_license = $request->file('driving_license')->store("documents/", 'public');
+        //     // $document->driving_license = $path;
+        // }
         if ($request->hasFile('emirate_id')) {
-            $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
-            // $emirate_id = $path;
+            $file = $request->file('emirate_id');
+            $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $emirate_id = 'public/admin/assets/images/users/' . $filename;
         }
+        
         if ($request->hasFile('passport')) {
-            $passport = $request->file('passport')->store("documents/", 'public');
-            // $passport = $path;
+            $file = $request->file('passport');
+            $filename = time() . '_passport_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $passport = 'public/admin/assets/images/users/' . $filename;
         }
+        
         if ($request->hasFile('driving_license')) {
-            $driving_license = $request->file('driving_license')->store("documents/", 'public');
-            // $document->driving_license = $path;
+            $file = $request->file('driving_license');
+            $filename = time() . '_driving_license_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license = 'public/admin/assets/images/users/' . $filename;
         }
-
         // Update user details
         $user->update([
             'name' => $request->name,

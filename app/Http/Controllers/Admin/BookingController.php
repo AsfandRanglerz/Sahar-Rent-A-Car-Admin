@@ -17,7 +17,7 @@ class BookingController extends Controller
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
         $apiBookings = Booking::orderBy('status','ASC')->get();
-        $requestBookings = RequestBooking::with(['driver','booking', 'assign']) 
+        $requestBookings = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
         ->whereIn('status', [0, 1])
         ->orderBy('status','ASC')
         ->get();

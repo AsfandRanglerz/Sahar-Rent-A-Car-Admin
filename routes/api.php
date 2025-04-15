@@ -109,7 +109,7 @@ Route::get('/cars', [CarController::class, 'index'])->middleware('auth:sanctum')
 Route::middleware('auth:sanctum')->post('/price-details', [CarController::class, 'getCarPriceDetails']);
 Route::middleware('auth:sanctum')->post('/filter-cars', [CarController::class, 'filterCars']);
 Route::get('/relatedsearch', [CarController::class, 'relatedSearch'])->middleware('auth:sanctum');
-Route::post('/car-details', [CarController::class, 'show'])->middleware('auth:sanctum');
+Route::get('/car-details/{car_id}', [CarController::class, 'show'])->middleware('auth:sanctum');
 
 //#################  Notification ##############################
 Route::middleware('auth:sanctum')->get('/notifications', [NotificationController::class, 'getUserNotifications']);

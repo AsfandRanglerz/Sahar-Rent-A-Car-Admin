@@ -89,10 +89,18 @@
                                                 @else
                                                 <span>--</span>
                                                 @endif --}}
+                                                @if($booking instanceof \App\Models\AssignedRequest)
+                                                {{ $booking->driver ? $booking->pickupdriver->name : '--' }}
+                                            @else
                                                 {{ $booking->driver ? $booking->driver->name : '--' }}
+                                            @endif
                                                 </td>
                                                 <td>
+                                                    @if($booking instanceof \App\Models\AssignedRequest)
+                                                    {{ $booking->dropdriver ? $booking->dropoffdriver->name : '--' }}
+                                                @else
                                                     {{ $booking->dropdriver ? $booking->dropdriver->name : '--' }}
+                                                @endif
                                                 </td>
                                                 <td>{{ $booking->full_name }}</td>
                                                 <td>

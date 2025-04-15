@@ -33,8 +33,8 @@
                                             <th>Price Per Week (AED)</th>
                                             <th>Price Per Month (AED)</th>
                                             {{-- <th>Durations</th> --}}
-                                            {{-- <th>Call Number</th>
-                                            <th>Whatsapp Number</th> --}}
+                                            <th>Phone</th>
+                                            {{-- <th>Whatsapp Number</th> --}}
                                             <th>Passengers</th>
                                             <th>Luggage</th>
                                             <th>Doors</th>
@@ -66,8 +66,8 @@
                                                 <td>{{ $CarDetail->price_per_week }}</td>
                                                 <td>{{ $CarDetail->price_per_month }}</td>
                                                 {{-- <td>{{ $CarDetail->durations }}</td> --}}
-                                                {{-- <td>{{ $CarDetail->call_number }}</td>
-                                                <td>{{ $CarDetail->whatsapp_number }}</td> --}}
+                                                <td>{{ $CarDetail->call_number }}</td>
+                                                {{-- <td>{{ $CarDetail->whatsapp_number }}</td> --}}
                                                 <td>{{ $CarDetail->passengers }}</td>
                                                 <td>{{ $CarDetail->luggage }}</td>
                                                 <td>{{ $CarDetail->doors }}</td>

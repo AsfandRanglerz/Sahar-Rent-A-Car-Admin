@@ -36,7 +36,7 @@ class CarController extends Controller
     $cars = CarDetails::where('status', 0)
     ->whereNotIn('car_id', $bookedCarIds)
      // 'user_id' column exists in 'car_details'
-        ->select(['id','car_id', 'car_name', 'price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
+        ->select(['id','car_id', 'car_name','call_number', 'price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
         ->get()
         ->map(function ($car) use ($favoriteCarIds) {
             // Remove unwanted characters but keep spaces
@@ -136,7 +136,7 @@ class CarController extends Controller
     $relatedCars = CarDetails::whereIn('car_id', $combinedCarIds)
         ->where('status', 0)
         ->select([
-            'id','car_id','car_name','price_per_day','price_per_week','price_per_month',
+            'id','car_id','car_name','call_number','price_per_day','price_per_week','price_per_month',
             'passengers','luggage','doors','car_type','feature','image'
         ])
         ->get()
@@ -159,7 +159,7 @@ class CarController extends Controller
     ]);
 }
 
-public function show(Request $request)
+public function show(Request $request, $car_id)
 {
     // $request->validate([
     //     'car_id' => 'required|integer|exists:car_details,car_id',
@@ -173,11 +173,12 @@ public function show(Request $request)
     ->toArray();
     
     // Fetch the car details — optionally, you can filter using $userId if needed
-    $car = CarDetails::where('car_id', $request->car_id)
+    $car = CarDetails::where('car_id', $car_id)
         ->select([
             'id',
             'car_id',
             'car_name',
+            'call_number',
             'price_per_day',
             'price_per_week',
             'price_per_month',
@@ -218,7 +219,7 @@ public function filterCars(Request $request)
     // }
 
     $query = CarDetails::select([
-        'id', 'car_id', 'car_name', 'pricing', 'passengers', 'luggage', 
+        'id', 'car_id', 'car_name','call_number','pricing', 'passengers', 'luggage', 
         'doors', 'car_type', 'car_play', 'sanitized', 'car_feature', 'image'
     ]);
 

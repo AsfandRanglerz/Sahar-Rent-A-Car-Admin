@@ -95,7 +95,7 @@
                                             
                                             @if ($user->emirate_id)
                                                 <p>Current File: 
-                                                    <a href="{{ asset('storage/app/public/' . $user->emirate_id) }}" target="_blank">
+                                                    <a href="{{ asset( $user->emirate_id) }}" target="_blank">
                                                         View Emirate ID
                                                     </a>
                                                 </p>
@@ -114,7 +114,7 @@
                                             
                                             @if ($user->passport)
                                                 <p>Current File: 
-                                                    <a href="{{ asset('storage/app/public/' . $user->passport) }}" target="_blank">
+                                                    <a href="{{ asset( $user->passport) }}" target="_blank">
                                                         View Passport
                                                     </a>
                                                 </p>
@@ -133,7 +133,7 @@
                                             
                                             @if ($user->driving_license)
                                                 <p>Current File: 
-                                                    <a href="{{ asset('storage/app/public/' . $user->driving_license) }}" target="_blank">
+                                                    <a href="{{ asset( $user->driving_license) }}" target="_blank">
                                                         View Driving License
                                                     </a>
                                                 </p>

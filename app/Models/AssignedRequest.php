@@ -17,12 +17,12 @@ class AssignedRequest extends Model
         return $this->belongsTo(RequestBooking::class, 'request_booking_id', 'id');
     }
 
-    public function driver()
+    public function pickupdriver()
     {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');
     }
 
-    public function dropdriver()
+    public function dropoffdriver()
     {
         return $this->belongsTo(Driver::class, 'dropoff_driver_id');
     }

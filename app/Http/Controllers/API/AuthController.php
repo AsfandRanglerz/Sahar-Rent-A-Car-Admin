@@ -54,18 +54,39 @@ $emirate_id = null;
 $passport = null;
 $driving_license = null;
 
+// if ($request->hasFile('emirate_id')) {
+//     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
+//     // $document->emirate_id = "storage/app/public/{$path}";
+// }
+// if ($request->hasFile('passport')) {
+//     $passport = $request->file('passport')->store("documents/passport", 'public');
+//     // $document->passport = "storage/app/public/{$path}";
+// }
+// if ($request->hasFile('driving_license')) {
+//     $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
+//     // $document->driving_license = "storage/app/public/{$path}";
+// }
 if ($request->hasFile('emirate_id')) {
-    $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
-    // $document->emirate_id = "storage/app/public/{$path}";
+    $file = $request->file('emirate_id');
+    $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $emirate_id = 'public/admin/assets/images/users/' . $filename;
 }
+
 if ($request->hasFile('passport')) {
-    $passport = $request->file('passport')->store("documents/passport", 'public');
-    // $document->passport = "storage/app/public/{$path}";
+    $file = $request->file('passport');
+    $filename = time() . '_passport_' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $passport = 'public/admin/assets/images/users/' . $filename;
 }
+
 if ($request->hasFile('driving_license')) {
-    $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
-    // $document->driving_license = "storage/app/public/{$path}";
+    $file = $request->file('driving_license');
+    $filename = time() . '_driving_license_' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $driving_license = 'public/admin/assets/images/users/' . $filename;
 }
+
 $customer = User::create([
     'name' => $request->name,
     'email' => $request->email,

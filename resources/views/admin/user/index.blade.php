@@ -50,7 +50,7 @@
                                                 </td>
                                                 <td>{{ $user->phone }}</td>
                                                 {{-- <td>{{ $user->address }}</td> --}}
-                                                 <td>
+                                                 {{-- <td>
                                                     @if ($user->emirate_id||$user->passport||$user->driving_license)
                                                         <ul>
                                                             @if ($user->emirate_id)
@@ -90,59 +90,48 @@
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
-                                                </td> 
-                                                {{-- <td>
-                                                    @if ($user->emirate_id)
-                                                        <a href="{{ asset('storage/' . $user->emirate_id) }}" target="_blank">Emirate ID</a>
-                                                    @endif
-                                                    @if ($user->passport)
-                                                        | <a href="{{ asset('storage/' . $user->passport) }}" target="_blank">Passport</a>
-                                                    @endif
-                                                    @if ($user->driving_license)
-                                                        | <a href="{{ asset('storage/' . $user->driving_license) }}" target="_blank">Driving License</a>
-                                                    @endif
-                                                </td> --}}
-                                                {{-- <td>
-                                                    @if ($user->documents)
-                                                        @php
-                                                            $documents = [];
-                                                            if ($user->documents->emirate_id) {
-                                                                $documents[] = [
-                                                                    'name' => 'Emirate Id',
-                                                                    'url' => asset('public/storage/' . $user->documents->emirate_id),
-                                                                ];
-                                                            }
-                                                            if ($user->documents->passport) {
-                                                                $documents[] = [
-                                                                    'name' => 'Passport',
-                                                                    'url' => asset('public/storage/' . $user->documents->passport),
-                                                                ];
-                                                            }
-                                                            if ($user->documents->driving_license) {
-                                                                $documents[] = [
-                                                                    'name' => 'Driving License',
-                                                                    'url' => asset('public/storage/' . $user->documents->driving_license),
-                                                                ];
-                                                            }
-                                                        @endphp
-                                                
-                                                        @if (count($documents) === 1)
-                                                            <a href="{{ $documents[0]['url'] }}" target="_blank">{{ $documents[0]['name'] }}</a>
-                                                        @elseif (count($documents) > 1)
-                                                            <ul>
-                                                                @foreach ($documents as $document)
-                                                                    <li>
-                                                                        <a href="{{ $document['url'] }}" target="_blank">{{ $document['name'] }}</a>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @else
-                                                            <span>No documents uploaded</span>
-                                                        @endif
+                                                </td>  --}}
+                                                <td>
+                                                    @if ($user->emirate_id || $user->passport || $user->driving_license)
+                                                        <ul>
+                                                            @if ($user->emirate_id)
+                                                                <li>
+                                                                    <a href="{{ asset($user->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->passport)
+                                                                <li>
+                                                                    <a href="{{ asset($user->passport) }}" target="_blank">Passport</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->driving_license)
+                                                                <li>
+                                                                    <a href="{{ asset($user->driving_license) }}" target="_blank">Driving License</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    @elseif($user->documents)
+                                                        <ul>
+                                                            @if ($user->documents->emirate_id)
+                                                                <li>
+                                                                    <a href="{{ asset($user->documents->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->documents->passport)
+                                                                <li>
+                                                                    <a href="{{ asset($user->documents->passport) }}" target="_blank">Passport</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->documents->driving_license)
+                                                                <li>
+                                                                    <a href="{{ asset($user->documents->driving_license) }}" target="_blank">Driving License</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
                                                     @else
                                                         <span>No documents uploaded</span>
                                                     @endif
-                                                </td> --}}
+                                                </td>
                                                
                                                 <td>
                                                     @if($user->image)
