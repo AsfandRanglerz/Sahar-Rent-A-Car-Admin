@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Auth;
 class RequestBookingController extends Controller
 {
     public function pendingCounter(){
-        $orderCount = RequestBooking::where('status', 2)
-        ->orWhere('driver_id', null)
+        $orderCount = RequestBooking::
+        Where('driver_id', null)
         ->whereNotNull('pickup_address')
         ->count();
          return response()->json(['count' => $orderCount]);

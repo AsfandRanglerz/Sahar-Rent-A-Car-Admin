@@ -253,7 +253,21 @@
                                                                 data-target="#assignDriverModal">
                                                                     Assign Driver
                                                                 </a>
-
+                                                                @php
+                                                                // Check if assigned driver status is 0
+                                                                $assignedDriver = $requestbooking->assign->whereNotNull('driver_id')->first();
+                                                            @endphp
+                                                        
+                                                            @if($assignedDriver && $assignedDriver->status == 0)
+                                                                <form action="{{ route('requestbooking.markCompleted', $requestbooking->id) }}" 
+                                                                      method="POST" style="display:inline-block; margin-left: 10px;">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-success">
+                                                                        Mark as Completed
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                            
                                                            @endif
                                                             @if($isAdmin || ($permissions && $permissions->delete == 1))
                                                                 <form action="{{ route('requestbooking.destroy', $requestbooking->id) }}"

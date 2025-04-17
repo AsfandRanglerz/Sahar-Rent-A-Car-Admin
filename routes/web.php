@@ -243,6 +243,7 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         // Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');
     //     Route::post('/requestbooking/update-status',  'updateStatus')
     // ->name('requestbooking.update-status');
+    Route::post('/requestbooking/{id}/complete',  'markCompleted')->name('requestbooking.markCompleted');
 
         // Route::post('/requestbooking/{id}',  'update')->name('requestbooking.update');
         Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');

@@ -14,8 +14,10 @@ use App\Mail\ForgotOTPMail;
 use Illuminate\Support\Str;
 use App\Models\UserDocument;
 use Illuminate\Http\Request;
+use App\Mail\UserCredentials;
 use App\Models\DeleteRequest;
 use App\Models\DriverDocument;
+use App\Mail\DriverCredentials;
 use App\Models\DriverForgotOTP;
 use App\Models\driversregister;
 use App\Models\LicenseApproval;
@@ -106,7 +108,7 @@ if ($request->hasFile('image')) {
     $customer->update(['image' => $image]);
 }
 // $document->save();
-Mail::to($customer->email)->send(new CustomerRegisteredMail($customer->name, $customer->email, $customer->phone));
+Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone));
 return response()->json([
     // 'status' => true,
     'message' => 'User created successfully',
@@ -182,8 +184,8 @@ return response()->json([
                 // 'fcm_token' => 'nullable|string',
             ],
             [
-                'identifier.required' => 'The email is required.',
-                'password.required' => 'The password is required.',
+                'identifier.required' => 'The email is required',
+                'password.required' => 'The password is required',
                 // 'send_otp.required' => 'The otp field is required.',
             ]
         );
@@ -255,7 +257,7 @@ return response()->json([
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Logged In successfully',
+            'message' => 'Logged in successfully',
             // 'message' => 'OTP sent successfully.',
             'token' => $customer->createToken("API Token")->plainTextToken,
             // 'otp_token' => $otpToken, // Send OTP token to frontend 
@@ -285,12 +287,12 @@ return response()->json([
     $otpRecord = OTP::where('otp_token', $request->otp_token)->first();
 
     if (!$otpRecord) {
-        return response()->json(['message' => 'Invalid OTP token.'], 400);
+        return response()->json(['message' => 'Invalid OTP token'], 400);
     }
 
     // Check if OTP is valid
     if ($otpRecord->otp !== $request->otp) {
-        return response()->json(['message' => 'Invalid OTP.'], 401);
+        return response()->json(['message' => 'Invalid OTP'], 401);
     }
 
     // Check if OTP has expired
@@ -304,7 +306,7 @@ return response()->json([
                         ->first();
 
     if (!$customer) {
-        return response()->json(['message' => 'User not found.'], 404);
+        return response()->json(['message' => 'User not found'], 404);
     }
     Auth::login($customer);
 
@@ -353,7 +355,7 @@ return response()->json([
 
     return response()->json([
         // 'status' => true,
-        'message' => 'Logged Out successfully',
+        'message' => 'Logged out successfully',
     ], 200);
     }
 
@@ -369,7 +371,7 @@ public function forgotPassword(Request $request)
 
     if (!$user) {
         return response()->json([
-            'message' => 'This email does not exist.'
+            'message' => 'This email does not exist'
         ], 404);
     }
 
@@ -392,7 +394,7 @@ public function forgotPassword(Request $request)
     // }
 
     return response()->json([
-        'message' => 'OTP sent successfully.',
+        'message' => 'OTP sent successfully',
         'otp_token' => $otpToken, // Send OTP token to frontend
     ], 200);
 }
@@ -408,7 +410,7 @@ public function forgotverifyOtp(Request $request)
     $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
 
     if (!$otpRecord) {
-        return response()->json(['message' => 'Invalid OTP token.'], 400);
+        return response()->json(['message' => 'Invalid OTP token'], 400);
     }
 
     // Check if OTP is valid
@@ -427,7 +429,7 @@ public function forgotverifyOtp(Request $request)
                         ->first();
 
     if (!$user) {
-        return response()->json(['message' => 'User not found.'], 404);
+        return response()->json(['message' => 'User not found'], 404);
     }
 
     
@@ -451,7 +453,7 @@ public function resetPassword(Request $request)
     $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
 
     if (!$otpRecord) {
-        return response()->json(['message' => 'Invalid OTP token.'], 400);
+        return response()->json(['message' => 'Invalid OTP token'], 400);
     }
     // Fetch OTP record using otp_token
     $otpRecord = ForgotOTP::where('otp_token', $request->otp_token)->first();
@@ -469,7 +471,7 @@ public function resetPassword(Request $request)
 
     if (Hash::check($request->new_password, $user->password)) {
         return response()->json([
-            'message' => 'This password is already in use. Please choose a different password.',
+            'message' => 'This password is already in use. Please choose a different password',
         ], 422);
     }
     // Update password
@@ -479,7 +481,7 @@ public function resetPassword(Request $request)
     $otpRecord->delete();
 
     return response()->json([
-        'message' => 'Password reset successfully.',
+        'message' => 'Password reset successfully',
     ], 200);
 }
 
@@ -489,7 +491,7 @@ public function getProfile(Request $request)
 
         return response()->json([
             // 'status' => true,
-            'message' => 'User profile retrieved successfully.',
+            'message' => 'User profile retrieved successfully',
             'data' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
@@ -576,7 +578,7 @@ public function getProfile(Request $request)
     
         return response()->json([
             // 'status' => true,
-            'message' => 'Customer profile updated successfully.',
+            'message' => 'Customer profile updated successfully',
             'data' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
@@ -603,7 +605,7 @@ public function getProfile(Request $request)
     
         return response()->json([
             // 'status' => 'success',
-            'message' => 'Account deactivation request sent to admin.'
+            'message' => 'Account deactivation request sent to admin'
         ]);
     }
 
@@ -618,7 +620,7 @@ public function customerdeleteAccount(Request $request)
     ]);
 
     return response()->json([
-        'message' => 'Your account will be deleted within 14 days.',
+        'message' => 'Your account will be deleted within 14 days',
     ], 200);
 }
 
@@ -685,7 +687,7 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
-Mail::to($driver->email)->send(new CustomerRegisteredMail($driver->name, $driver->email, $driver->phone));     
+Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone));     
 
 return response()->json([
 // 'status' => true,
@@ -708,8 +710,8 @@ public function driverlogin(Request $request){
             // 'send_otp' => 'required',
         ],
         [
-            'identifier.required' => 'The email is required.',
-            'password.required' => 'The password is required.',
+            'identifier.required' => 'The email is required',
+            'password.required' => 'The password is required',
             // 'send_otp.required' => 'The otp field is required.',
         ]
     );
@@ -899,7 +901,7 @@ public function driverforgotPassword(Request $request)
 
     if (!$driver) {
         return response()->json([
-            'message' => 'This email does not exist.'
+            'message' => 'This email does not exist'
         ], 404);
     }
     // Generate a unique token
@@ -921,7 +923,7 @@ public function driverforgotPassword(Request $request)
     // }
 
     return response()->json([
-        'message' => 'OTP sent successfully.',
+        'message' => 'OTP sent successfully',
         'otp_token' => $otpToken, // Send OTP token to frontend
     ], 200);
 }
@@ -937,12 +939,12 @@ public function driverforgotverifyOtp(Request $request)
     $otpRecord = DriverForgotOTP::where('otp_token', $request->otp_token)->first();
 
     if (!$otpRecord) {
-        return response()->json(['message' => 'Invalid OTP token.'], 400);
+        return response()->json(['message' => 'Invalid OTP token'], 400);
     }
 
     // Check if OTP is valid
     if ($otpRecord->otp !== $request->otp) {
-        return response()->json(['message' => 'Invalid OTP.'], 401);
+        return response()->json(['message' => 'Invalid OTP'], 401);
     }
 
     // Check if OTP has expired
@@ -956,7 +958,7 @@ public function driverforgotverifyOtp(Request $request)
                         ->first();
 
     if (!$user) {
-        return response()->json(['message' => 'User not found.'], 404);
+        return response()->json(['message' => 'User not found'], 404);
     }
 
     
@@ -993,7 +995,7 @@ public function driverresetPassword(Request $request)
 
     if (Hash::check($request->new_password, $user->password)) {
         return response()->json([
-            'message' => 'This password is already in use. Please choose a different password.',
+            'message' => 'This password is already in use. Please choose a different password',
         ], 422);
     }
     // Update password
@@ -1003,7 +1005,7 @@ public function driverresetPassword(Request $request)
     $otpRecord->delete();
 
     return response()->json([
-        'message' => 'Password reset successfully.',
+        'message' => 'Password reset successfully',
     ], 200);
 }
 
@@ -1039,7 +1041,7 @@ return response()->json([
         ->value('license');
         return response()->json([
             // 'status' => true,
-            'message' => 'User profile retrieved successfully.',
+            'message' => 'User profile retrieved successfully',
             'data' => [
                 'name' => $driver->name,
                 'email' => $driver->email,
@@ -1082,7 +1084,7 @@ return response()->json([
     
         return response()->json([
             // 'status' => true,
-            'message' => 'driver profile updated successfully.',
+            'message' => 'Driver profile updated successfully',
             'data' => [
                 'name' => $driver->name,
                 'email' => $driver->email,
@@ -1139,18 +1141,45 @@ return response()->json([
         $passport = null;
         $driving_license = null;
         
+        // if ($request->hasFile('emirate_id')) {
+        //     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
+        //     $customer->emirate_id = "{$emirate_id}";
+        // }
+        // if ($request->hasFile('passport')) {
+        //     $passport = $request->file('passport')->store("documents/passport", 'public');
+        //     $customer->passport = "{$passport}";
+        // }
+        // if ($request->hasFile('driving_license')) {
+        //     $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
+        //     $customer->driving_license = "{$driving_license}";
+        // }
         if ($request->hasFile('emirate_id')) {
-            $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
-            $customer->emirate_id = "{$emirate_id}";
+            $file = $request->file('emirate_id');
+            $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $emirate_id = 'public/admin/assets/images/users/' . $filename;
+
+            $customer->emirate_id = $emirate_id;
         }
+        
         if ($request->hasFile('passport')) {
-            $passport = $request->file('passport')->store("documents/passport", 'public');
-            $customer->passport = "{$passport}";
+            $file = $request->file('passport');
+            $filename = time() . '_passport_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $passport = 'public/admin/assets/images/users/' . $filename;
+
+            $customer->passport = $passport;
         }
+        
         if ($request->hasFile('driving_license')) {
-            $driving_license = $request->file('driving_license')->store("documents/driving_license", 'public');
-            $customer->driving_license = "{$driving_license}";
+            $file = $request->file('driving_license');
+            $filename = time() . '_driving_license_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license = 'public/admin/assets/images/users/' . $filename;
+
+            $customer->driving_license = $driving_license;
         }
+        
         // Handle profile image upload
         // if ($request->hasFile('image')) {
         //     $file = $request->file('image');
@@ -1165,7 +1194,7 @@ return response()->json([
     
         return response()->json([
             // 'status' => true,
-            'message' => 'Customer document updated successfully.',
+            'message' => 'Customer document updated successfully',
             'data' => [
                 // 'name' => $customer->name,
                 // 'email' => $customer->email,

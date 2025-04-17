@@ -27,12 +27,19 @@ Thanks,
 
 # Welcome, {{ $name }}!
 
-Your account has been successfully created.
+<p>Your account has been successfully created.</p>
+
+<p>With your account, you’ll be able to:</p>
+<ul>
+    <li>View and accept assigned pickup and drop-off requests</li>
+    <li>Track and manage your booking schedule</li>
+    <li>Accept or reject new requests</li>
+</ul>
 
 ## Your Account Details:
 {{-- - **Name:** {{ $data['name'] }} --}}
 **Email:** {{ $email }}
-**Phone:** {{ $phone }}
+{{-- **Phone:** {{ $phone }} --}}
 **Password:** {{ $password }}
 
 @if ($type == 'sub_admins')
@@ -46,8 +53,9 @@ Your account has been successfully created.
 {{-- @component('mail::button', ['url' => url('/')])
 Visit Website
 @endcomponent --}}
+<p>Please keep this information safe and secure. Do not share your login credentials with anyone</p>
 
-If you have any questions, feel free to contact us.
+<p>If you have any questions or need assistance, feel free to contact our support team anytime.</p>
 
 Thanks,  
 **Sahar Rent a Driver**

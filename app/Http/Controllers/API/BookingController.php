@@ -131,7 +131,7 @@ if ($carDetails) {
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Booking created successfully and moved directly to Bookings.',
+            'message' => 'Booking created successfully.',
             'data' => $booking,
         ], 200);
     } 
@@ -204,7 +204,7 @@ if ($carDetails) {
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Booking request created successfully and sent for approval.',
+            'message' => 'Booking request created successfully.',
             'data' => $requestBooking,
         ], 200);
     }
@@ -468,7 +468,7 @@ foreach ($assignedDrivers as $assigned) {
 }
 
 // Now set the booking status based on both drivers' acceptance
-if ($pickupAccepted || $dropoffAccepted) {
+if ($pickupAccepted && $dropoffAccepted) {
     $requestBooking->status = 0; // Either driver accepted
     \Log::info("Both pickup and dropoff drivers accepted. Booking status set to 0.");
 } else {

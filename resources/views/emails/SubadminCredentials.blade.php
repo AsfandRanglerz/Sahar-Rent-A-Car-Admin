@@ -22,12 +22,21 @@ Thanks,
 
 # Welcome, {{ $userName }}!
 
-Your account has been successfully created by the Admin.
+<p>Your account has been successfully.</p>
+
+<p>With your account, you’ll be able to:</p>
+<ul>
+    <li>Manage and assign drivers to customer bookings</li>
+    <li>Oversee booking schedules and availability</li>
+    <li>Update car status and availability</li>
+    <li>Coordinate with drivers for pickup and drop-off arrangements</li>
+    <li>Monitor booking status and customer feedback</li>
+</ul>    
 
 ## Your Account Details:
 {{-- - **Name:** {{ $data['name'] }} --}}
 **Email:** {{ $email }}
-**Phone:** {{ $phone }}
+{{-- **Phone:** {{ $phone }} --}}
 **Password:** {{ $password }}
 
 @if ($type == 'sub_admins')
@@ -42,7 +51,9 @@ Your account has been successfully created by the Admin.
 Visit Website
 @endcomponent --}}
 
-If you have any questions, feel free to contact us.
+<p>Please keep this information safe and secure. Do not share your login credentials with anyone</p>
+
+<p>If you have any questions or need assistance, feel free to contact our support team anytime.</p>
 
 Thanks,  
 **Sahar Rent a Car**

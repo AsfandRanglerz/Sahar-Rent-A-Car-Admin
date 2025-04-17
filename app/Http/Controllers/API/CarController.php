@@ -32,19 +32,22 @@ class CarController extends Controller
         )
         ->unique()
         ->toArray();
-    // Fetch cars belonging to the authenticated user
-    $cars = CarDetails::where('status', 0)
-    ->whereNotIn('car_id', $bookedCarIds)
+        // Fetch cars belonging to the authenticated user
+        $cars = CarDetails::where('status', 0)
+        ->whereNotIn('car_id', $bookedCarIds)
+        ->orderBy('id', 'desc')
      // 'user_id' column exists in 'car_details'
         ->select(['id','car_id', 'car_name','call_number', 'price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
         ->get()
         ->map(function ($car) use ($favoriteCarIds) {
             // Remove unwanted characters but keep spaces
-            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
-            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature)); // Clean extra spaces
-
+            // $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            // $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature)); // Clean extra spaces
+            $car->feature = preg_split('/\r\n|\r|\n/', $car->feature);
+            // Clean extra spaces from each item
+            $car->feature = array_filter(array_map('trim', $car->feature));
             // Convert to array based on space separation
-            $car->feature = explode(' ', $cleanedFeature);
+            // $car->feature = explode(' ', $cleanedFeature);
 
             $car->is_liked = in_array($car->car_id, $favoriteCarIds, false) ? true : false;
 
@@ -52,7 +55,7 @@ class CarController extends Controller
             return $car;
         });
 
-    return response()->json([
+        return response()->json([
         'cars' => $cars
     ]);
     }
@@ -95,23 +98,35 @@ class CarController extends Controller
         ->toArray();
 
     // Step 2: Get completed bookings (status = 1) with timestamps
-    $bookings = DB::table('bookings')
-        ->where('status', 1)
-        ->select('car_id', 'updated_at')
-        ->get();
+    // $bookings = DB::table('bookings')
+    //     ->where('status', 1)
+    //     ->select('car_id', 'updated_at')
+    //     ->get();
 
-    $requestBookings = DB::table('request_bookings')
-        ->where('status', 1)
-        ->select('car_id', 'updated_at')
-        ->get();
+    // $requestBookings = DB::table('request_bookings')
+    //     ->where('status', 1)
+    //     ->select('car_id', 'updated_at')
+    //     ->get();
 
-    // Step 3: Merge and sort by most recent
-    $recentCompleted = $bookings->merge($requestBookings)
-        ->sortByDesc('updated_at')
-        ->pluck('car_id')
-        ->unique()
-        ->take(5)
-        ->toArray();
+    // // Step 3: Merge and sort by most recent
+    // $recentCompleted = $bookings->merge($requestBookings)
+    //     ->sortByDesc('updated_at')
+    //     ->pluck('car_id')
+    //     ->unique()
+    //     ->take(5)
+    //     ->toArray();
+
+      // Exclude cars that are booked, pending, or requested
+      $excludedCarIds = DB::table('bookings')
+      ->whereIn('status', [0, 2, 3])
+      ->pluck('car_id')
+      ->merge(
+          DB::table('request_bookings')
+              ->whereIn('status', [0, 2, 3])
+              ->pluck('car_id')
+      )
+      ->unique()
+      ->toArray();
 
         $allBookings = DB::table('bookings')
         ->where('status', 1)
@@ -123,29 +138,38 @@ class CarController extends Controller
         ->pluck('car_id')
         ->toArray();
 
-     $mergedCarIds = array_merge($allBookings, $allRequestBookings);
+    //  $mergedCarIds = array_merge($allBookings, $allRequestBookings);
+    // $popularCarCounts = array_count_values($mergedCarIds);
+    // arsort($popularCarCounts); // Sort descending
+
+    // $popularCarIds = array_keys(array_slice($popularCarCounts, 0, 5, true));
+
+    // // Step 4: Merge related + popular (no duplicates)
+    // $combinedCarIds = array_unique(array_merge($recentCompleted, $popularCarIds));
+    $mergedCarIds = array_merge($allBookings, $allRequestBookings);
     $popularCarCounts = array_count_values($mergedCarIds);
-    arsort($popularCarCounts); // Sort descending
+    arsort($popularCarCounts); // sort descending by booking count
 
-    $popularCarIds = array_keys(array_slice($popularCarCounts, 0, 5, true));
-
-    // Step 4: Merge related + popular (no duplicates)
-    $combinedCarIds = array_unique(array_merge($recentCompleted, $popularCarIds));
-
+    $sortedPopularCarIds = array_keys($popularCarCounts);
     // Step 4: Fetch car details
-    $relatedCars = CarDetails::whereIn('car_id', $combinedCarIds)
-        ->where('status', 0)
+    $relatedCars = CarDetails::where('status', 0)
+    ->whereIn('car_id', $sortedPopularCarIds)
+    ->whereNotIn('car_id', $excludedCarIds) // Exclude booked cars
+    ->orderByRaw("FIELD(car_id, '" . implode("','", $sortedPopularCarIds) . "')") 
         ->select([
             'id','car_id','car_name','call_number','price_per_day','price_per_week','price_per_month',
             'passengers','luggage','doors','car_type','feature','image'
         ])
+        ->take(5)
         ->get()
         ->map(function ($car) use ($favoriteCarIds) {
             // Clean and explode feature string
-            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
-            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
-            $car->feature = explode(' ', $cleanedFeature);
-
+            // $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            // $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
+            // $car->feature = explode(' ', $cleanedFeature);
+            $car->feature = preg_split('/\r\n|\r|\n/', $car->feature);
+            // Clean extra spaces from each item
+            $car->feature = array_filter(array_map('trim', $car->feature));
             // Liked status
             $car->is_liked = in_array($car->car_id, $favoriteCarIds);
             $car->like_message = $car->is_liked ? "You liked this car!" : "";
@@ -193,10 +217,12 @@ public function show(Request $request, $car_id)
 
         if ($car) {
             // Clean and convert feature string to array
-            $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
-            $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
-            $car->feature = explode(' ', $cleanedFeature);
-    
+            // $cleanedFeature = preg_replace('/[\r\n\t]+/', ' ', $car->feature);
+            // $cleanedFeature = trim(preg_replace('/\s+/', ' ', $cleanedFeature));
+            // $car->feature = explode(' ', $cleanedFeature);
+            $car->feature = preg_split('/\r\n|\r|\n/', $car->feature);
+            // Clean extra spaces from each item
+            $car->feature = array_filter(array_map('trim', $car->feature));
             // Add favorite status
             $car->is_liked = in_array($car->car_id, $favoriteCarIds);
             $car->like_message = $car->is_liked ? "You liked this car!" : "";
@@ -219,14 +245,14 @@ public function filterCars(Request $request)
     // }
 
     $query = CarDetails::select([
-        'id', 'car_id', 'car_name','call_number','pricing', 'passengers', 'luggage', 
-        'doors', 'car_type', 'car_play', 'sanitized', 'car_feature', 'image'
+        'id', 'car_id', 'car_name','call_number','price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 
+        'doors', 'car_type','feature', 'image'
     ]);
 
     // Get input from FormData
     $location = $request->input('location');
     // $vehicleType = $request->input('vehicle_type');
-    $vehicleType = $request->input('car_name');
+    $vehicleType = $request->input('car_type');
     $minPrice = $request->input('min_price');
     $maxPrice = $request->input('max_price');
 
@@ -243,7 +269,7 @@ public function filterCars(Request $request)
     }
 
     if (!empty($minPrice) && !empty($maxPrice)) {
-        $query->whereBetween('pricing', [(int)$minPrice, (int)$maxPrice]);
+        $query->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice]);
     }
 
     // Fetch filtered cars
