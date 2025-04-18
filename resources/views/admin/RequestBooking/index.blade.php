@@ -9,7 +9,20 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Pickup Requests</h4>
+                                    <form id="statusFilterForm" action="{{ route('requestbooking.index') }}" method="GET">
+                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                            <h4>Pickup Requests</h4>
+                                            <select name="status" id="statusFilter" class="form-control form-select w-auto rounded">
+                                                <option value="">All</option>
+                                                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    
+                                    
+                                    
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -21,7 +34,7 @@
                            {{--@if($isAdmin || ($permissions && $permissions->add == 1))  --}}
                                 {{-- <a class="btn btn-primary mb-3" href="{{ route('booking.create') }}">Create
                                 </a> --}}
-{{-- @endif --}}
+                            {{-- @endif --}}
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
@@ -46,10 +59,44 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($requestbookings as $requestbooking)
-                                            <tr>
+                                                    @php
+                                                        $assigned = $requestbooking->assign->whereNotNull('driver_id')->first();
+                                                        $driverCompleted = $requestbooking->assign
+                                                        ->whereNotNull('driver_id')
+                                                        ->contains(function ($assigned) {
+                                                            return $assigned->status == 1;
+                                                        });
+                                                    @endphp
+                                            <tr data-status="
+                                            @if($requestbooking->status == 2)
+                                                Pending
+                                            @elseif($requestbooking->status == 0)
+                                                Active
+                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
+                                                @if($assigned)
+                                                    @if($assigned->status == 0)
+                                                        Active
+                                                    @elseif($assigned->status == 1)
+                                                        Completed
+                                                    @elseif($assigned->status == 3)
+                                                        @if(is_null($assigned->driver_id))
+                                                            Pending
+                                                        @else
+                                                            Requested
+                                                        @endif
+                                                    @else
+                                                        Unknown
+                                                    @endif
+                                                @else
+                                                    Pending
+                                                @endif
+                                            @else
+                                                Unknown
+                                            @endif
+                                        ">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $requestbooking->car_id }}</td>
-                                                <td>
+                                                <td >
                                                     {{-- <div class="badge {{ $requestbooking->status == 0 ? 'badge-success' : 'badge-primary' }} badge-shadow">
                                                         {{ $requestbooking->status == 0 ? 'Active' : 'Completed' }}
                                                     </div> --}}
@@ -71,23 +118,24 @@
                                                     @endif
                                                     
                                                 @endif --}}
-                                                @php
-                                                    $assigned = $requestbooking->assign->whereNotNull('driver_id')->first();
-                                                @endphp
 
                                                         @if($requestbooking->status == 2)
                                                             {{-- Always show Pending from request_booking table --}}
                                                             <div class="badge badge-warning badge-shadow">Pending</div>
 
+                                                            @elseif($driverCompleted)
+                                                            {{-- Show Completed if any driver_id status is 1 --}}
+                                                            <div class="badge badge-primary badge-shadow">Completed</div>
+
                                                             @elseif($requestbooking->status == 0)
                                                             <div class="badge badge-success badge-shadow">Active</div>
                                                             
-                                                        @elseif($requestbooking->status == 3)
+                                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
                                                             @if($assigned)
                                                                 @if($assigned->status == 0)
                                                                     <div class="badge badge-success badge-shadow">Active</div>
-                                                                @elseif($assigned->status == 1)
-                                                                    <div class="badge badge-primary badge-shadow">Completed</div>
+                                                                {{-- @elseif($assigned->status == 1)
+                                                                    <div class="badge badge-primary badge-shadow">Completed</div> --}}
                                                                 @elseif($assigned->status == 3)
                                                                     @if(is_null($assigned->driver_id))
                                                                         <div class="badge badge-warning badge-shadow">Pending</div>
@@ -256,13 +304,14 @@
                                                                 @php
                                                                 // Check if assigned driver status is 0
                                                                 $assignedDriver = $requestbooking->assign->whereNotNull('driver_id')->first();
+                                                                // $isDisabled = !($assignedDriver && $assignedDriver->status == 0);
                                                             @endphp
                                                         
                                                             @if($assignedDriver && $assignedDriver->status == 0)
                                                                 <form action="{{ route('requestbooking.markCompleted', $requestbooking->id) }}" 
                                                                       method="POST" style="display:inline-block; margin-left: 10px;">
                                                                     @csrf
-                                                                    <button type="submit" class="btn btn-success">
+                                                                    <button type="submit" class="btn btn-success"> {{-- {{ $isDisabled ? 'disabled' : '' }} --}}
                                                                         Mark as Completed
                                                                     </button>
                                                                 </form>
@@ -468,6 +517,26 @@
     });
 });
 
+// document.getElementById('statusFilter').addEventListener('change', function() {
+//     let selectedStatus = this.value;
+//     document.querySelectorAll('#table-1 tbody tr').forEach(function(row) {
+//         let rowStatus = row.getAttribute('data-status').trim();
+
+//         if (selectedStatus === "" || rowStatus === selectedStatus) {
+//             row.style.display = "";
+//         } else {
+//             row.style.display = "none";
+//         }
+//     });
+// });
+
+
+</script>
+
+<script>
+    document.getElementById('statusFilter').addEventListener('change', function () {
+        document.getElementById('statusFilterForm').submit();
+    });
 </script>
 
 

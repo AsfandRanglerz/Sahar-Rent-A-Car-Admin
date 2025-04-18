@@ -111,7 +111,7 @@ if ($request->hasFile('image')) {
 Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone));
 return response()->json([
     // 'status' => true,
-    'message' => 'User created successfully',
+    'message' => 'Your account has been created successfully',
     'data' => ['customer'=>$customer,
                
               ],
@@ -691,7 +691,7 @@ Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->ema
 
 return response()->json([
 // 'status' => true,
-'message' => 'Driver created successfully',
+'message' => 'Your account has been created successfully',
 'data' => ['driver'=>$driver,
         //    'document'=>$document
           ],

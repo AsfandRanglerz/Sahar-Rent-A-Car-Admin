@@ -16,9 +16,10 @@ class BookingController extends Controller
     {
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
+        
         $apiBookings = Booking::orderBy('status','ASC')->get();
         $requestBookings = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
-        ->whereIn('status', [0, 1])
+        ->whereIn('status', [1])
         ->orderBy('status','ASC')
         ->get();
         $bookings = $apiBookings->merge($requestBookings);
@@ -29,7 +30,7 @@ class BookingController extends Controller
     public function activeBookingsCounter()
     {
         $activeBookings = Booking::where('status', 0)->count();
-        $activeRequestBookings = RequestBooking::where('status', 0)->count();
+        // $activeRequestBookings = RequestBooking::where('status', 0)->count();
 
         $totalActive = $activeBookings + $activeRequestBookings;
         return response()->json(['count' => $totalActive]);

@@ -22,27 +22,67 @@ class RequestBookingController extends Controller
          return response()->json(['count' => $orderCount]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         
-        // $bookings = Booking::latest()->get();
-        $requestbookings = RequestBooking::with('assign')
+        // // $bookings = Booking::latest()->get();
+        // $requestbookings = RequestBooking::with('assign')
+        // ->whereNotNull('pickup_address')
+        // ->whereIn('status', [0, 2, 3, 1])
+        // // ->orderBy('status','ASC')
+        // ->latest()
+        // ->get();
+        
+        // $drivers = Driver::all();
+        $status = $request->get('status');
+
+        // $query = RequestBooking::with('assign')->whereNotNull('pickup_address');
+        $query = RequestBooking::with('assign')
         ->whereNotNull('pickup_address')
-        ->whereIn('status', [0, 2, 3])
-        // ->orderBy('status','ASC')
-        ->latest()
-        ->get();
+        ->where('status', '!=', 1) // <-- Exclude bookings with status = 1
+        ->whereDoesntHave('assign', function ($q) {
+            $q->where('status', 1)
+              ->whereNotNull('driver_id')
+              ->whereNotNull('dropoff_driver_id');
+        });
+    
+        if ($status) {
+            $query = $query->where(function ($q) use ($status) {
+                if ($status === 'Completed') {
+                    $q->whereHas('assign', function ($subQ) {
+                        $subQ->where('status', 1);
+                    });
+                } elseif ($status === 'Active') {
+                    $q->where(function ($subQ) {
+                        $subQ->where('status', 0)
+                             ->orWhereHas('assign', function ($a) {
+                                 $a->where('status', 0);
+                             });
+                    });
+                } elseif ($status === 'Pending') {
+                    $q->where('status', 2)
+                      ->orWhere(function ($subQ) {
+                          $subQ->where('status', 3)->whereDoesntHave('assign')
+                              ->orWhereHas('assign', function ($a) {
+                                  $a->where('status', 3)->whereNull('driver_id');
+                              });
+                      });
+                } elseif ($status === 'Requested') {
+                    $q->whereHas('assign', function ($a) {
+                        $a->where('status', 3)->whereNotNull('driver_id');
+                    });
+                }
+            });
+        }
+    
+        $requestbookings = $query->whereIn('status', [0, 2, 3, 1])->latest()->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
     }
 
 public function edit(Request $request, $id)
 {
-        // $request->validate([
-        //     'request_booking_id' => 'required|exists:requestbookings,id',
-        //     'driver_id' => 'required|exists:drivers,id',
-        // ]);
-    
+     
 $requestBooking = RequestBooking::with('assign')->findOrFail($id);
 
 if ($request->self_pickup === 'No') {
@@ -55,25 +95,8 @@ if ($request->self_pickup === 'No') {
         return response()->json(['message' => 'Driver not found.'], 404);
     }
 
-    // Check if the driver is already assigned at the same time
-    // $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
-    // ->where('status', '!=', 1) // Exclude completed bookings
-    // ->where(function ($query) use ($requestBooking) {
-    //     $query->where('pickup_date', $requestBooking->pickup_date) // Same pickup date
-    //           ->where(function ($q) use ($requestBooking) {
-    //               $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
-    //                 ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
-    //                 ->orWhere(function ($subQuery) use ($requestBooking) {
-    //                     $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
-    //                              ->where('dropoff_time', '>', $requestBooking->dropoff_time);
-    //                 });
-    //           });
-    // })
-    // ->exists();
-    
    
-
-    
+     
     
 $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
     ->where('status', '!=', 1) // Exclude completed bookings
@@ -283,14 +306,14 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     // $driver->is_available = 0; //false
     // $driver->save();
 // **Check if booking is completed (status = 1), then free the driver**
-if ($requestBooking->status == 1) {
-    if ($requestBooking->driver_id) {
-        Driver::where('id', $requestBooking->driver_id)->update(['is_available' => 1]);
-    }
-    if ($requestBooking->dropoff_driver_id) {
-        Driver::where('id', $requestBooking->dropoff_driver_id)->update(['is_available' => 1]);
-    }
-}
+// if ($requestBooking->status == 1) {
+//     if ($requestBooking->driver_id) {
+//         Driver::where('id', $requestBooking->driver_id)->update(['is_available' => 1]);
+//     }
+//     if ($requestBooking->dropoff_driver_id) {
+//         Driver::where('id', $requestBooking->dropoff_driver_id)->update(['is_available' => 1]);
+//     }
+// }
     // if ($requestBooking->status == 1) {
     //     $driver->is_available = 1; // Mark driver as available true
     //     $driver->save();
@@ -345,6 +368,47 @@ if ($requestBooking->status == 1) {
     ]);
     
     }
+
+    public function markCompleted($id)
+{
+    $requestBooking = RequestBooking::with('assign')->findOrFail($id);
+
+    foreach ($requestBooking->assign as $assigned) {
+
+        // Update assigned_request status to 1 (completed) if driver exists
+        if ($assigned->driver_id ) {
+            $assigned->status = 1;
+            $assigned->save();
+
+            // Make driver available again
+            Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
+        }
+
+        // If there's a dropoff driver assigned, do the same
+        // if ($assigned->dropoff_driver_id ) {
+        //     $assigned->status = 1;
+        //     $assigned->save();
+
+        //     Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
+        // }
+    }
+    $allCompleted = true;
+    foreach ($requestBooking->assign as $assigned) {
+        if (($assigned->driver_id && $assigned->status != 1) || 
+            ($assigned->dropoff_driver_id && $assigned->status != 1)) {
+            $allCompleted = false;
+            break;
+        }
+    }
+
+    if ($allCompleted) {
+        $requestBooking->status = 1;
+        $requestBooking->save();
+    }
+    return redirect()->back()->with('success', 'Booking marked as completed successfully!');
+}
+
+
     // public function create(){
     //     return view('admin.booking.create');
     // }
@@ -385,7 +449,21 @@ if ($requestBooking->status == 1) {
 
 
 
-
+ // Check if the driver is already assigned at the same time
+    // $isDriverAssigned = RequestBooking::where('driver_id', $request->driver_id)
+    // ->where('status', '!=', 1) // Exclude completed bookings
+    // ->where(function ($query) use ($requestBooking) {
+    //     $query->where('pickup_date', $requestBooking->pickup_date) // Same pickup date
+    //           ->where(function ($q) use ($requestBooking) {
+    //               $q->whereBetween('pickup_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+    //                 ->orWhereBetween('dropoff_time', [$requestBooking->pickup_time, $requestBooking->dropoff_time])
+    //                 ->orWhere(function ($subQuery) use ($requestBooking) {
+    //                     $subQuery->where('pickup_time', '<', $requestBooking->pickup_time)
+    //                              ->where('dropoff_time', '>', $requestBooking->dropoff_time);
+    //                 });
+    //           });
+    // })
+    // ->exists();
 
 
 

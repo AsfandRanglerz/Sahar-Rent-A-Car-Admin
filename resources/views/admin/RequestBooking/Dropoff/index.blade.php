@@ -234,7 +234,17 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Dropoff Requests</h4>
+                                    <form id="statusFilter" action="{{ route('dropoffs.index') }}" method="GET">
+                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                            <h4>Dropoff Requests</h4>
+                                            <select name="status" id="statusdropoffFilter" class="form-control form-select w-auto rounded">
+                                                <option value="">All</option>
+                                                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
+                                            </select>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -271,6 +281,14 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($dropoffs as $dropoff)
+                                        @php
+                                        $assigned = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
+                                        $driverCompleted = $dropoff->assign
+                                            ->whereNotNull('dropoff_driver_id')
+                                            ->contains(function ($assigned) {
+                                                return $assigned->status == 1;
+                                            });
+                                    @endphp
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $dropoff->car_id }}</td>
@@ -296,23 +314,25 @@
                                                 @endif
                                                     
                                                 @endif --}}
-                                                @php
-                                                $assigned = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
-                                            @endphp
+                                               
                                             
                                             @if($dropoff->status == 2)
                                                 {{-- Always show Pending from request_booking table --}}
                                                 <div class="badge badge-warning badge-shadow">Pending</div>
-                                            
+
+                                                @elseif($driverCompleted)
+                                                {{-- Show Completed if any driver_id status is 1 --}}
+                                                <div class="badge badge-primary badge-shadow">Completed</div>
+
                                                 @elseif($dropoff->status == 0)
                                                 <div class="badge badge-success badge-shadow">Active</div>
 
-                                            @elseif($dropoff->status == 3)
+                                            @elseif($dropoff->status == 3 || $dropoff->status == 1)
                                                 @if($assigned)
                                                     @if($assigned->status == 0)
                                                         <div class="badge badge-success badge-shadow">Active</div>
-                                                    @elseif($assigned->status == 1)
-                                                        <div class="badge badge-primary badge-shadow">Completed</div>
+                                                    {{-- @elseif($assigned->status == 1)
+                                                        <div class="badge badge-primary badge-shadow">Completed</div> --}}
                                                     @elseif($assigned->status == 3)
                                                         @if(is_null($assigned->dropoff_driver_id))
                                                             <div class="badge badge-warning badge-shadow">Pending</div>
@@ -478,7 +498,21 @@
                                                                 data-target="#assignDriverModal">
                                                                     Assign Driver
                                                                 </a>
-
+                                                                @php
+                                                                // Check if assigned driver status is 0
+                                                                $assignedDriver = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
+                                                                // $isDisabled = !($assignedDriver && $assignedDriver->status == 0);
+                                                            @endphp
+                                                        
+                                                            @if($assignedDriver && $assignedDriver->status == 0)
+                                                                <form action="{{ route('dropoff.markCompleted', $dropoff->id) }}" 
+                                                                      method="POST" style="display:inline-block; margin-left: 10px;">
+                                                                    @csrf
+                                                                                    <button type="submit" class="btn btn-success">  {{--{{ $isDisabled ? 'disabled' : '' }} --}}
+                                                                        Mark as Completed
+                                                                    </button>
+                                                                </form>
+                                                            @endif
                                                            @endif
                                                             @if($isAdmin || ($permissions && $permissions->delete == 1))
                                                                 <form action="{{ route('dropoff.destroy', $dropoff->id) }}"
@@ -680,8 +714,24 @@
     });
 });
 
+document.getElementById('Filter').addEventListener('change', function() {
+    let selectedStatus = this.value;
+    document.querySelectorAll('#table-1 tbody tr').forEach(function(row) {
+        let rowStatus = row.getAttribute('data-status').trim();
+
+        if (selectedStatus === "" || rowStatus === selectedStatus) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
 </script>
 
-
+<script>
+    document.getElementById('statusdropoffFilter').addEventListener('change', function () {
+        document.getElementById('statusFilter').submit();
+    });
+</script>
 
 @endsection

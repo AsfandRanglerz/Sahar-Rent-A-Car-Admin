@@ -237,6 +237,7 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
     Route::controller(RequestBookingController::class)->middleware(['admin','adminOrSubadmin:requestbookings,view'])->group(function () {
         Route::get('/requestbooking',  'index')->name('requestbooking.index');
         Route::get('/requestbooking/count', 'pendingCounter')->name('pending.counter');
+        Route::get('/requestbookings/filter',  'filter')->name('requestbookings.filter');
 
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
@@ -265,7 +266,7 @@ Route::controller(RequestBookingController::class)->middleware(['admin','adminOr
     Route::controller(DropoffController::class)->middleware(['admin','adminOrSubadmin:requestbookings,view'])->group(function () {
         Route::get('/dropoffrequest',  'index')->name('dropoffs.index');
         Route::get('/dropoff/count',  'dropoffCounter')->name('dropoff.counter');
-
+        Route::post('/dropoff/{id}/complete',  'markDropoffCompleted')->name('dropoff.markCompleted');
         // Route::get('/booking-create',  'create')->name('booking.create');
         // Route::post('/booking-store',  'store')->name('booking.store');
         // Route::post('/requestbooking/{id}/edit',  'edit')->name('requestbooking.edit');

@@ -14,8 +14,8 @@
                                 <div class="text-end">
                                     <h5>Total Income: <span id="totalIncome">0.00</span></h5>
                                     <div class="d-flex mt-2 me-3">
-                                        <input  id="startDate" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;">
-                                        <input  id="endDate" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;">
+                                        <input  id="startDate" type="date" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;">
+                                        <input  id="endDate" type="date" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;">
                                         <button class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
                                         <button class="btn btn-primary" style="margin-bottom:15px;">Print</button>
                                     </div>
