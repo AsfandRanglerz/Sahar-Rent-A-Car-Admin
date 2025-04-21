@@ -12,19 +12,60 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
         
-        $apiBookings = Booking::orderBy('status','ASC')->get();
-        $requestBookings = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
-        ->whereIn('status', [1])
-        ->orderBy('status','ASC')
-        ->get();
+        $query = Booking::whereIn('status', [1,0]);
+        if ($request->filled('start_date')) {
+            $query->whereDate('pickup_date', '>=', $request->start_date);
+        }
+    
+        // Apply End Date Filter
+        if ($request->filled('end_date')) {
+            $query->whereDate('dropoff_date', '<=', $request->end_date);
+        }
+    
+        $apiBookings = $query->orderBy('status', 'ASC')->get();
+        $bookingIncome = $query->whereNotNull('price')->sum('price');
+        $requestQuery = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
+        ->whereIn('status', [1]);
+        if ($request->filled('start_date')) {
+            $requestQuery->whereDate('pickup_date', '=', $request->start_date);
+        }
+    
+        // Apply End Date Filter
+        if ($request->filled('end_date')) {
+            $requestQuery->whereDate('dropoff_date', '=', $request->end_date);
+        }
+        $requestBookings = $requestQuery->orderBy('status', 'ASC')->get();
         $bookings = $apiBookings->merge($requestBookings);
+        $bookings = $bookings->filter(function ($booking) use ($request) {
+            $pickupDate = $booking->pickup_date ?? null;
+            $dropoffDate = $booking->dropoff_date ?? null;
+        
+            if ($request->filled('start_date')) {
+                if (!$pickupDate || $pickupDate < $request->start_date) {
+                    return false;
+                }
+            }
+        
+            if ($request->filled('end_date')) {
+                if (!$dropoffDate || $dropoffDate > $request->end_date) {
+                    return false;
+                }
+            }
+        
+            return true;
+        });
         $bookings = $bookings->sortBy('status');
-        return view('admin.booking.index',compact('bookings'));
+        $requestQuery = RequestBooking::whereIn('status', [2,1]);
+        $requestIncome = $requestQuery->whereNotNull('price')->sum('price');
+
+$totalIncome = $bookingIncome + $requestIncome;
+        
+        return view('admin.booking.index',compact('bookings', 'totalIncome'));
     }
 
     public function activeBookingsCounter()
@@ -32,7 +73,7 @@ class BookingController extends Controller
         $activeBookings = Booking::where('status', 0)->count();
         // $activeRequestBookings = RequestBooking::where('status', 0)->count();
 
-        $totalActive = $activeBookings + $activeRequestBookings;
+        $totalActive = $activeBookings;
         return response()->json(['count' => $totalActive]);
     }
     

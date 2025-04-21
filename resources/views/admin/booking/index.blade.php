@@ -12,13 +12,15 @@
                                     <h4>Bookings</h4>
                                 </div>
                                 <div class="text-end">
-                                    <h5>Total Income: <span id="totalIncome">0.00</span></h5>
-                                    <div class="d-flex mt-2 me-3">
-                                        <input  id="startDate" type="date" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;">
-                                        <input  id="endDate" type="date" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;">
-                                        <button class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
-                                        <button class="btn btn-primary" style="margin-bottom:15px;">Print</button>
-                                    </div>
+                                    <h5>Total Income: <span id="totalIncome">{{ number_format($totalIncome, 2) }}</span></h5>
+                                    <form method="GET" action="{{ route('booking.index') }}" class="d-flex mt-2 me-3">
+                                        <input id="startDate" name="start_date" type="date" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;" value="{{ request('start_date') }}">
+                                        <input id="endDate" name="end_date" type="date" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;" value="{{ request('end_date') }}">
+                                        <button type="submit" class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
+                                        <a href="{{ route('booking.index') }}" class="btn btn-secondary" style="margin-right:5px; margin-bottom:15px;">Reset</a>
+                                        <button type="button" class="btn btn-primary" style="margin-bottom:15px;" onclick="printTable()">Print</button>
+                                    </form>
+                                    
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -30,7 +32,7 @@
                            {{--@if($isAdmin || ($permissions && $permissions->add == 1))  --}}
                                 {{-- <a class="btn btn-primary mb-3" href="{{ route('booking.create') }}">Create
                                 </a> --}}
-{{-- @endif --}}
+{{-- @endif --}}               <div id="printArea">
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
@@ -260,6 +262,7 @@
 
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
 
                         </div>
@@ -377,6 +380,37 @@
             });
         });
     </script>
+
+<script>
+    function printTable() {
+        var table = $('#table-1').DataTable();
+
+        // Destroy DataTable to remove responsive behavior
+        table.destroy();
+
+        // Reinitialize without responsive, disable paging and search
+        var newTable = $('#table-1').DataTable({
+            responsive: false,
+            paging: false,
+            searching: false
+        });
+
+        // Wait for reinitialization and redraw
+        setTimeout(function() {
+            var printContents = document.getElementById('table-1_wrapper').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+
+            // Reload to restore original DataTable behavior
+            location.reload();
+        }, 500); // give it half a second to fully redraw
+    }
+</script>
+
+
     
 
 @endsection

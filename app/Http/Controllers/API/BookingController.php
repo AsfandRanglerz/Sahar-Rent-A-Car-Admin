@@ -79,6 +79,7 @@ class BookingController extends Controller
             'driver_required' => $request->driver_required,
             'car_id' => $request->car_id,
             'status' => 0, // Directly set to Active
+            'price' => $request->price,
         ]);
         
 // Assign loyalty points if available for this car
@@ -152,6 +153,7 @@ if ($carDetails) {
             'dropoff_time' => $request->dropoff_time,
             'driver_required' => $request->driver_required,
             'car_id' => $request->car_id,
+            'price' => $request->price,
         ]);
         
 // Assign loyalty points if available for this car
