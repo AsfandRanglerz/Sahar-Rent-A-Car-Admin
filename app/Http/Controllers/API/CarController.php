@@ -265,7 +265,7 @@ public function filterCars(Request $request)
     //     $query->where('vehicle_type', $vehicleType);
     // }
     if (!empty($vehicleType)) {
-        $query->where('car_name', $vehicleType);
+        $query->where('car_type', $vehicleType);
     }
 
     if (!empty($minPrice) && !empty($maxPrice)) {
@@ -275,6 +275,11 @@ public function filterCars(Request $request)
     // Fetch filtered cars
     $cars = $query->get();
 
+    foreach ($cars as $car) {
+        $car->feature = preg_split('/\r\n|\r|\n/', $car->feature);
+        $car->feature = array_filter(array_map('trim', $car->feature));
+    }
+    
     return response()->json([
         'success' => true,
         // 'user_id' => $userId,

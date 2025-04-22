@@ -165,6 +165,8 @@ Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOr
         Route::get('/notification-edit/{id}',  'edit')->name('notification.edit');
         Route::post('/notification-update/{id}',  'update')->name('notification.update');
         Route::delete('/notification-destroy/{id}',  'destroy')->name('notification.destroy');
+        Route::delete('/notifications/delete-all',  'deleteAll')->name('notifications.deleteAll');
+
     });
 
     Route::controller(LicenseController::class)->middleware(['admin','adminOrSubadmin:license_approvals'])->group(function () {

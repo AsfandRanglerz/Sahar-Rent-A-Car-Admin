@@ -22,7 +22,7 @@ class NotificationHelper
         }
     }
 
-    public static function sendFcmNotification($fcmToken, $title, $body, $data = [])
+    public static function sendFcmNotification($fcmToken, $title, $description, $data = [])
     {
         try {
             $accessToken = self::getGoogleAccessToken();
@@ -31,7 +31,7 @@ class NotificationHelper
                     'token' => $fcmToken,
                     'notification' => [
                         'title' => $title,
-                        'body' => $body,
+                        'description' => $description,
                     ],
                     'data' => array_map('strval', $data),
                 ],

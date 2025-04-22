@@ -7,10 +7,12 @@ use App\Models\Driver;
 use App\Models\SubAdminLog;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationJob;
 use App\Models\AdminNotification;
 use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+
 
 class NotificationController extends Controller
 {
@@ -48,7 +50,7 @@ class NotificationController extends Controller
         // Iterate through the arrays and create notifications
         foreach ($customerNames as $customerName) {
             foreach ($drivers as $driver) {
-                Notification::create([
+                $notification = Notification::create([
                     'user_type' => $request->user_type,
                     'customer_id' => $customerName, // Save as a single value
                     'driver_id' => $driver, // Save as a single value
@@ -64,9 +66,11 @@ class NotificationController extends Controller
                         'title' => $request->title,
                         'body' => $request->description,
                     ];
-                    NotificationHelper::sendFcmNotification($customer->fcm_token, $request->title, $request->description, $data);
+                    // NotificationHelper::sendFcmNotification($customer->fcm_token, $request->title, $request->description, $data);
+                    dispatch(new NotificationJob($customer->fcm_token, $request->title, $request->description, $data));
                 }
     
+                
                 // Send FCM Notification to Driver
                 $driverUser = Driver::find($driver); // Fetch driver by ID
                 if ($driverUser && $driverUser->fcm_token) {
@@ -75,7 +79,9 @@ class NotificationController extends Controller
                         'title' => $request->title,
                         'body' => $request->description,
                     ];
-                    NotificationHelper::sendFcmNotification($driverUser->fcm_token, $request->title, $request->description, $data);
+                    // NotificationHelper::sendFcmNotification($driverUser->fcm_token, $request->title, $request->description, $data);
+                    dispatch(new NotificationJob($driverUser->fcm_token, $request->title, $request->description, $data));
+
                 }
             }
         }
@@ -143,4 +149,11 @@ class NotificationController extends Controller
         return redirect()->route('notification.index')->with(['message' => 'Notification Deleted Successfully']);
 
     }
+
+    public function deleteAll()
+{
+    AdminNotification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
+    return redirect()->route('notification.index')->with('message', 'All notifications have been deleted.');
+}
+
 }

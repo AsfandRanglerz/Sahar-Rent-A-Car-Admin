@@ -241,7 +241,7 @@
                    background-color: white; color: black; 
                    border-radius: 50%; width: 22px; height: 22px; 
                    display: flex; align-items: center; justify-content: center; 
-                   font-size: 12px; font-weight: bold;">
+                   font-size: 12px; font-weight: bold; margin-top: 0px;">
           0</span>
                       </span>
                         </a>

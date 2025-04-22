@@ -81,6 +81,12 @@ class BookingController extends Controller
             'status' => 0, // Directly set to Active
             'price' => $request->price,
         ]);
+        \DB::table('booking_totals')->insert([
+            'booking_id' => $booking->id,
+            'price' => $request->price,
+            'total_price' => $request->price,
+
+        ]);
         
 // Assign loyalty points if available for this car
 // $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
@@ -154,6 +160,12 @@ if ($carDetails) {
             'driver_required' => $request->driver_required,
             'car_id' => $request->car_id,
             'price' => $request->price,
+        ]);
+        \DB::table('booking_totals')->insert([
+            'request_booking_id' => $requestBooking->id,
+            'price' => $request->price,
+            'total_price' => $request->price,
+           
         ]);
         
 // Assign loyalty points if available for this car

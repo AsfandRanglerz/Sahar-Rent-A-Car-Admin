@@ -12,7 +12,7 @@
                                     <h4>Notifications</h4>
                                 </div>
                             </div>
-                            <div class="card-body table-striped table-bordered table-responsive">
+                            <div class="card-body  table-striped table-bordered table-responsive">
                                 @php
                                 $isAdmin = $isAdmin ?? false;
                                $permissions = $subadminPermissions['notifications'] ?? null;
@@ -22,7 +22,15 @@
                                 <a  class="btn btn-primary mb-3" data-toggle="modal" data-target="#createNotificationModal">
                                     Create
                                 </a>
-@endif
+                                <form action="{{ route('notifications.deleteAll') }}" method="POST" class="d-inline-block float-right"
+                      >
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger mb-3 delete_all">
+                        Delete All
+                    </button>
+                </form>
+                            @endif
                                 <table class="responsive table" id="table-1">
                                     <thead>
                                         <tr>
@@ -279,5 +287,21 @@
         $("#createBtn").prop("disabled", true);
     });
          });
+
+         $(document).on('click', '.delete_all', function(event) {
+        var form = $(this).closest("form");
+        event.preventDefault();
+        swal({
+            title: "Are you sure you want to delete all records?",
+            text: "This will permanently remove all records and cannot be undone.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                form.submit();
+            }
+        });
+    });
 </script>
 @endsection

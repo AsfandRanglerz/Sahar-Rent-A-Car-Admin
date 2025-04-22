@@ -11,11 +11,28 @@
                                 <div>
                                     <h4>Bookings</h4>
                                 </div>
+                                <style>
+                                    .date-wrapper {
+                                        position: relative;
+                                    }
+                                    .date-wrapper input:valid + .placeholder,
+                                    .date-wrapper input:focus + .placeholder {
+                                        display: none;
+                                    }
+                                    .date-wrapper .placeholder {
+                                        position: absolute;
+                                        top: 7px;
+                                        left: 10px;
+                                        color: #999;
+                                        pointer-events: none;
+                                    }
+                                </style>
+                                
                                 <div class="text-end">
                                     <h5>Total Income: <span id="totalIncome">{{ number_format($totalIncome, 2) }}</span></h5>
                                     <form method="GET" action="{{ route('booking.index') }}" class="d-flex mt-2 me-3">
-                                        <input id="startDate" name="start_date" type="date" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;" value="{{ request('start_date') }}">
-                                        <input id="endDate" name="end_date" type="date" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;" value="{{ request('end_date') }}">
+                                        <input id="startDate" name="start_date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;" value="{{ request('start_date') }}">
+                                        <input id="endDate" name="end_date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;" value="{{ request('end_date') }}">
                                         <button type="submit" class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
                                         <a href="{{ route('booking.index') }}" class="btn btn-secondary" style="margin-right:5px; margin-bottom:15px;">Reset</a>
                                         <button type="button" class="btn btn-primary" style="margin-bottom:15px;" onclick="printTable()">Print</button>

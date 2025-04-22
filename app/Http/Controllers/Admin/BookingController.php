@@ -28,7 +28,7 @@ class BookingController extends Controller
         }
     
         $apiBookings = $query->orderBy('status', 'ASC')->get();
-        $bookingIncome = $query->whereNotNull('price')->sum('price');
+        // $bookingIncome = $query->whereNotNull('price')->sum('price');
         $requestQuery = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
         ->whereIn('status', [1]);
         if ($request->filled('start_date')) {
@@ -60,10 +60,11 @@ class BookingController extends Controller
             return true;
         });
         $bookings = $bookings->sortBy('status');
-        $requestQuery = RequestBooking::whereIn('status', [2,1]);
-        $requestIncome = $requestQuery->whereNotNull('price')->sum('price');
+        // $requestQuery = RequestBooking::whereIn('status', [2,1]);
+        // $requestIncome = $requestQuery->whereNotNull('price')->sum('price');
 
-$totalIncome = $bookingIncome + $requestIncome;
+        $totalIncome = \DB::table('booking_totals')->sum('total_price');
+
         
         return view('admin.booking.index',compact('bookings', 'totalIncome'));
     }
