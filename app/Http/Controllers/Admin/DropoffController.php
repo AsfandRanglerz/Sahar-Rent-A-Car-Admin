@@ -80,12 +80,45 @@ class DropoffController extends Controller
     return response()->json(['count' => $dropoffCount]);
 }
 
+// public function markDropoffCompleted($id)
+// {
+//     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
+
+//     foreach ($requestBooking->assign as $assigned) {
+//         if ($assigned->dropoff_driver_id) {
+//             $assigned->status = 1;
+//             $assigned->save();
+
+//             // Make dropoff driver available again
+//             Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
+//         }
+//     }
+
+//     // Check if all assigned entries have both driver and dropoff marked completed
+//     $allCompleted = true;
+//     foreach ($requestBooking->assign as $assigned) {
+//         if (($assigned->driver_id && $assigned->status != 1) || 
+//             ($assigned->dropoff_driver_id && $assigned->status != 1)) {
+//             $allCompleted = false;
+//             break;
+//         }
+//     }
+
+//     if ($allCompleted) {
+//         $requestBooking->status = 1;
+//         $requestBooking->save();
+//     }
+
+//     return redirect()->back()->with('success', 'Dropoff marked as completed successfully!');
+// }
+
 public function markDropoffCompleted($id)
 {
     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
 
     foreach ($requestBooking->assign as $assigned) {
-        if ($assigned->dropoff_driver_id) {
+        // Only mark dropoff driver complete if assigned and not already completed
+        if (!is_null($assigned->dropoff_driver_id) && $assigned->status != 1) {
             $assigned->status = 1;
             $assigned->save();
 
@@ -94,24 +127,20 @@ public function markDropoffCompleted($id)
         }
     }
 
-    // Check if all assigned entries have both driver and dropoff marked completed
-    $allCompleted = true;
-    foreach ($requestBooking->assign as $assigned) {
-        if (($assigned->driver_id && $assigned->status != 1) || 
-            ($assigned->dropoff_driver_id && $assigned->status != 1)) {
-            $allCompleted = false;
-            break;
-        }
-    }
+    // Check if all assigned rows have both drivers (if assigned) marked completed
+    $allCompleted = $requestBooking->assign->every(function ($assigned) {
+        $pickupDone = is_null($assigned->driver_id) || $assigned->status == 1;
+        $dropoffDone = is_null($assigned->dropoff_driver_id) || $assigned->status == 1;
+        return $pickupDone && $dropoffDone;
+    });
 
     if ($allCompleted) {
-        $requestBooking->status = 1;
+        $requestBooking->status = 1; // Main booking completed
         $requestBooking->save();
     }
 
     return redirect()->back()->with('success', 'Dropoff marked as completed successfully!');
 }
-
 
     public function destroy($id)
     {

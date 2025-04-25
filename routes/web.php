@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\About;
+use App\Models\PrivacyPolicy;
+use App\Models\TermCondition;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
@@ -34,6 +37,20 @@ Route::get('/admin-forgot-password',[AdminController::class,'forgetPassword']);
 Route::post('/admin-reset-password-link',[AdminController::class,'adminResetPasswordLink']);
 Route::get('/change_password/{id}',[AdminController::class,'change_password']);
 Route::post('/admin-reset-password',[AdminController::class,'ResetPassword']);
+
+// webview links
+Route::get('/aboutUs', function () {
+    $data = About::first();
+    return view('aboutUs.aboutUs', compact('data'));
+}); 
+Route::get('/privacyPolicy', function () {
+    $data = PrivacyPolicy::first();
+    return view('privacyPolicy.privacy', compact('data'));
+});
+Route::get('/terms-conditions', function () {
+    $data = TermCondition::first();
+    return view('terms_and_condition.termsConditions', compact('data'));
+});
 
 Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOrSubadmin:privacy_policy','adminOrSubadmin:terms_conditions','adminOrSubadmin:about_us'])->group(function (){
     Route::get('dashboard',[AdminController::class,'getdashboard']);

@@ -282,14 +282,40 @@
                                     <tbody>
                                         @foreach ($dropoffs as $dropoff)
                                         @php
-                                        $assigned = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
-                                        $driverCompleted = $dropoff->assign
-                                            ->whereNotNull('dropoff_driver_id')
-                                            ->contains(function ($assigned) {
-                                                return $assigned->status == 1;
-                                            });
+                                        $assignedDrivers = $dropoff->assign->whereNotNull('dropoff_driver_id');
+                                        // $driverCompleted = $dropoff->assign
+                                        //     ->whereNotNull('dropoff_driver_id')
+                                        //     ->contains(function ($assigned) {
+                                        //         return $assigned->status == 1;
+                                        //     });
+                                        $statusLabel = 'Unknown';
+
+if ($dropoff->status == 2) {
+    $statusLabel = 'Pending';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 1;
+})) {
+    $statusLabel = 'Completed';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 0;
+})) {
+    $statusLabel = 'Active';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 3;
+})) {
+    $statusLabel = $assignedDrivers->contains(function ($driver) {
+        return is_null($driver->dropoff_driver_id);
+    }) ? 'Pending' : 'Requested';
+} elseif ($dropoff->status == 0) {
+    $statusLabel = 'Active';
+} elseif ($dropoff->status == 3 || $dropoff->status == 1) {
+    $statusLabel = 'Pending';
+}
+
                                     @endphp
-                                            <tr>
+                                            <tr data-status="
+                                            {{ $statusLabel }}
+                                        ">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $dropoff->car_id }}</td>
                                                 <td>
@@ -316,40 +342,18 @@
                                                 @endif --}}
                                                
                                             
-                                            @if($dropoff->status == 2)
-                                                {{-- Always show Pending from request_booking table --}}
+                                                @if($statusLabel == 'Pending')
                                                 <div class="badge badge-warning badge-shadow">Pending</div>
-
-                                                @elseif($driverCompleted)
-                                                {{-- Show Completed if any driver_id status is 1 --}}
-                                                <div class="badge badge-primary badge-shadow">Completed</div>
-
-                                                @elseif($dropoff->status == 0)
+                                            @elseif($statusLabel == 'Active')
                                                 <div class="badge badge-success badge-shadow">Active</div>
-
-                                            @elseif($dropoff->status == 3 || $dropoff->status == 1)
-                                                @if($assigned)
-                                                    @if($assigned->status == 0)
-                                                        <div class="badge badge-success badge-shadow">Active</div>
-                                                    {{-- @elseif($assigned->status == 1)
-                                                        <div class="badge badge-primary badge-shadow">Completed</div> --}}
-                                                    @elseif($assigned->status == 3)
-                                                        @if(is_null($assigned->dropoff_driver_id))
-                                                            <div class="badge badge-warning badge-shadow">Pending</div>
-                                                        @else
-                                                            <div class="badge badge-warning badge-shadow">Requested</div>
-                                                        @endif
-                                                    @else
-                                                        <div class="badge badge-secondary badge-shadow">Unknown</div>
-                                                    @endif
-                                                @else
-                                                    {{-- Status is 3 but assigned entry not yet made --}}
-                                                    <div class="badge badge-warning badge-shadow">Pending</div>
-                                                @endif
-                                            
+                                            @elseif($statusLabel == 'Completed')
+                                                <div class="badge badge-primary badge-shadow">Completed</div>
+                                            @elseif($statusLabel == 'Requested')
+                                                <div class="badge badge-warning badge-shadow">Requested</div>
                                             @else
                                                 <div class="badge badge-secondary badge-shadow">Unknown</div>
                                             @endif
+
                                             
                                                 </td>
                                                 <td>{{ $dropoff->full_name }}</td>
@@ -500,11 +504,16 @@
                                                                 </a>
                                                                 @php
                                                                 // Check if assigned driver status is 0
-                                                                $assignedDriver = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
+                                                                // $assignedDriver = $dropoff->assign->whereNotNull('dropoff_driver_id')->first();
+                                                                $hasActiveDriver = $dropoff->assign
+                                                                                    ->whereNotNull('dropoff_driver_id')
+                                                                                    ->where('status', 0)
+                                                                                    ->sortByDesc('id') // or 'created_at' if you prefer
+                                                                                    ->first();
                                                                 // $isDisabled = !($assignedDriver && $assignedDriver->status == 0);
                                                             @endphp
                                                         
-                                                            @if($assignedDriver && $assignedDriver->status == 0)
+                                                            @if($hasActiveDriver)
                                                                 <form action="{{ route('dropoff.markCompleted', $dropoff->id) }}" 
                                                                       method="POST" style="display:inline-block; margin-left: 10px;">
                                                                     @csrf
@@ -735,3 +744,45 @@ document.getElementById('Filter').addEventListener('change', function() {
 </script>
 
 @endsection
+
+
+
+
+
+
+
+
+{{-- @if($dropoff->status == 2) --}}
+{{-- Always show Pending from request_booking table --}}
+{{-- <div class="badge badge-warning badge-shadow">Pending</div>
+
+@elseif($driverCompleted) --}}
+{{-- Show Completed if any driver_id status is 1 --}}
+{{-- <div class="badge badge-primary badge-shadow">Completed</div>
+
+@elseif($dropoff->status == 0)
+<div class="badge badge-success badge-shadow">Active</div>
+
+@elseif($dropoff->status == 3 || $dropoff->status == 1)
+@if($assigned)
+    @if($assigned->status == 0)
+        <div class="badge badge-success badge-shadow">Active</div> --}}
+    {{-- @elseif($assigned->status == 1)
+        <div class="badge badge-primary badge-shadow">Completed</div> --}}
+    {{-- @elseif($assigned->status == 3)
+        @if(is_null($assigned->dropoff_driver_id))
+            <div class="badge badge-warning badge-shadow">Pending</div>
+        @else
+            <div class="badge badge-warning badge-shadow">Requested</div>
+        @endif
+    @else
+        <div class="badge badge-secondary badge-shadow">Unknown</div>
+    @endif
+@else --}}
+    {{-- Status is 3 but assigned entry not yet made --}}
+    {{-- <div class="badge badge-warning badge-shadow">Pending</div>
+@endif
+
+@else
+<div class="badge badge-secondary badge-shadow">Unknown</div>
+@endif --}}

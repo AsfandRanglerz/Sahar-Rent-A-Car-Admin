@@ -60,39 +60,40 @@
                                     <tbody>
                                         @foreach ($requestbookings as $requestbooking)
                                                     @php
-                                                        $assigned = $requestbooking->assign->whereNotNull('driver_id')->first();
-                                                        $driverCompleted = $requestbooking->assign
-                                                        ->whereNotNull('driver_id')
-                                                        ->contains(function ($assigned) {
-                                                            return $assigned->status == 1;
-                                                        });
+                                                        $assignedDrivers = $requestbooking->assign->whereNotNull('driver_id');
+                                                        // $driverCompleted = $requestbooking->assign
+                                                        // ->whereNotNull('driver_id')
+                                                        // ->contains(function ($assigned) {
+                                                        //     return $assigned->status == 1;
+                                                        // });
+                                                         // Determine booking status from all assigned drivers
+                                                         $statusLabel = 'Unknown';
+
+if ($requestbooking->status == 2) {
+    $statusLabel = 'Pending';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 1;
+})) {
+    $statusLabel = 'Completed';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 0;
+})) {
+    $statusLabel = 'Active';
+} elseif ($assignedDrivers->contains(function ($driver) {
+    return $driver->status == 3;
+})) {
+    $statusLabel = $assignedDrivers->contains(function ($driver) {
+        return is_null($driver->driver_id);
+    }) ? 'Pending' : 'Requested';
+} elseif ($requestbooking->status == 0) {
+    $statusLabel = 'Active';
+} elseif ($requestbooking->status == 3 || $requestbooking->status == 1) {
+    $statusLabel = 'Pending';
+}
+
                                                     @endphp
                                             <tr data-status="
-                                            @if($requestbooking->status == 2)
-                                                Pending
-                                            @elseif($requestbooking->status == 0)
-                                                Active
-                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
-                                                @if($assigned)
-                                                    @if($assigned->status == 0)
-                                                        Active
-                                                    @elseif($assigned->status == 1)
-                                                        Completed
-                                                    @elseif($assigned->status == 3)
-                                                        @if(is_null($assigned->driver_id))
-                                                            Pending
-                                                        @else
-                                                            Requested
-                                                        @endif
-                                                    @else
-                                                        Unknown
-                                                    @endif
-                                                @else
-                                                    Pending
-                                                @endif
-                                            @else
-                                                Unknown
-                                            @endif
+                                            {{ $statusLabel }}
                                         ">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $requestbooking->car_id }}</td>
@@ -119,40 +120,17 @@
                                                     
                                                 @endif --}}
 
-                                                        @if($requestbooking->status == 2)
-                                                            {{-- Always show Pending from request_booking table --}}
-                                                            <div class="badge badge-warning badge-shadow">Pending</div>
-
-                                                            @elseif($driverCompleted)
-                                                            {{-- Show Completed if any driver_id status is 1 --}}
-                                                            <div class="badge badge-primary badge-shadow">Completed</div>
-
-                                                            @elseif($requestbooking->status == 0)
-                                                            <div class="badge badge-success badge-shadow">Active</div>
-                                                            
-                                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
-                                                            @if($assigned)
-                                                                @if($assigned->status == 0)
-                                                                    <div class="badge badge-success badge-shadow">Active</div>
-                                                                {{-- @elseif($assigned->status == 1)
-                                                                    <div class="badge badge-primary badge-shadow">Completed</div> --}}
-                                                                @elseif($assigned->status == 3)
-                                                                    @if(is_null($assigned->driver_id))
-                                                                        <div class="badge badge-warning badge-shadow">Pending</div>
-                                                                    @else
-                                                                        <div class="badge badge-warning badge-shadow">Requested</div>
-                                                                    @endif
-                                                                @else
-                                                                    <div class="badge badge-secondary badge-shadow">Unknown</div>
-                                                                @endif
-                                                            @else
-                                                                {{-- Status is 3 but assigned entry not yet made --}}
-                                                                <div class="badge badge-warning badge-shadow">Pending</div>
-                                                            @endif
-
-                                                        @else
-                                                            <div class="badge badge-secondary badge-shadow">Unknown</div>
-                                                        @endif
+                                                @if($statusLabel == 'Pending')
+                                                <div class="badge badge-warning badge-shadow">Pending</div>
+                                            @elseif($statusLabel == 'Active')
+                                                <div class="badge badge-success badge-shadow">Active</div>
+                                            @elseif($statusLabel == 'Completed')
+                                                <div class="badge badge-primary badge-shadow">Completed</div>
+                                            @elseif($statusLabel == 'Requested')
+                                                <div class="badge badge-warning badge-shadow">Requested</div>
+                                            @else
+                                                <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                            @endif
 
                                                 </td>
                                                 <td>{{ $requestbooking->full_name }}</td>
@@ -303,11 +281,16 @@
                                                                 </a>
                                                                 @php
                                                                 // Check if assigned driver status is 0
-                                                                $assignedDriver = $requestbooking->assign->whereNotNull('driver_id')->first();
+                                                               // Check if any assigned driver (with driver_id) has status == 0
+                                                                $hasActiveDriver = $requestbooking->assign
+                                                                                    ->whereNotNull('driver_id')
+                                                                                    ->where('status', 0)
+                                                                                    ->sortByDesc('id') 
+                                                                                    ->first();
                                                                 // $isDisabled = !($assignedDriver && $assignedDriver->status == 0);
                                                             @endphp
                                                         
-                                                            @if($assignedDriver && $assignedDriver->status == 0)
+                                                            @if($hasActiveDriver)
                                                                 <form action="{{ route('requestbooking.markCompleted', $requestbooking->id) }}" 
                                                                       method="POST" style="display:inline-block; margin-left: 10px;">
                                                                     @csrf
@@ -542,3 +525,81 @@
 
 
 @endsection
+
+
+
+
+
+
+
+
+
+{{-- $assigned = $requestbooking->assign->whereNotNull('driver_id')->first();
+$driverCompleted = $requestbooking->assign
+->whereNotNull('driver_id')
+->contains(function ($assigned) {
+    return $assigned->status == 1;
+}); --}}
+
+
+{{-- @if($requestbooking->status == 2)
+                                                Pending
+                                            @elseif($requestbooking->status == 0)
+                                                Active
+                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
+                                                @if($assigned)
+                                                    @if($assigned->status == 0)
+                                                        Active
+                                                    @elseif($assigned->status == 1)
+                                                        Completed
+                                                    @elseif($assigned->status == 3)
+                                                        @if(is_null($assigned->driver_id))
+                                                            Pending
+                                                        @else
+                                                            Requested
+                                                        @endif
+                                                    @else
+                                                        Unknown
+                                                    @endif
+                                                @else
+                                                    Pending
+                                                @endif
+                                            @else
+                                                Unknown
+                                            @endif --}}
+
+
+                                            {{-- @if($requestbooking->status == 2) --}}
+                                            {{-- Always show Pending from request_booking table --}}
+                                            {{-- <div class="badge badge-warning badge-shadow">Pending</div>
+
+                                            @elseif($driverCompleted) --}}
+                                            {{-- Show Completed if any driver_id status is 1 --}}
+                                            {{-- <div class="badge badge-primary badge-shadow">Completed</div>
+
+                                            @elseif($requestbooking->status == 0)
+                                            <div class="badge badge-success badge-shadow">Active</div>
+                                            
+                                            @elseif($requestbooking->status == 3 || $requestbooking->status == 1)
+                                            @if($assigned)
+                                                @if($assigned->status == 0)
+                                                    <div class="badge badge-success badge-shadow">Active</div> --}}
+                                                {{-- @elseif($assigned->status == 1)
+                                                    <div class="badge badge-primary badge-shadow">Completed</div> --}}
+                                                {{-- @elseif($assigned->status == 3)
+                                                    @if(is_null($assigned->driver_id))
+                                                        <div class="badge badge-warning badge-shadow">Pending</div>
+                                                    @else
+                                                        <div class="badge badge-warning badge-shadow">Requested</div>
+                                                    @endif
+                                                @else
+                                                    <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                                @endif
+                                            @else --}}
+                                                {{-- Status is 3 but assigned entry not yet made --}}
+                                                {{-- <div class="badge badge-warning badge-shadow">Pending</div>
+                                            @endif
+
+                                        @else
+                                            <div class="badge badge-secondary badge-shadow">Unknown</div>
+                                        @endif                                            --}}

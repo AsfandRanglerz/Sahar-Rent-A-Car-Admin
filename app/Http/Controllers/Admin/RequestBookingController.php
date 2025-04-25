@@ -369,43 +369,97 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     
     }
 
-    public function markCompleted($id)
+//     public function markCompleted($id)
+// {
+//     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
+
+//     foreach ($requestBooking->assign as $assigned) {
+
+//         // Update assigned_request status to 1 (completed) if driver exists
+//         if ($assigned->driver_id ) {
+//             $assigned->status = 1;
+//             $assigned->save();
+
+//             // Make driver available again
+//             Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
+//         }
+
+//         // If there's a dropoff driver assigned, do the same
+//         // if ($assigned->dropoff_driver_id ) {
+//         //     $assigned->status = 1;
+//         //     $assigned->save();
+
+//         //     Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
+//         // }
+//     }
+//     $allCompleted = true;
+//     foreach ($requestBooking->assign as $assigned) {
+//         if (($assigned->driver_id && $assigned->status != 1) || 
+//             ($assigned->dropoff_driver_id && $assigned->status != 1)) {
+//             $allCompleted = false;
+//             break;
+//         }
+//     }
+
+//     if ($allCompleted) {
+//         $requestBooking->status = 1;
+//         $requestBooking->save();
+//     }
+//     return redirect()->back()->with('success', 'Booking marked as completed successfully!');
+// }
+
+public function markCompleted($id)
 {
     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
+    $selfPickup = $requestBooking->self_pickup;
+    $selfDropoff = $requestBooking->self_dropoff;
 
-    foreach ($requestBooking->assign as $assigned) {
+    // 1. Update only pickup driver status if both pickup and dropoff are required
+    if ($selfPickup === 'No' && $selfDropoff === 'No') {
+        foreach ($requestBooking->assign as $assigned) {
+            if (!is_null($assigned->driver_id) && $assigned->status != 1) {
+                $assigned->status = 1; // Mark as completed
+                $assigned->save();
 
-        // Update assigned_request status to 1 (completed) if driver exists
-        if ($assigned->driver_id ) {
-            $assigned->status = 1;
-            $assigned->save();
-
-            // Make driver available again
-            Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
+                Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
+            }
         }
 
-        // If there's a dropoff driver assigned, do the same
-        // if ($assigned->dropoff_driver_id ) {
-        //     $assigned->status = 1;
-        //     $assigned->save();
+        // 2. Now check if both pickup and dropoff are completed for all assigned entries
+        $bothCompleted = $requestBooking->assign->every(function ($assigned) {
+            return $assigned->status == 1 &&
+                !is_null($assigned->driver_id) &&
+                !is_null($assigned->dropoff_driver_id);
+        });
 
-        //     Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
-        // }
+        if ($bothCompleted) {
+            $requestBooking->status = 1; // mark main booking as completed
+            $requestBooking->save();
+        }
     }
-    $allCompleted = true;
-    foreach ($requestBooking->assign as $assigned) {
-        if (($assigned->driver_id && $assigned->status != 1) || 
-            ($assigned->dropoff_driver_id && $assigned->status != 1)) {
-            $allCompleted = false;
-            break;
+     elseif ($selfPickup === 'No' && $selfDropoff === 'Yes') {
+        $allPickupDone = true;
+
+        foreach ($requestBooking->assign as $assigned) {
+            if (!is_null($assigned->driver_id) && $assigned->status != 1) {
+                $assigned->status = 1;
+                $assigned->save();
+
+                Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
+            }
+
+            if (!is_null($assigned->driver_id) && $assigned->status != 1) {
+                $allPickupDone = false;
+            }
+        }
+
+        if ($allPickupDone) {
+            $requestBooking->status = 1;
+            $requestBooking->save();
         }
     }
 
-    if ($allCompleted) {
-        $requestBooking->status = 1;
-        $requestBooking->save();
-    }
-    return redirect()->back()->with('success', 'Booking marked as completed successfully!');
+    return redirect()->back()->with('success', 'Booking marked as completed successfully');
 }
 
 
