@@ -16,8 +16,8 @@
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>User Type</label>
-                                            <select name="user_type" id="is_dropdown" class="form-control">
-                                                <option disabled selected>Select value</option>
+                                            <select name="user_type" id="is_dropdown" class="form-control" required>
+                                                <option value="" selected>Select value</option>
                                                
                                                 <option value="Customer" {{ old('user_type') == 'Customer' ? 'selected' : '' }}>Customer</option>
                                                 <option value="Driver" {{ old('user_type') == 'Driver' ? 'selected' : '' }}>Driver</option>

@@ -54,11 +54,11 @@
                                                     {{-- <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
                                                         width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}"> --}}
                                                         @if ($LicenseApproval->image)
-                                                        <img src="{{ asset('storage/app/public/' . $LicenseApproval->image) }}" 
+                                                        <img src="{{ asset($LicenseApproval->image) }}" 
                                                             alt="License Image" height="45" width="50" class="image"
                                                             style="cursor: pointer;" data-toggle="modal" 
                                                             data-target="#imageModal" 
-                                                            data-image="{{ asset('storage/app/public/' . $LicenseApproval->image) }}">
+                                                            data-image="{{ asset($LicenseApproval->image) }}">
                                                     @else
                                                         N/A
                                                     @endif

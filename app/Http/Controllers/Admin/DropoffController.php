@@ -6,8 +6,11 @@ use Log;
 use Carbon\Carbon;
 use App\Models\Driver;
 use App\Models\Dropoff;
+use App\Models\CarDetails;
 use Illuminate\Http\Request;
+use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
+use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
 
 class DropoffController extends Controller
@@ -124,6 +127,11 @@ public function markDropoffCompleted($id)
 
             // Make dropoff driver available again
             Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
+
+            if (is_null($assigned->driver_id)) {
+                // Only Dropoff was assigned => assign loyalty points immediately
+                $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
+            }
         }
     }
 
@@ -137,10 +145,45 @@ public function markDropoffCompleted($id)
     if ($allCompleted) {
         $requestBooking->status = 1; // Main booking completed
         $requestBooking->save();
+
+        $hasPickup = $requestBooking->assign->contains(function ($assigned) {
+            return !is_null($assigned->driver_id);
+        });
+    
+        if ($hasPickup) {
+            // Pickup existed, now completed => assign loyalty points once here
+            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
+        }
     }
 
     return redirect()->back()->with('success', 'Dropoff marked as completed successfully!');
 }
+
+public function assignLoyaltyPoints($userId, $carId)
+{
+    // Fetch CarDetails using car_id
+    $carDetails = CarDetails::where('car_id', $carId)->first();
+
+    if ($carDetails) {
+        // Now, fetch LoyaltyPoints using CarDetails ID
+        $loyaltyPoints = LoyaltyPoints::where('car_id', $carDetails->id)->first();
+
+        if ($loyaltyPoints) {
+            // Find user's latest loyalty record
+            $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
+            $totalPoints = $userLoyalty ? $userLoyalty->total_points + $loyaltyPoints->on_car : $loyaltyPoints->on_car;
+
+            UserLoyaltyEarning::create([
+                'user_id'       => $userId,
+                'total_points'  => $totalPoints,
+                'earned_points' => $loyaltyPoints->on_car,
+                'car_name'      => $carDetails->car_name,
+                'discount'      => $loyaltyPoints->discount
+            ]);
+        }
+    }
+}
+
 
     public function destroy($id)
     {

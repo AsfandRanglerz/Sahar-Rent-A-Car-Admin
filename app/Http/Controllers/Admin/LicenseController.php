@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\SubAdminLog;
+use Log;
 
+use App\Models\Driver;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\LicenseApproval;
 use App\Http\Controllers\Controller;
@@ -12,7 +14,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\LicenseRequest;
 use App\Mail\LicenseApprovalActivated;
 use App\Mail\LicenseApprovalDeActivated;
-use App\Models\Driver;
 
 
 class LicenseController extends Controller
@@ -45,7 +46,7 @@ class LicenseController extends Controller
         $pendingCount = LicenseApproval::where('status', 2)
         ->whereNotNull('image')
         ->count();
-    
+        Log::info("Pending License Count: " . $pendingCount);
         return response()->json(['count' => $pendingCount]);
     }
     public function create()

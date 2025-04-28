@@ -687,7 +687,7 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
-Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone));     
+Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $request->password,'driver'));     
 
 return response()->json([
 // 'status' => true,
@@ -852,14 +852,19 @@ public function driverlogin(Request $request){
         $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
 
         if ($request->hasFile('license')) {
-            $licensePath = $request->file('license')->store("driverdocument/{$driver->id}/license", 'public');
-        }
+            $file = $request->file('license');
+            $filename = time() . '_license_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $licensePath = 'public/admin/assets/images/users/' . $filename;
+
+            $driver->license = $licensePath;
+        
         $document->license = $licensePath;
         $document->save();
 
-        LicenseApproval::where('driver_id', $request->driver_id)
+        LicenseApproval::where('driver_id', $driver->id)
         ->update(['image' => $licensePath]);
-        
+        }
 
         return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
     }

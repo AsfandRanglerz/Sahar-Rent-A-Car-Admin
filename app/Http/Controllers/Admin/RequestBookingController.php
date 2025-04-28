@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use Log;
 use App\Models\Driver;
 use App\Models\Booking;
+use App\Models\CarDetails;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
+use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -435,6 +438,9 @@ public function markCompleted($id)
         if ($bothCompleted) {
             $requestBooking->status = 1; // mark main booking as completed
             $requestBooking->save();
+
+            //Assign Loyalty Points when request booking is completed
+            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
         }
     }
      elseif ($selfPickup === 'No' && $selfDropoff === 'Yes') {
@@ -456,12 +462,36 @@ public function markCompleted($id)
         if ($allPickupDone) {
             $requestBooking->status = 1;
             $requestBooking->save();
+
+            // 🎯 Assign Loyalty Points when request booking is completed
+            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
         }
     }
 
     return redirect()->back()->with('success', 'Booking marked as completed successfully');
 }
 
+private function assignLoyaltyPoints($userId, $carId)
+{
+    $carDetails = CarDetails::where('car_id', $carId)->first();
+
+    if ($carDetails) {
+        $loyaltyPoints = LoyaltyPoints::where('car_id', $carDetails->id)->first();
+
+        if ($loyaltyPoints) {
+            $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
+            $totalPoints = $userLoyalty ? $userLoyalty->total_points + $loyaltyPoints->on_car : $loyaltyPoints->on_car;
+
+            UserLoyaltyEarning::create([
+                'user_id'       => $userId,
+                'total_points'  => $totalPoints,
+                'earned_points' => $loyaltyPoints->on_car,
+                'car_name'      => $carDetails->car_name,
+                'discount'      => $loyaltyPoints->discount,
+            ]);
+        }
+    }
+}
 
     // public function create(){
     //     return view('admin.booking.create');

@@ -29,8 +29,8 @@ public function getLoyaltyPoints()
     $currentTotalPoints = $userLoyalty ? $userLoyalty->total_points : 0;
 
     // Fetch all user bookings and request bookings
-    $bookings = Booking::with('car')->where('user_id', $userId)->get();
-    $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->get();
+    $bookings = Booking::with('car')->where('user_id', $userId)->where('status', 1)->get();
+    $requestBookings = RequestBooking::with('car')->where('user_id', $userId)->where('status', 1)->get();
 
     // Extract unique car IDs
     $carIds = $bookings->pluck('car.id')->merge($requestBookings->pluck('car.id'))->unique();

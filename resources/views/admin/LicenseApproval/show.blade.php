@@ -52,11 +52,11 @@
                                                 <td>
                                                     
                                                     @if ($licenseApprovals && $licenseApprovals->image)
-                                                        <img src="{{ asset('storage/app/public/' . $licenseApprovals->image) }}" 
+                                                        <img src="{{ asset($licenseApprovals->image) }}" 
                                                         alt="License Image" height="45" width="50" class="image"
                                                         style="cursor: pointer;" data-toggle="modal" 
                                                         data-target="#imageModal" 
-                                                        data-image="{{ asset('storage/app/public/' . $licenseApprovals->image) }}">
+                                                        data-image="{{ asset($licenseApprovals->image) }}">
                                                     @else
                                                         N/A
                                                     @endif

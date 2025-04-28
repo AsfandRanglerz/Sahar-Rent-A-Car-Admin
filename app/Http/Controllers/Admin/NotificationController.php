@@ -35,6 +35,13 @@ class NotificationController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate ([
+            'user_type' => 'required',
+            
+        ],
+        [
+            'user_type.required' => 'User Type is required',
+        ]);
         // return $request;
         $status = '0';
     

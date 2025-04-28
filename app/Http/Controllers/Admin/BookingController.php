@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use DB;
 use App\Models\Booking;
+use App\Models\CarDetails;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
+use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,12 +22,12 @@ class BookingController extends Controller
         
         $query = Booking::whereIn('status', [1,0]);
         if ($request->filled('start_date')) {
-            $query->whereDate('pickup_date', '>=', $request->start_date);
+            $query->whereDate('pickup_date', '=', $request->start_date);
         }
     
         // Apply End Date Filter
         if ($request->filled('end_date')) {
-            $query->whereDate('dropoff_date', '<=', $request->end_date);
+            $query->whereDate('dropoff_date', '=', $request->end_date);
         }
     
         $apiBookings = $query->orderBy('status', 'ASC')->get();
@@ -87,9 +90,9 @@ class BookingController extends Controller
     $booking = Booking::find($id);
 
     // If not found in Booking, check in RequestBooking
-    if (!$booking) {
-        $booking = RequestBooking::find($id);
-    }
+    // if (!$booking) {
+    //     $booking = RequestBooking::find($id);
+    // }
 
     // If still not found, return an error
     if (!$booking) {
@@ -99,12 +102,15 @@ class BookingController extends Controller
     // Update status to completed
     $booking->status = $request->status;
     $booking->save();
-
     if ($request->status == 1) {
-        DB::table('assigned_requests')
-            ->where('request_booking_id', $booking->id)
-            ->update(['status' => 1]);  // Mark as completed
+        // 🎯 Assign Loyalty Points when booking is marked completed
+        $this->assignLoyaltyPoints($booking->user_id, $booking->car_id);
     }
+    // if ($request->status == 1) {
+    //     DB::table('assigned_requests')
+    //         ->where('request_booking_id', $booking->id)
+    //         ->update(['status' => 1]);  // Mark as completed
+    // }
     
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
@@ -120,6 +126,27 @@ class BookingController extends Controller
     return response()->json(['success' => true, 'message' => 'Status updated successfully.']);
 }
 
+private function assignLoyaltyPoints($userId, $carId)
+{
+    $carDetails = CarDetails::where('car_id', $carId)->first();
+
+    if ($carDetails) {
+        $loyaltyPoints = LoyaltyPoints::where('car_id', $carDetails->id)->first();
+
+        if ($loyaltyPoints) {
+            $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
+            $totalPoints = $userLoyalty ? $userLoyalty->total_points + $loyaltyPoints->on_car : $loyaltyPoints->on_car;
+
+            UserLoyaltyEarning::create([
+                'user_id'       => $userId,
+                'total_points'  => $totalPoints,
+                'earned_points' => $loyaltyPoints->on_car,
+                'car_name'      => $carDetails->car_name,
+                'discount'      => $loyaltyPoints->discount,
+            ]);
+        }
+    }
+}
 
     public function store(Request $request)
     {
