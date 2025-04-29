@@ -328,7 +328,7 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     
         SubAdminLog::create([
             'subadmin_id' => $subadmin->id,
-            'section' => 'Ride Requests',
+            'section' => 'Request Bookings',
             'action' => 'Assign Driver',
             'message' => "SubAdmin: {$subadminName} assigned Driver with Car ID: {$requestBooking->car_id} ",
         ]);
@@ -428,6 +428,18 @@ public function markCompleted($id)
             }
         }
 
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+
+            SubAdminLog::create([
+                'subadmin_id' => $subadmin->id,
+                'section' => 'Bookings',
+                'action' => 'Update Pickup Status',
+                'message' => "SubAdmin: {$subadminName} updated pickup booking status.",
+            ]);
+        }
+
         // 2. Now check if both pickup and dropoff are completed for all assigned entries
         $bothCompleted = $requestBooking->assign->every(function ($assigned) {
             return $assigned->status == 1 &&
@@ -457,6 +469,18 @@ public function markCompleted($id)
             if (!is_null($assigned->driver_id) && $assigned->status != 1) {
                 $allPickupDone = false;
             }
+        }
+
+        if (Auth::guard('subadmin')->check()) {
+            $subadmin = Auth::guard('subadmin')->user();
+            $subadminName = $subadmin->name;
+
+            SubAdminLog::create([
+                'subadmin_id' => $subadmin->id,
+                'section' => 'Bookings',
+                'action' => 'Update Pickup Status',
+                'message' => "SubAdmin: {$subadminName} updated pickup booking status.",
+            ]);
         }
 
         if ($allPickupDone) {
@@ -513,7 +537,7 @@ private function assignLoyaltyPoints($userId, $carId)
         $subadminName = $subadmin->name;
         SubAdminLog::create([
             'subadmin_id' => Auth::guard('subadmin')->id(),
-            'section' => 'Ride Requests',
+            'section' => 'Request Bookings',
             'action' => 'Delete',
             'message' => "SubAdmin: {$subadminName} Deleted Request Booking: {$requestbookingName}",
         ]);

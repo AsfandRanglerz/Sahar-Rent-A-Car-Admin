@@ -41,4 +41,22 @@ class NotificationController extends Controller
             'notifications' => $formattedNotifications
         ]);
     }
+
+    public function showNotification($id){
+
+        $notification  = Notification::find($id);
+        if(!$notification){
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+        
+        if(!$notification->seenByUser){
+            $notification->seenByUser = true;
+            $notification->save();
+        }
+
+        return response()->json([
+           'data' => $notification
+            
+        ]);
+    }
 }

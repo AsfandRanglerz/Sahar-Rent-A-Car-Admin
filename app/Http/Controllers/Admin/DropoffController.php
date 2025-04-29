@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use App\Models\Driver;
 use App\Models\Dropoff;
 use App\Models\CarDetails;
+use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\UserLoyaltyEarning;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DropoffController extends Controller
 {
@@ -135,6 +137,18 @@ public function markDropoffCompleted($id)
         }
     }
 
+    // Log Subadmin activity if dropoff status was updated
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
+
+        SubAdminLog::create([
+            'subadmin_id' => $subadmin->id,
+            'section' => 'Bookings',
+            'action' => 'Update Dropoff Status',
+            'message' => "SubAdmin: {$subadminName} marked dropoff as completed.",
+        ]);
+    }
     // Check if all assigned rows have both drivers (if assigned) marked completed
     $allCompleted = $requestBooking->assign->every(function ($assigned) {
         $pickupDone = is_null($assigned->driver_id) || $assigned->status == 1;

@@ -113,6 +113,7 @@ Route::get('/car-details/{car_id}', [CarController::class, 'show'])->middleware(
 
 //#################  Notification ##############################
 Route::middleware('auth:sanctum')->get('/notifications', [NotificationController::class, 'getUserNotifications']);
+Route::get('/notification/{id}', [NotificationController::class, 'showNotification']);
 
 //#################  Favorite ##############################
 Route::middleware('auth:sanctum')->group(function () {
