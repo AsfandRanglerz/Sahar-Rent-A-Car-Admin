@@ -55,19 +55,20 @@ class DriverController extends Controller
             $image = null;
         }
 
-        $status = 1;
-
-// if($request->hasFile('license')){
-//             $license = $request->file('license')->store("driverdocumet/",'public');
-// }
-
+        
+        // if($request->hasFile('license')){
+            //             $license = $request->file('license')->store("driverdocumet/",'public');
+            // }
+            
+            $status = 1;
+            $availability = 1;
         // Create the user
         $driver = Driver::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'license' => $license,
-            'availability' => $request->availability,
+            'availability' => $availability,
             'password' => Hash::make($plainPassword),
             'image' => $image,
             'status' => $status,
@@ -97,11 +98,11 @@ class DriverController extends Controller
     {
 
         // Validate the incoming request
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     // 'email' => 'required|email|unique:drivers,email,' . $id,
-        //     'phone' => 'required|string|max:15',
-        // ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            // 'email' => 'required|email|unique:drivers,email,' . $id,
+            'phone' => 'required|string|max:11',
+        ]);
 
         $license = null;
 
@@ -132,7 +133,7 @@ class DriverController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'license' => $license,
-            'availability' => $request->availability,
+            // 'availability' => $availability,
             'image' => $image,
         ]);
         // if (Auth::guard('subadmin')->check()) {

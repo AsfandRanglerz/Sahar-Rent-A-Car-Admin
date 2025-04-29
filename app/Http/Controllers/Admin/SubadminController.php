@@ -40,6 +40,16 @@ class SubadminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:subadmins,email',
             'phone' => 'required|string|max:15',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ],
+        [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'email.unique' => 'Email already exists',
+            'phone.required' => 'Phone number is required',
+            'image.image' => 'The file must be an image',
+            'image.mimes' => 'The Image must be a file of type: jpeg, png, jpg, gif',
+            'image.max' => 'The Image may not be greater than 2MB',
         ]);
 
         // $generatedPassword = random_int(10000000, 99999999);
@@ -68,7 +78,7 @@ class SubadminController extends Controller
 
         ]);
 
-        Mail::to($user->email)->send(new SubadminCredentials($user->name, $user->email, $plainPassword));
+        Mail::to($user->email)->send(new SubadminCredentials($user->name ,$user->email ,$user->phone , $plainPassword));
 
         return redirect()->route('subadmin.index')->with(['message' => 'Subadmin Created Successfully']);
     }
@@ -89,6 +99,16 @@ class SubadminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:subadmins,email,' . $id,
             'phone' => 'required|string|max:15',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ],
+        [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'email.unique' => 'Email already exists',
+            'phone.required' => 'Phone number is required',
+            'image.image' => 'The file must be an image',
+            'image.mimes' => 'The Image must be a file of type: jpeg, png, jpg, gif',
+            'image.max' => 'The Image may not be greater than 2MB',
         ]);
 
         $subadmin = Subadmin::findOrFail($id);

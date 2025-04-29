@@ -54,7 +54,21 @@ class UserRequest extends FormRequest
     'password.required' => 'The Password is required.',
     'password.string' => 'The Password must be a string.',
     'password.min' => 'The Password must be at least 8 characters.',
-   
+
+    'emirate_id.required' => 'The Emirate ID is required.',
+    'emirate_id.file' => 'The Emirate ID must be a file.',
+    'emirate_id.mimes' => 'The Emirate ID must be a file of type: jpeg, png, jpg, gif, svg.',
+    'emirate_id.max' => 'The Emirate ID must not exceed 2048 kilobytes.',
+
+    'passport.required' => 'The Passport is required.',
+    'passport.file' => 'The Passport must be a file.',
+    'passport.mimes' => 'The Passport must be a file of type: jpeg, png, jpg, gif, svg.',
+    'passport.max' => 'The Passport must not exceed 2048 kilobytes.',
+
+    'driving_license.required' => 'The Driving License is required.',
+    'driving_license.file' => 'The Driving License must be a file.',
+    'driving_license.mimes' => 'The Driving License must be a file of type: jpeg, png, jpg, gif, svg.',
+    'driving_license.max' => 'The Driving License must not exceed 2048 kilobytes.',
         ];
     }
 }

@@ -1,14 +1,14 @@
-@slot('header')
+{{-- @slot('header')
 <span style="font-size: 18px; font-weight: bold;">{{ $headerTitle }}</span>
 @endslot
 
-@component('mail::message')
+@component('mail::message') --}}
 {{-- <p style="margin:0 auto 10px;width:145px">Store Manager Deactivated</p> --}}
 {{-- <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/images/logo.png') }}" alt="Logo" style="max-width: 100px;">
 </div> --}}
 
-<div style="text-align: center; margin-bottom: 20px;">
+{{-- <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="{{ config('app.name') }} Logo"
         style="height: 100px; margin-bottom: 20px;">
     <h3><strong>Welcome to <span>Sahar Rent a Driver</span></strong></h3>
@@ -18,8 +18,34 @@
 <p>We regret to inform you that your account has been deactivated by Saher Rent A Driver Team.
 <h1>Reason:</h1>
 <p>{{ $message['reason'] }}</p>
-Thanks,
-**Sahar Rent A Driver**
-{{-- {{ config('app.name') }} --}}
-@endcomponent
 
+Thanks,
+**Sahar Rent A Driver** --}}
+{{-- {{ config('app.name') }} --}}
+{{-- @endcomponent --}}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver Deactivation Email</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Sahar Rent a Driver Logo" style="height: 100px;">
+    </div>
+
+    <h2>Hi {{ $message['name'] }},</h2>
+
+    <p style="font-size: 16px;">
+        We regret to inform you that your account has been <strong>deactivated</strong> by the <strong>Sahar Rent A Driver</strong> team.
+    </p>
+
+    <h3>Reason:</h3>
+    <p>{{ $message['reason'] }}</p>
+
+    <p>
+        Thanks,<br>
+        Sahar Rent A Driver
+    </p>
+</body>
+</html>

@@ -14,6 +14,7 @@
 <p>We regret to inform you that your account has been rejected by the Saher Rent A Car team.
 <h1>Reason:</h1>
 <p>{{ $message['reason'] }}</p>
+
 Thanks,
 **Sahar Rent A Car**
 {{-- {{ config('app.name') }} --}}

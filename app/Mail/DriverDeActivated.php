@@ -21,7 +21,7 @@ class DriverDeActivated extends Mailable
      public $type;
      public $headerTitle;
  
-    public function __construct($message, $type)
+    public function __construct($message, $type = null)
     {
         $this->message = $message;
         $this->type = $type;

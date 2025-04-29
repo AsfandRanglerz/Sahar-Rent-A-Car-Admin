@@ -14,6 +14,7 @@ class SubadminCredentials extends Mailable
     public $userName;
     public $email;
     public $password;
+    public $phone;
     public $type;
 
     /**
@@ -21,11 +22,12 @@ class SubadminCredentials extends Mailable
      *
      * @return void
      */
-    public function __construct($userName, $email, $password, $type = null)
+    public function __construct($userName, $email, $phone, $password, $type = null)
     {
         $this->userName = $userName;
         $this->email = $email;
         $this->password = $password;
+        $this->phone = $phone;
         $this->type = $type;
     }
 

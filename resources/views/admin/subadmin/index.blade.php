@@ -689,7 +689,7 @@
                   </div>
                   <input type="hidden" id="status" name="status" value="0">
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                       <button type="submit" class="btn btn-primary">Deactivate</button>
                   </div>
               </form>
@@ -714,7 +714,7 @@
 
 
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                       <button type="submit" class="btn btn-primary">Activate</button>
                   </div>
               </form>

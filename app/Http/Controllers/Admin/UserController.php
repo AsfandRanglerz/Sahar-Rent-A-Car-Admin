@@ -146,6 +146,20 @@ class UserController extends Controller
             'emirate_id' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'passport' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'driving_license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ],[
+            
+            'emirate_id.required' => 'Emirate ID is required',
+            'emirate_id.file' => 'Emirate ID must be a file',
+            'emirate_id.mimes' => 'Emirate ID must be a file of type: jpeg, png, jpg, gif, svg',
+            'emirate_id.max' => 'Emirate ID must not exceed 2MB',
+            'passport.required' => 'Passport is required',
+            'passport.file' => 'Passport must be a file',
+            'passport.mimes' => 'Passport must be a file of type: jpeg, png, jpg, gif, svg',
+            'passport.max' => 'Passport must not exceed 2MB',
+            'driving_license.required' => 'Driving License is required',
+            'driving_license.file' => 'Driving License must be a file',
+            'driving_license.mimes' => 'Driving License must be a file of type: jpeg, png, jpg, gif, svg',
+            'driving_license.max' => 'Driving License must not exceed 2MB',
         ]);
         // $validatedData = $request->validated();
 
@@ -207,7 +221,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'document' => $request->document,
+            // 'document' => $request->document,
             'emirate_id' => $emirate_id,
             'passport' => $passport,
             'driving_license' => $driving_license,

@@ -26,7 +26,7 @@
         
         // Determine user and profile image
         $user = $admin ?? $subadmin;
-        $image = $user && $user->image ? asset($user->image) : asset('public/admin/assets/img/user.png');
+        $image = $user && $user->image ? asset($user->image) : asset('public/admin/assets/img/avator.png');
         ?>
         <li class="dropdown">
             <a href="#" class="nav-link" data-toggle="dropdown">

@@ -52,25 +52,32 @@ Route::get('/terms-conditions', function () {
     return view('terms_and_condition.termsConditions', compact('data'));
 });
 
-Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard','adminOrSubadmin:privacy_policy','adminOrSubadmin:terms_conditions','adminOrSubadmin:about_us'])->group(function (){
+Route::prefix('admin')->middleware(['admin','adminOrSubadmin:dashboard'])->group(function (){
     Route::get('dashboard',[AdminController::class,'getdashboard']);
     Route::get('profile',[AdminController::class,'getProfile']);
     Route::post('update-profile',[AdminController::class,'update_profile']);
-    Route::get('Privacy-policy',[SecurityController::class,'PrivacyPolicy']);
-    Route::get('privacy-policy-edit',[SecurityController::class,'PrivacyPolicyEdit']);
-    Route::post('privacy-policy-update',[SecurityController::class,'PrivacyPolicyUpdate']);
-    Route::get('term-condition',[SecurityController::class,'TermCondition']);
-    Route::get('term-condition-edit',[SecurityController::class,'TermConditionEdit']);
-    Route::post('term-condition-update',[SecurityController::class,'TermConditionUpdate']);
-    Route::get('About-us',[SecurityController::class,'AboutUs']);
-    Route::get('About-us-edit',[SecurityController::class,'AboutUsEdit']);
-    Route::post('About-us-update',[SecurityController::class,'AboutUsUpdate']);
     Route::get('logout',[AdminController::class,'logout']);
     Route::get('/adminnotifications', [AdminController::class, 'getNotifications'])->name('admin.notifications');
     Route::post('/adminnotifications/mark-read', [AdminController::class, 'markNotificationsRead'])->name('admin.notifications.mark-read');
     Route::post('/adminnotifications/mark-all-read', [AdminController::class, 'markAllNotificationsRead'])
     ->name('admin.notifications.mark-all-read');
 
+    Route::controller(SecurityController::class)->middleware(['admin','adminOrSubadmin:privacy_policy'])->group(function () {
+        Route::get('Privacy-policy','PrivacyPolicy');
+    Route::get('privacy-policy-edit','PrivacyPolicyEdit');
+    Route::post('privacy-policy-update','PrivacyPolicyUpdate');
+        });
+
+    Route::controller(SecurityController::class)->middleware(['admin','adminOrSubadmin:terms_conditions'])->group(function () {
+        Route::get('term-condition','TermCondition');
+        Route::get('term-condition-edit','TermConditionEdit');
+        Route::post('term-condition-update','TermConditionUpdate');
+            });
+    Route::controller(SecurityController::class)->middleware(['admin','adminOrSubadmin:about_us'])->group(function () {
+        Route::get('About-us','AboutUs');
+        Route::get('About-us-edit','AboutUsEdit');
+        Route::post('About-us-update','AboutUsUpdate');
+                    });
  // ############ User #################
  Route::controller(UserController::class)->middleware(['admin','adminOrSubadmin:customers,view'])->group(function () {
     Route::get('/user',  'index')->name('user.index');

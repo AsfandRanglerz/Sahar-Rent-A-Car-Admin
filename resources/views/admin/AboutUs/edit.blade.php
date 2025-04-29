@@ -5,6 +5,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-body">
+                <a class="btn btn-primary mb-3" href="{{ url('/admin/About-us') }}">Back</a>
                 <form action="{{url('admin/About-us-update')}}" method="POST">
                     @csrf
                     <div class="row">

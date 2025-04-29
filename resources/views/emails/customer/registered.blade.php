@@ -38,9 +38,11 @@ Thanks,
 Your account has been successfully created.
 
 ## Your Account Details:
-- **Name:** {{ $name }}
-- **Email:** {{ $email }}
-- **Phone:** {{ $phone }}
+<ul>
+<li>- **Name:** {{ $name }}</li>
+<li>- **Email:** {{ $email }}</li>
+<li>- **Phone:** {{ $phone }}</li>
+</ul>
 {{-- - **Password:** {{ $password }} --}}
 
 @if ($type == 'sub_admins')

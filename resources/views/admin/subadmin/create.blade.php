@@ -58,9 +58,10 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Image</label>
+                                            <label>Image(Optional)</label>
                                             <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
                                                 class="form-control">
+                                                <small text-muted>(Image should be of size 2MB)</small>
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
