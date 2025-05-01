@@ -80,6 +80,9 @@ class BookingController extends Controller
             'car_id' => $request->car_id,
             'status' => 0, // Directly set to Active
             'price' => $request->price,
+            'price_per_week' => $request->price_per_week,
+            'price_per_day' => $request->price_per_day,
+            'price_per_month' => $request->price_per_month,
         ]);
         \DB::table('booking_totals')->insert([
             'booking_id' => $booking->id,
@@ -160,6 +163,9 @@ class BookingController extends Controller
             'driver_required' => $request->driver_required,
             'car_id' => $request->car_id,
             'price' => $request->price,
+            'price_per_week' => $request->price_per_week,
+            'price_per_day' => $request->price_per_day,
+            'price_per_month' => $request->price_per_month,
         ]);
         \DB::table('booking_totals')->insert([
             'request_booking_id' => $requestBooking->id,
@@ -240,14 +246,39 @@ public function getUserBookings()
                 'car_id' => $booking ? $booking->car_id : null,
                 'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
                 'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
-                'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
-                'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
-                'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                // 'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                'price_per_hour' => $booking->price_per_hour,
+                'price_per_day' => $booking->price_per_day,
+                'price_per_week' => $booking->price_per_week,
             ];
         });
 
+        $requestBookings = RequestBooking::where('user_id', $userId)
+        ->where('status', 0)
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($booking) {
+            $car = CarDetails::where('car_id', $booking->car_id)->first();
+            return [
+                'type' => 'Request Booking',
+                'car_name' => $car ? $car->car_name : 'Car Not Found',
+                'car_id' => $booking->car_id,
+                'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
+                'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
+                // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                // 'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                'price_per_hour' => $booking->price_per_hour,
+                'price_per_day' => $booking->price_per_day,
+                'price_per_week' => $booking->price_per_week,
+            ];
+        });
+
+        $allBookings = $bookings->merge($requestBookings)->sortByDesc('booking_date')->values();
     return response()->json([
-        'bookings' => $bookings
+        'bookings' => $allBookings
     ]);
 }
 
@@ -267,14 +298,38 @@ public function UserHistoryBookings()
                 'car_id' => $booking ? $booking->car_id : null,
                 'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
                 'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
-                'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
-                'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
-                'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                // 'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                'price_per_hour' => $booking->price_per_hour,
+                'price_per_day' => $booking->price_per_day,
+                'price_per_week' => $booking->price_per_week,
             ];
         });
 
+        $requestBookings = RequestBooking::where('user_id', $userId)
+        ->where('status', 1) // Fetch only active bookings
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($booking) {
+            // $car = CarDetails::find($booking->car_id);
+            $car = CarDetails::where('car_id', $booking->car_id)->first();
+            return [
+                'car_name' => $car ? $car->car_name : 'Car Not Found',
+                'car_id' => $booking ? $booking->car_id : null,
+                'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
+                'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
+                // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
+                // 'price_per_day' => $car ? number_format($car->sanitized, 2) . ' AED' : 'Not Available',
+                // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
+                'price_per_hour' => $booking->price_per_hour,
+                'price_per_day' => $booking->price_per_day,
+                'price_per_week' => $booking->price_per_week,
+            ];
+        });
+        $allBookings = $bookings->merge($requestBookings)->sortByDesc('booking_date')->values();
     return response()->json([
-        'history' => $bookings
+        'history' => $allBookings
     ]);
 }
 
