@@ -107,7 +107,7 @@ class CarDetailsController extends Controller
         return view('admin.CarFleet.CarDetail.edit', compact('CarDetail'));
     }
 
-    public function update( CarRequest $request, $id)
+    public function update(CarRequest $request, $id)
     {
         $validatedData = $request->validated();
 

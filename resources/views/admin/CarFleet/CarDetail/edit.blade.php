@@ -327,4 +327,29 @@
             });
         });
     </script>
+     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const imageInput = document.querySelector('input[name="image"]');
+    
+            imageInput.addEventListener("change", function () {
+                const file = this.files[0];
+                const maxSize = 2 * 1024 * 1024; // 4MB in bytes
+    
+                // Remove previous error if any
+                const existingError = this.parentElement.querySelector(".text-danger");
+                if (existingError) existingError.remove();
+    
+                if (file && file.size > maxSize) {
+                    // Clear the input
+                    this.value = "";
+    
+                    // Show custom error message
+                    const errorDiv = document.createElement("div");
+                    errorDiv.className = "text-danger";
+                    errorDiv.textContent = "Image size must not exceed 2MB.";
+                    this.parentElement.appendChild(errorDiv);
+                }
+            });
+        });
+    </script>
 @endsection

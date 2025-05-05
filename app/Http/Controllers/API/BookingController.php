@@ -235,7 +235,7 @@ public function getUserBookings()
     $userId = Auth::id(); // Get authenticated user ID
 
     $bookings = Booking::where('user_id', $userId)
-        ->where('status', 0) // Fetch only active bookings
+        ->whereIn('status', [0, 2, 3]) // Fetch only active bookings
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($booking) {
@@ -263,6 +263,7 @@ public function getUserBookings()
                 'self_pickup' => $booking->self_pickup,
                 'self_dropoff' => $booking->self_dropoff,
                 'driver_required' => $booking->driver_required,
+                'status' => $booking->status,
                 'price_per_hour' => $booking->price_per_hour,
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
@@ -270,7 +271,7 @@ public function getUserBookings()
         });
 
         $requestBookings = RequestBooking::where('user_id', $userId)
-        ->where('status', 0)
+        ->whereIn('status', [0, 2, 3])
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($booking) {
@@ -298,6 +299,7 @@ public function getUserBookings()
                 'self_pickup' => $booking->self_pickup,
                 'self_dropoff' => $booking->self_dropoff,
                 'driver_required' => $booking->driver_required,
+                'status' => $booking->status,
                 'price_per_hour' => $booking->price_per_hour,
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
