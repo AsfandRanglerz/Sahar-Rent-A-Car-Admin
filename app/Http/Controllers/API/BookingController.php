@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use DB;
 use Log;
 use Carbon\Carbon;
 use App\Models\Driver;
@@ -14,6 +13,7 @@ use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
 use App\Models\DriverNotification;
 use App\Models\UserLoyaltyEarning;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -233,6 +233,7 @@ class BookingController extends Controller
 public function getUserBookings()
 {
     $userId = Auth::id(); // Get authenticated user ID
+    $adminPhone = DB::table('contact_us')->value('phone');
 
     $bookings = Booking::where('user_id', $userId)
         ->whereIn('status', [0, 2, 3]) // Fetch only active bookings
@@ -245,7 +246,8 @@ public function getUserBookings()
                 'car_name' => $car ? $car->car_name : 'Car Not Found',
                 'car_id' => $booking ? $booking->car_id : null,
                 'car_image' => $car ? $car->image : null,
-                'phone' => $car ? $car->call_number : null,
+                // 'phone' => $car ? $car->call_number : null,
+                'phone' => in_array($booking->status, [2, 3]) ? $adminPhone : ($car ? $car->call_number : null),
                 'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
                 'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
                 // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',
@@ -281,7 +283,8 @@ public function getUserBookings()
                 'car_name' => $car ? $car->car_name : 'Car Not Found',
                 'car_id' => $booking->car_id,
                 'car_image' => $car ? $car->image : null,
-                'phone' => $car ? $car->call_number : null,
+                // 'phone' => $car ? $car->call_number : null,
+                'phone' => in_array($booking->status, [2, 3]) ? $adminPhone : ($car ? $car->call_number : null),
                 'booking_date' => $booking->created_at ? Carbon::parse($booking->created_at)->format('d M Y') : null,
                 'booking_time' => $booking->created_at ? Carbon::parse($booking->created_at)->format('h:i A') : null,
                 // 'price_per_hour' => $car ? number_format($car->pricing, 2) . ' AED' : 'Price Not Available',

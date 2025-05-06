@@ -30,11 +30,13 @@ class NotificationController extends Controller
         // if ($notifications->isEmpty()) {
         //     return response()->json(['message' => 'No notifications found'], 404);
         // }
-        $formattedNotifications = $notifications->map(function ($notification) {
+        $formattedNotifications = $notifications->map(function ($notification) use ($user) {
             return [
+                'id' => $user,
                 'title'       => $notification->title,
                 'description' => $notification->description,
-                'time'        => Carbon::parse($notification->created_at)->format('h:i A') // Format time as 12-hour (12:00 PM)
+                'time'        => Carbon::parse($notification->created_at)->format('h:i A'), // Format time as 12-hour (12:00 PM)
+                'created_at' => Carbon::parse($notification->created_at)
             ];
         });
         return response()->json([
@@ -42,8 +44,9 @@ class NotificationController extends Controller
         ]);
     }
 
-    public function showNotification($id){
-
+    public function showNotification($id)
+    {
+        $user = Auth::id(); 
         $notification  = Notification::find($id);
         if(!$notification){
             return response()->json(['message' => 'Notification not found'], 404);
@@ -59,4 +62,16 @@ class NotificationController extends Controller
             
         ]);
     }
+
+    public function clearAll()
+{
+    $userId = Auth::id();
+
+    // Delete all notifications for the authenticated user
+    Notification::where('user_id', $userId)->delete();
+
+    return response()->json([
+        'message' => 'Notifications cleared successfully'
+    ]);
+}
 }

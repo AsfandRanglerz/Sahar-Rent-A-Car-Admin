@@ -17,6 +17,7 @@ class CarController extends Controller
     // Optional status filtering
     $status = $request->query('status');
 
+    $adminPhone = DB::table('contact_us')->value('phone');
     $favoriteCarIds = DB::table('favorites')
     ->where('user_id', $userId)
     ->pluck('car_id')
@@ -56,7 +57,8 @@ class CarController extends Controller
         });
 
         return response()->json([
-        'cars' => $cars
+        'cars' => $cars,
+        'admin_phone' => $adminPhone
     ]);
     }
 
@@ -90,7 +92,7 @@ class CarController extends Controller
     public function relatedSearch(Request $request)
 {
     $userId = Auth::id();
-
+    $adminPhone = DB::table('contact_us')->value('phone');
     // Step 1: Get user favorite car_ids
     $favoriteCarIds = DB::table('favorites')
         ->where('user_id', $userId)
@@ -179,7 +181,8 @@ class CarController extends Controller
 
     // Step 5: Return JSON response
     return response()->json([
-        'related_cars' => $relatedCars
+        'related_cars' => $relatedCars,
+        'admin_phone' => $adminPhone
     ]);
 }
 
