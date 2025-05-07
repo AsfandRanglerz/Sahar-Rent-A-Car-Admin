@@ -31,7 +31,17 @@
         <li class="dropdown">
             <a href="#" class="nav-link" data-toggle="dropdown">
                 <i data-feather="bell"></i>
-                <span id="notificationCounter" class="badge badge-primary" style="padding: 6px 9px">0</span>
+                <span id="notificationCounter" class="badge badge-primary" style=" position: absolute;
+        top: 2px;
+        right: 1px;
+        font-size: 12px;
+        border-radius: 50%;
+        width: 23px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        font-weight: bold;
+        padding: 0px;">0</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right pullDown">
                 <div id="notificationList" style="max-height: 300px; overflow-y: auto;">
@@ -82,7 +92,7 @@
                 let notificationList = $('#notificationList');
 
                 if (notifications.length > 0) {
-                    notificationCounter.text(notifications.length);
+                    notificationCounter.text(notifications.length > 10 ? '10+' : notifications.length);
                     notificationList.html('');
 
                     notifications.forEach(notification => {

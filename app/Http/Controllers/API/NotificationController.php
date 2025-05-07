@@ -23,7 +23,7 @@ class NotificationController extends Controller
             $query->where('customer_id', $user)
                   ->orWhere('driver_id', $user);
         })
-            ->select('title', 'description', 'created_at')
+            ->select('id','title', 'description', 'created_at','seenByUser')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -32,11 +32,13 @@ class NotificationController extends Controller
         // }
         $formattedNotifications = $notifications->map(function ($notification) use ($user) {
             return [
-                'id' => $user,
+                'id' => $notification->id,
+                'user_id' => $user,
                 'title'       => $notification->title,
                 'description' => $notification->description,
                 'time'        => Carbon::parse($notification->created_at)->format('h:i A'), // Format time as 12-hour (12:00 PM)
-                'created_at' => Carbon::parse($notification->created_at)
+                'created_at' => Carbon::parse($notification->created_at),
+                'is_seen'     => (bool) $notification->seenByUser,
             ];
         });
         return response()->json([
@@ -68,7 +70,9 @@ class NotificationController extends Controller
     $userId = Auth::id();
 
     // Delete all notifications for the authenticated user
-    Notification::where('user_id', $userId)->delete();
+    Notification::where('customer_id', $userId)
+    ->orwhere('driver_id', $userId)
+    ->delete();
 
     return response()->json([
         'message' => 'Notifications cleared successfully'

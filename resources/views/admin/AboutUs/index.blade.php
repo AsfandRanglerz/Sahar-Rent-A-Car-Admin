@@ -29,7 +29,10 @@
                                         <th scope="row">1</th>
                                         <td>
                                             @if(isset($data))
-                                            {!! $data->description !!}
+                                            <td title="{{ strip_tags($data->description) }}">
+                                                {!! Str::limit($data->description, 100, '...') !!}
+                                            </td>
+                                            
                                         @endif
                                         </td>
                                         <td>
