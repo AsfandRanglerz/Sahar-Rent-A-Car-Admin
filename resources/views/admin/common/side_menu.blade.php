@@ -356,6 +356,10 @@
                         data-feather="info"></i><span>About Us</span></a>
             </li>
             @endif
+            <li class="dropdown {{ request()->is('admin/chat*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
+                <a href="{{ url('/admin/chat') }}" class="nav-link"><i
+                        data-feather="info"></i><span>Chat</span></a>
+            </li>
         </ul>
     </aside>
 </div> 
