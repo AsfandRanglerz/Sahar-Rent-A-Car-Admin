@@ -37,6 +37,7 @@ class FirebaseService
 
 
 
+
     public function getUsers()
     {
         $chats = $this->database
@@ -45,12 +46,23 @@ class FirebaseService
 
         $users = [];
         foreach ($chats as $userId => $chat) {
-            $users[] = [
-                'id' => $userId,
-                'name' => "User {$userId}", // Placeholder name, replace with actual name if available
-                'lastMessage' => 'No messages yet', // Default value
-                'lastMessageTime' => '', // Default value
-            ];
+            if (is_array($chat)) {
+                // Get the last message
+                $lastMessage = end($chat);
+                $users[] = [
+                    'id' => $userId,
+                    'name' => "User {$userId}", // Placeholder name, replace with actual name if available
+                    'lastMessage' => $lastMessage['text'] ?? 'No messages yet',
+                    'lastMessageTime' => $lastMessage['createdAt'] ?? 'N/A',
+                ];
+            } else {
+                $users[] = [
+                    'id' => $userId,
+                    'name' => "User {$userId}",
+                    'lastMessage' => 'No messages yet',
+                    'lastMessageTime' => 'N/A',
+                ];
+            }
         }
 
         \Log::info('All users fetched from Firebase:', ['users' => $users]);

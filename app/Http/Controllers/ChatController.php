@@ -24,6 +24,11 @@ class ChatController extends Controller
         $messages = $id ? $this->firebase->getMessages($id) ?? [] : []; // Fetch messages only if 'id' exists
         $users = $this->firebase->getUsers(); // Fetch all profiles from the chats node
 
+        // Sort users by lastMessageTime in descending order
+        usort($users, function ($a, $b) {
+            return strtotime($b['lastMessageTime'] ?? '1970-01-01') - strtotime($a['lastMessageTime'] ?? '1970-01-01');
+        });
+
         \Log::info('Users fetched for sidebar:', $users); // Log the users for debugging
 
         $currentUser = $id ? collect($users)->firstWhere('id', $id) : null; // Find the current user if 'id' exists
@@ -50,8 +55,8 @@ class ChatController extends Controller
 
         $data = [
             'text' => $request->message,
-            'sendBy' => auth()->user()->id ?? 'guest',
-            'sendByName' => auth()->user()->name ?? 'Guest', // Include the sender's name
+            'sendBy' => auth()->user()->id ?? 'Admin',
+            'sendByName' => auth()->user()->name ?? 'Admin', // Include the sender's name
             'createdAt' => now()->toDateTimeString(),
         ];
 

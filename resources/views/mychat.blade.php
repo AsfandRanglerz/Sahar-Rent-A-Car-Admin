@@ -6,6 +6,7 @@
 
     .sidebar-sec {
         width: 30%;
+        height: 464px;
         border-right: 1px solid #ddd;
         overflow-y: auto;
     }
@@ -87,29 +88,29 @@
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="row border">
-            <div class="col-4 px-0 sidebar-sec">
-                @forelse ($users as $user)
-                    <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
-                        onclick="window.location.href='{{ route('chat.index', ['id' => $user['id']]) }}'">
-                        <div>
-                            <strong>{{ $user['name'] }}</strong>
-                            <div>{{ $user['lastMessage'] }}</div>
+                <div class="col-4 px-0 sidebar-sec">
+                    @forelse ($users as $user)
+                        <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
+                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id']]) }}'">
+                            <div>
+                                <strong>{{ $user['name'] }}</strong>
+                                <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
+                            </div>
+                            <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
                         </div>
-                        <small>{{ $user['lastMessageTime'] }}</small>
-                    </div>
-                @empty
-                    <p>No users available.</p>
-                @endforelse
-            </div>
+                    @empty
+                        <p>No users available.</p>
+                    @endforelse
+                </div>
            
         
             <div class="col-8 px-0 chat-container">
                 <div class="chat-header">
-                    Chat with {{ $currentUser['name'] ?? 'Unknown' }}
+                    {{ $currentUser['name'] ?? '' }}
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     @foreach ($messages as $msg)
-                        <div class="message {{ $msg['sendBy'] === (auth()->user()->id ?? 'guest') ? 'sent' : 'received' }}">
+                        <div class="message {{ $msg['sendBy'] === (auth()->user()->id ?? 'Admin') ? 'sent' : 'received' }}">
                             <strong>{{ $msg['sendBy'] }}</strong>: {{ $msg['text'] }}
                             <div><small>{{ $msg['createdAt'] }}</small></div>
                         </div>
