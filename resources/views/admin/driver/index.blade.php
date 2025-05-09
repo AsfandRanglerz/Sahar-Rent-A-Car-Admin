@@ -113,7 +113,7 @@
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-primary" href="
-                                                   {{ route('chat.index') }}?id={{ $driver->id }}
+                                                   {{ route('chat.index') }}?id={{ $driver->id }}&type=driver
                                                      ">chat</a>
                                                 </td>
                                                 <td>

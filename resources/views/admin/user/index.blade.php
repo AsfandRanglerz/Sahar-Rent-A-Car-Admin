@@ -145,7 +145,7 @@
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-primary" href="
-                                                   {{ route('chat.index') }}?id={{ $user->id }}
+                                                   {{ route('chat.index') }}?id={{ $user->id }}&type=customer
                                                      ">chat</a>
                                                 </td>
                                                 <td>

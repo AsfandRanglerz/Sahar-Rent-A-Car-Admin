@@ -493,6 +493,7 @@ public function getProfile(Request $request)
             // 'status' => true,
             'message' => 'User profile retrieved successfully',
             'data' => [
+                'user_id' => $customer->id,
                 'name' => $customer->name,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
