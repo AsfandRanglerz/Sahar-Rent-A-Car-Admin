@@ -35,11 +35,7 @@ class FirebaseService
         return true;
     }
 
-
-
-
-
-    public function getUsers()
+    public function getUsers(): array
     {
         $chats = $this->database
             ->getReference('chats') // Fetch all chats from the 'chats' node
@@ -65,6 +61,7 @@ class FirebaseService
                     'lastMessage' => $lastMessage['text'] ?? 'No messages yet',
                     'lastMessageTime' => $lastMessage['createdAt'] ?? 'N/A',
                     'usertype' => $lastMessage['usertype'] ?? 'default', // Include the type
+                    'mytype' => $lastMessage['mytype'] ?? '', // Include the mytype value
                     'unreadCount' => $unreadCount, // Add unread message count
                 ];
             } else {
@@ -74,6 +71,7 @@ class FirebaseService
                     'lastMessage' => 'No messages yet',
                     'lastMessageTime' => 'N/A',
                     'usertype' => 'N/A', // Default type if no messages exist
+                    'mytype' => '', // Default mytype if no messages exist
                     'unreadCount' => 0, // Default unread count
                 ];
             }
@@ -81,7 +79,7 @@ class FirebaseService
 
         \Log::info('All users fetched from Firebase:', ['users' => $users]);
 
-        return $users;
+        return $users; // Ensure an array is always returned
     }
     public function getMessages($chatId)
     {

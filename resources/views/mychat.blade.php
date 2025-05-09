@@ -123,7 +123,8 @@
                             </div>
                             <div>
                                 <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
-                                @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0)
+                                
+                                @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0 && $user['mytype'] !== "admin")
                                     <span class="badge badge-danger">{{ $user['unreadCount'] }}</span>
                                 @endif
                             </div>
