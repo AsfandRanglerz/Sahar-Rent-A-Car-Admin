@@ -269,7 +269,7 @@ public function getUserBookings()
                 // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
                 'full_name' => $booking->full_name,
                 'email' => $booking->email,
-                'phone' => $booking->phone,
+                // 'phone' => $booking->phone,
                 'pickup_address' => $booking->pickup_address,
                 'pickup_date' => $booking->pickup_date,
                 'pickup_time' => $booking->pickup_time,
@@ -281,8 +281,6 @@ public function getUserBookings()
                 'driver_required' => $booking->driver_required,
                 'status' => $booking->status,
                 'price_per_hour' => $booking->price_per_hour,
-                'price_per_day' => $booking->price_per_day,
-                'price_per_week' => $booking->price_per_week,
             ];
         });
 
@@ -292,16 +290,15 @@ public function getUserBookings()
         ->get()
         ->map(function ($booking) use ($adminPhone){
             $car = CarDetails::where('car_id', $booking->car_id)->first();
-            $assigned = DB::table('assigned_requests')->where('request_booking_id', $booking->id)->first();
+            $assigned = DB::table('assigned_requests')->where('request_booking_id', $booking->id)->get();
             $pickupDriverPhone = null;
             $dropoffDriverPhone = null;
-
-            if (!in_array($booking->status, [2, 3]) && $assigned) {
-                if ($assigned->driver_id) {
+            foreach ($assigned as $assigned) {
+                if ($assigned->driver_id && !$pickupDriverPhone) {
                     $pickupDriver = DB::table('drivers')->where('id', $assigned->driver_id)->first();
                     $pickupDriverPhone = $pickupDriver ? $pickupDriver->phone : null;
                 }
-                if ($assigned->dropoff_driver_id) {
+                if ($assigned->dropoff_driver_id && !$dropoffDriverPhone) {
                     $dropoffDriver = DB::table('drivers')->where('id', $assigned->dropoff_driver_id)->first();
                     $dropoffDriverPhone = $dropoffDriver ? $dropoffDriver->phone : null;
                 }
@@ -320,7 +317,7 @@ public function getUserBookings()
                 // 'price_per_week' => $car ? number_format($car->car_feature, 2) . ' AED' : 'Not Available',
                 'full_name' => $booking->full_name,
                 'email' => $booking->email,
-                'phone' => $booking->phone,
+                // 'phone' => $booking->phone,
                 'pickup_address' => $booking->pickup_address,
                 'pickup_date' => $booking->pickup_date,
                 'pickup_time' => $booking->pickup_time,
@@ -335,7 +332,7 @@ public function getUserBookings()
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
                 'pickup_driver_phone' => $pickupDriverPhone,
-    'dropoff_driver_phone' => $dropoffDriverPhone,
+                'dropoff_driver_phone' => $dropoffDriverPhone,
             ];
         });
 

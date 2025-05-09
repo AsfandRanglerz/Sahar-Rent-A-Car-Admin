@@ -8,6 +8,7 @@ use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\LoyaltyRedemption;
 use App\Models\UserLoyaltyEarning;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -343,6 +344,28 @@ public function getRedemptionHistory()
         });
 
     return response()->json(['history' => $history]);
+}
+
+public function getPoints()
+{
+    $carIds = DB::table('car_details')->pluck('id'); // get car IDs from car_details
+
+    $loyaltyPoints = LoyaltyPoints::with('car') // only fetch 'car_id' and 'id'
+    ->whereIn('car_id', $carIds)
+    ->select('car_id', 'on_car', 'discount')
+    ->get()
+    ->map(function ($item) {
+        return [
+            'car_id' => $item->car ? $item->car->car_id : null, 
+            'car_name' => $item->car ? $item->car->car_name : null,
+            'on_car' => $item->on_car,
+            'discount' => $item->discount,
+        ];
+    });
+    return response()->json([
+        'message' => 'Loyalty points fetched successfully',
+        'data' => $loyaltyPoints
+    ]);
 }
 
 }

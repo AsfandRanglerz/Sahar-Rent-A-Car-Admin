@@ -33,6 +33,7 @@
                                             <th>Documents</th>
                                             {{-- <th>Documents2</th> --}}
                                             <th>Image</th>
+                                            <th>Message</th>
                                             <th>Status</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -142,12 +143,17 @@
                                                     <span>No image</span>
                                                     @endif
                                                 </td>
-
+                                                <td>
+                                                    <a class="btn btn-primary" href="
+                                                   {{ route('chat.index') }}?id={{ $user->id }}
+                                                     ">chat</a>
+                                                </td>
                                                 <td>
                                                     <div class="badge {{ $user->availability == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
                                                         {{ $user->availability == 1 ? 'Available' : 'Not Available' }}
                                                     </div>
                                                 </td>
+                                                
                                                 <td>
                                                     <div class="d-flex gap-4">
                                                         <div class="gap-3"
