@@ -38,6 +38,7 @@ class FirebaseService
 
 
 
+
     public function getUsers()
     {
         $chats = $this->database
@@ -49,12 +50,22 @@ class FirebaseService
             if (is_array($chat)) {
                 // Get the last message
                 $lastMessage = end($chat);
+
+                // Count unread messages
+                $unreadCount = 0;
+                foreach ($chat as $message) {
+                    if (isset($message['read']) && !$message['read'] && (!auth()->check() || $message['sendBy'] !== auth()->user()->id)) {
+                        $unreadCount++;
+                    }
+                }
+
                 $users[] = [
                     'id' => $userId,
                     'name' => "User {$userId}", // Placeholder name, replace with actual name if available
                     'lastMessage' => $lastMessage['text'] ?? 'No messages yet',
                     'lastMessageTime' => $lastMessage['createdAt'] ?? 'N/A',
                     'usertype' => $lastMessage['usertype'] ?? 'default', // Include the type
+                    'unreadCount' => $unreadCount, // Add unread message count
                 ];
             } else {
                 $users[] = [
@@ -63,6 +74,7 @@ class FirebaseService
                     'lastMessage' => 'No messages yet',
                     'lastMessageTime' => 'N/A',
                     'usertype' => 'N/A', // Default type if no messages exist
+                    'unreadCount' => 0, // Default unread count
                 ];
             }
         }
@@ -116,5 +128,14 @@ class FirebaseService
         }
 
         return array_values($participants); // Return unique participants as an array
+    }
+
+    public function markMessageAsRead($chatId, $messageKey)
+    {
+        $this->database
+            ->getReference("chats/{$chatId}/{$messageKey}/read")
+            ->set(true);
+
+        \Log::info("Message {$messageKey} in Chat ID {$chatId} marked as read.");
     }
 }

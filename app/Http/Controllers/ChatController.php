@@ -20,6 +20,7 @@ class ChatController extends Controller
      * Display chat messages and all profiles.
      */
 
+
     public function index(Request $request)
     {
         $id = $request->query('id'); // Get the 'id' from the query parameter
@@ -27,6 +28,20 @@ class ChatController extends Controller
 
         $messages = $id ? $this->firebase->getMessages($id) ?? [] : []; // Fetch messages only if 'id' exists
         $users = $this->firebase->getUsers(); // Fetch all profiles from the chats node
+
+        // Mark messages as read
+        if ($id) {
+            foreach ($messages as $key => $message) {
+                if (
+                    isset($message['read']) &&
+                    !$message['read'] &&
+                    (!auth()->check() || $message['sendBy'] !== (auth()->user()->id ?? '')) &&
+                    ($message['mytype'] ?? '') !== 'admin' // Skip messages with 'mytype' set to 'admin'
+                ) {
+                    $this->firebase->markMessageAsRead($id, $key);
+                }
+            }
+        }
 
         // Sort users by lastMessageTime in descending order
         usort($users, function ($a, $b) {
@@ -65,6 +80,8 @@ class ChatController extends Controller
             'sendByName' => auth()->user()->name ?? 'Admin', // Include the sender's name
             'createdAt' => now()->toDateTimeString(),
             'usertype' => $type, // Use the variable instead of hardcoding
+            'read' => false, // Default to unread
+            'mytype' => 'admin',
         ];
 
         // Log the data being sent

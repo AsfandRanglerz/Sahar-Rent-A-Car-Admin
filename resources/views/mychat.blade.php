@@ -82,12 +82,17 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
     </style>
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
-            @if ($usertype)
-                <p>Chat Type: {{ $usertype }}</p>
-            @endif
             <div class="row border">
                 <div class="col-4 px-0 sidebar-sec">
                     <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
@@ -116,7 +121,12 @@
                                     <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
                                 </div>
                             </div>
-                            <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
+                            <div>
+                                <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
+                                @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0)
+                                    <span class="badge badge-danger">{{ $user['unreadCount'] }}</span>
+                                @endif
+                            </div>
                         </div>
                     @empty
                         <p class="text-center mt-2">No users available.</p>
