@@ -23,6 +23,8 @@ class ChatController extends Controller
     public function index(Request $request)
     {
         $id = $request->query('id'); // Get the 'id' from the query parameter
+        $type = $request->query('type'); // Get the 'type' from the query parameter
+
         $messages = $id ? $this->firebase->getMessages($id) ?? [] : []; // Fetch messages only if 'id' exists
         $users = $this->firebase->getUsers(); // Fetch all profiles from the chats node
 
@@ -38,6 +40,7 @@ class ChatController extends Controller
         return view('mychat', [
             'messages' => $messages,
             'chatId' => $id,
+            'userType' => $type, // Pass the 'type' to the view
             'users' => $users,
             'currentChatId' => $id,
             'currentUser' => $currentUser
@@ -50,23 +53,26 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         $id = $request->query('id'); // Get the 'id' from the query parameter
-
+        $type = $request->query('type'); // Get the 'type' from the query parameter
+        \Log::info('Request data:', $request->all());
         if (!$id) {
             return redirect()->back()->with('error', 'Chat ID is required.');
         }
 
         $data = [
-
             'text' => $request->message,
             'sendBy' => auth()->user()->id ?? 'Admin',
             'sendByName' => auth()->user()->name ?? 'Admin', // Include the sender's name
             'createdAt' => now()->toDateTimeString(),
+            'usertype' => $type, // Use the variable instead of hardcoding
         ];
 
+        // Log the data being sent
+        \Log::info('Type being sent:', ['type' => $type]);
         // Add the message to Firebase
         $this->firebase->sendMessage($id, $data);
 
-        return redirect()->route('chat.index', ['id' => $id]);
+        return redirect()->route('chat.index', ['id' => $id, 'type' => $type]);
     }
 
     /**

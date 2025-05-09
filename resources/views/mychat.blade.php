@@ -85,6 +85,9 @@
     </style>
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
+            @if ($userType)
+                <p>Chat Type: {{ $userType }}</p>
+            @endif
             <div class="row border">
                 <div class="col-4 px-0 sidebar-sec">
                     <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
@@ -93,16 +96,16 @@
                     </div>
                     @forelse ($users as $user)
                         <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
-                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id']]) }}'">
+                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id'], 'type' => $userType]) }}'">
                             <div style="gap: 10px;" class="d-flex justify-content-between align-items-center">
                                 <div class="user-image">
-                                    <img 
-                                    src="{{ isset($user['image']) && $user['image'] ? asset($user['image']) : asset('/public/admin/assets/images/users/1746614348.png') }}"
+                                    <img src="{{ isset($user['image']) && $user['image'] ? asset($user['image']) : asset('/public/admin/assets/images/users/1746614348.png') }}"
                                         alt="" class="rounded-circle" style="width: 40px; height: 40px;">
                                 </div>
                                 <div>
                                     <strong>{{ $user['name'] }}</strong>
                                     <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
+                                    <small>Type: {{ $userType ?? 'N/A' }}</small> {{-- Display the type --}}
                                 </div>
                             </div>
                             <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
@@ -201,17 +204,22 @@
             messageInput.value = '';
             try {
                 // Send the message via AJAX
-                const response = await fetch('{{ route('chat.send', ['id' => $currentChatId]) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        message
-                    })
-                });
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id'); // Get the 'id' parameter from the query string
+                const type = urlParams.get('type'); // Get the 'type' parameter from the query string
 
+                const response = await fetch(
+                    `{{ route('chat.send') }}?id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            message
+                        })
+                    }
+                );
                 loadMessages();
                 if (response.ok) {
                     loadMessages(); // Reload the chat messages dynamically
