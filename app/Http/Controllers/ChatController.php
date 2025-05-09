@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\FirebaseService;
+use App\Models\User;
+use App\Models\Driver;
 
 class ChatController extends Controller
 {
@@ -54,6 +56,7 @@ class ChatController extends Controller
         }
 
         $data = [
+
             'text' => $request->message,
             'sendBy' => auth()->user()->id ?? 'Admin',
             'sendByName' => auth()->user()->name ?? 'Admin', // Include the sender's name
