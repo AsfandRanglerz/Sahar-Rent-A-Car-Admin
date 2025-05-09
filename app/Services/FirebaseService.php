@@ -54,7 +54,7 @@ class FirebaseService
                     'name' => "User {$userId}", // Placeholder name, replace with actual name if available
                     'lastMessage' => $lastMessage['text'] ?? 'No messages yet',
                     'lastMessageTime' => $lastMessage['createdAt'] ?? 'N/A',
-                    'userType' => $lastMessage['userType'] ?? 'default', // Include the type
+                    'usertype' => $lastMessage['usertype'] ?? 'default', // Include the type
                 ];
             } else {
                 $users[] = [
@@ -62,7 +62,7 @@ class FirebaseService
                     'name' => "User {$userId}",
                     'lastMessage' => 'No messages yet',
                     'lastMessageTime' => 'N/A',
-                    'userType' => 'N/A', // Default type if no messages exist
+                    'usertype' => 'N/A', // Default type if no messages exist
                 ];
             }
         }

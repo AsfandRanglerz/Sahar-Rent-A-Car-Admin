@@ -40,7 +40,7 @@ class ChatController extends Controller
         return view('mychat', [
             'messages' => $messages,
             'chatId' => $id,
-            'userType' => $type, // Pass the 'type' to the view
+            'usertype' => $type, // Pass the 'type' to the view
             'users' => $users,
             'currentChatId' => $id,
             'currentUser' => $currentUser

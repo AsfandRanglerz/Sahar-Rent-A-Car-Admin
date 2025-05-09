@@ -85,8 +85,8 @@
     </style>
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
-            @if ($userType)
-                <p>Chat Type: {{ $userType }}</p>
+            @if ($usertype)
+                <p>Chat Type: {{ $usertype }}</p>
             @endif
             <div class="row border">
                 <div class="col-4 px-0 sidebar-sec">
@@ -96,35 +96,64 @@
                     </div>
                     @forelse ($users as $user)
                         <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
-                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id'], 'type' => $userType]) }}'">
+                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id'], 'type' => $user['usertype']]) }}'">
                             <div style="gap: 10px;" class="d-flex justify-content-between align-items-center">
                                 <div class="user-image">
-                                    <img src="{{ isset($user['image']) && $user['image'] ? asset($user['image']) : asset('/public/admin/assets/images/users/1746614348.png') }}"
+                                    @php
+                                        $userModel =
+                                            $user['usertype'] == 'customer'
+                                                ? App\Models\User::where('id', $user['id'])->first()
+                                                : App\Models\Driver::where('id', $user['id'])->first();
+
+                                        $image = $userModel ? $userModel->image : null;
+                                        $name = $userModel ? $userModel->name : 'Unknown';
+                                    @endphp
+                                    <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
                                         alt="" class="rounded-circle" style="width: 40px; height: 40px;">
                                 </div>
                                 <div>
-                                    <strong>{{ $user['name'] }}</strong>
+                                    <strong>{{ $name }}</strong>
                                     <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
-                                    <small>Type: {{ $userType ?? 'N/A' }}</small> {{-- Display the type --}}
                                 </div>
                             </div>
                             <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
                         </div>
                     @empty
-                        <p>No users available.</p>
+                        <p class="text-center mt-2">No users available.</p>
                     @endforelse
                 </div>
 
 
                 <div class="col-8 px-0 chat-container">
+                    @php
+                        // Find the current user based on $currentChatId
+                        $currentUser = collect($users)->firstWhere('id', $currentChatId);
+
+                        if ($currentUser) {
+                            $userModel =
+                                $currentUser['usertype'] == 'customer'
+                                    ? App\Models\User::where('id', $currentUser['id'])->first()
+                                    : App\Models\Driver::where('id', $currentUser['id'])->first();
+
+                            $image = $userModel ? $userModel->image : null;
+                            $name = $userModel ? $userModel->name : 'Unknown';
+                        } else {
+                            $image = null;
+                            $name = 'Unknown';
+                        }
+                    @endphp
+
                     <div class="chat-header">
                         <div style="gap: 10px;" class="d-flex align-items-center">
                             <div class="user-image">
-                                <img src="http://localhost/Sahar-Rent-A-Car-Admin/public/admin/assets/images/users/1746614348.png"
+                                <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
                                     alt="" class="rounded-circle" style="width: 40px; height: 40px;">
                             </div>
                             <div>
-                                {{ $currentUser['name'] ?? '' }}
+                                <h6 class="mb-0 text-white">{{ $name }}</h6>
+                                <p style="font-size: 0.8rem; color: #d9d8d8; line-height: 1.1;" class="mb-0">
+                                    {{ $currentUser['usertype'] ?? 'N/A' }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -203,7 +232,6 @@
             // Clear the textarea immediately for better responsiveness
             messageInput.value = '';
             try {
-                // Send the message via AJAX
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id'); // Get the 'id' parameter from the query string
                 const type = urlParams.get('type'); // Get the 'type' parameter from the query string
@@ -220,18 +248,17 @@
                         })
                     }
                 );
-                loadMessages();
+
                 if (response.ok) {
-                    loadMessages(); // Reload the chat messages dynamically
+                    loadMessages(); // Reload the chat messages and header dynamically
                     loadUsers(); // Reload the users dynamically
                 } else {
-                    // console.error('Failed to send message');
+                    console.error('Failed to send message');
                 }
             } catch (error) {
-                // console.error('Error sending message:', error);
+                console.error('Error sending message:', error);
             }
         });
-
         document.addEventListener('DOMContentLoaded', () => {
             scrollToBottom(); // Scroll to the latest message when the chat opens
 
@@ -262,8 +289,14 @@
             const newMessages = doc.getElementById('chat-messages').innerHTML;
             chatMessages.innerHTML = newMessages;
             scrollToBottom(); // Scroll to the latest message after loading messages
-        }
 
+            // Update chat header
+            const newChatHeader = doc.querySelector('.chat-header');
+            if (newChatHeader) {
+                const currentChatHeader = document.querySelector('.chat-header');
+                currentChatHeader.innerHTML = newChatHeader.innerHTML;
+            }
+        }
         async function loadUsers() {
             // Skip reloading users if the search input is active
             if (isSearching) {
