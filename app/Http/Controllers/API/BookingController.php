@@ -81,6 +81,8 @@ class BookingController extends Controller
             'status' => 0, // Directly set to Active
             'price' => $request->price,
             'price_per_week' => $request->price_per_week,
+            'price_per_two_week' => $request->price_per_two_week,
+            'price_per_three_week' => $request->price_per_three_week,
             'price_per_day' => $request->price_per_day,
             'price_per_month' => $request->price_per_month,
         ]);
@@ -164,6 +166,8 @@ class BookingController extends Controller
             'car_id' => $request->car_id,
             'price' => $request->price,
             'price_per_week' => $request->price_per_week,
+            'price_per_two_week' => $request->price_per_two_week,
+            'price_per_three_week' => $request->price_per_three_week,
             'price_per_day' => $request->price_per_day,
             'price_per_month' => $request->price_per_month,
         ]);
@@ -280,7 +284,11 @@ public function getUserBookings()
                 'self_dropoff' => $booking->self_dropoff,
                 'driver_required' => $booking->driver_required,
                 'status' => $booking->status,
-                'price_per_hour' => $booking->price_per_hour,
+                'price_per_month' => $booking->price_per_month,
+                'price_per_day' => $booking->price_per_day,
+                'price_per_week' => $booking->price_per_week,
+                'price_per_two_week' => $booking->price_per_two_week,
+                'price_per_three_week' => $booking->price_per_three_week,
             ];
         });
 
@@ -328,9 +336,11 @@ public function getUserBookings()
                 'self_dropoff' => $booking->self_dropoff,
                 'driver_required' => $booking->driver_required,
                 'status' => $booking->status,
-                'price_per_hour' => $booking->price_per_hour,
+                'price_per_month' => $booking->price_per_month,
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
+                'price_per_two_week' => $booking->price_per_two_week,
+                'price_per_three_week' => $booking->price_per_three_week,
                 'pickup_driver_phone' => $pickupDriverPhone,
                 'dropoff_driver_phone' => $dropoffDriverPhone,
             ];

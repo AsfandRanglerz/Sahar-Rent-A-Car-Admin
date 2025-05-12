@@ -79,6 +79,8 @@ class CarDetailsController extends Controller
             'feature' => $request->feature,
             'feature' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
             'price_per_week' => $request->price_per_week,
+            'price_per_two_week' => $request->price_per_two_week,
+            'price_per_three_week' => $request->price_per_three_week,
             'price_per_month' => $request->price_per_month,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,
@@ -159,6 +161,8 @@ class CarDetailsController extends Controller
             'feature' => $request->feature,
             'feature' => $request->features ? implode("\n", $request->features) : null, // Convert array to string
             'price_per_week' => $request->price_per_week,
+            'price_per_two_week' => $request->price_per_two_week,
+            'price_per_three_week' => $request->price_per_three_week,
             'price_per_month' => $request->price_per_month,
             // 'delivery' => $request->delivery,
             // 'pickup' => $request->pickup,

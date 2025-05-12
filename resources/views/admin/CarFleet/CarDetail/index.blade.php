@@ -30,7 +30,9 @@
                                             <th>Car Name</th>
                                             {{-- <th>Availability</th> --}}
                                             <th>Price Per Day (AED)</th>
-                                            <th>Price Per Week (AED)</th>
+                                            <th>Price Per One Week (AED)</th>
+                                            <th>Price Per Two Weeks (AED)</th>
+                                            <th>Price Per Three Weeks (AED)</th>
                                             <th>Price Per Month (AED)</th>
                                             {{-- <th>Durations</th> --}}
                                             <th>Phone</th>
@@ -64,6 +66,8 @@
                                                 {{-- <td>{{ $CarDetail->availability }}</td> --}}
                                                 <td>{{ $CarDetail->price_per_day }}</td>
                                                 <td>{{ $CarDetail->price_per_week }}</td>
+                                                <td>{{ $CarDetail->price_per_two_week }}</td>
+                                                <td>{{ $CarDetail->price_per_three_week }}</td>
                                                 <td>{{ $CarDetail->price_per_month }}</td>
                                                 {{-- <td>{{ $CarDetail->durations }}</td> --}}
                                                 <td>{{ $CarDetail->call_number }}</td>

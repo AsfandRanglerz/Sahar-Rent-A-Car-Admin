@@ -38,7 +38,7 @@ class CarController extends Controller
         ->whereNotIn('car_id', $bookedCarIds)
         ->orderBy('id', 'desc')
      // 'user_id' column exists in 'car_details'
-        ->select(['id','car_id', 'car_name','call_number', 'price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
+        ->select(['id','car_id', 'car_name','call_number', 'price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
         ->get()
         ->map(function ($car) use ($favoriteCarIds) {
             // Remove unwanted characters but keep spaces
@@ -71,7 +71,7 @@ class CarController extends Controller
         // }
         $carId = $request->input('id');
         $carDetails = CarDetails::
-        select(['car_id', 'price_per_day', 'price_per_week', 'price_per_month'])
+        select(['car_id', 'price_per_day', 'price_per_week','price_per_two_week','price_per_three_week', 'price_per_month'])
         ->where('id', $carId)
         ->first();
 
@@ -159,7 +159,7 @@ class CarController extends Controller
     ->whereNotIn('car_id', $excludedCarIds) // Exclude booked cars
     ->orderByRaw("FIELD(car_id, '" . implode("','", $sortedPopularCarIds) . "')") 
         ->select([
-            'id','car_id','car_name','call_number','price_per_day','price_per_week','price_per_month',
+            'id','car_id','car_name','call_number','price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month',
             'passengers','luggage','doors','car_type','feature','image'
         ])
         ->take(5)
@@ -208,6 +208,8 @@ public function show(Request $request, $car_id)
             'call_number',
             'price_per_day',
             'price_per_week',
+            'price_per_two_week',
+            'price_per_three_week',
             'price_per_month',
             'passengers',
             'luggage',
@@ -248,7 +250,7 @@ public function filterCars(Request $request)
     // }
 
     $query = CarDetails::select([
-        'id', 'car_id', 'car_name','call_number','price_per_day','price_per_week','price_per_month', 'passengers', 'luggage', 
+        'id', 'car_id', 'car_name','call_number','price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month', 'passengers', 'luggage', 
         'doors', 'car_type','feature', 'image'
     ]);
 

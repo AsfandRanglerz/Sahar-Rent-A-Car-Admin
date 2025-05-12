@@ -31,7 +31,7 @@
                                             {{-- <th>Document (License)</th> --}}
                                             <th>Image</th>
                                             <th>License</th>
-                                            <th>Message</th>
+                                            {{-- <th>Message</th> --}}
                                             <th>Availability</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Actions</th>
@@ -111,11 +111,11 @@
                                                     {{ route('license.show', $driver->id) }}
                                                      ">View</a>
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     <a class="btn btn-primary" href="
                                                    {{ route('chat.index') }}?id={{ $driver->id }}&type=driver
                                                      ">chat</a>
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <div class="badge {{ $driver->availability == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
                                                         {{ $driver->availability == 1 ? 'Available' : 'Not Available' }}

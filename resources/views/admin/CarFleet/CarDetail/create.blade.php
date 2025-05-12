@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Week</label>
+                                            <label>Price Per One Week</label>
                                             <div class ="input-group">
                                                 <input type="number" placeholder="Enter Price Per week" name="price_per_week"
                                                 id="price_per_week" value="{{ old('price_per_week') }}" class="form-control">
@@ -55,6 +55,41 @@
                                             
                                         </div>
                                     </div>
+
+                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Price Per Two Weeks</label>
+                                            <div class ="input-group">
+                                                <input type="number" placeholder="Enter Price Per Two weeks" name="price_per_two_week"
+                                                id="price_per_two_week" value="{{ old('price_per_two_week') }}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
+                                                </div>
+                                            </div>
+                                                @error('price_per_two_week')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            
+                                        </div>
+                                    </div>
+
+                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Price Per Three Weeks</label>
+                                            <div class ="input-group">
+                                                <input type="number" placeholder="Enter Price Per Three weeks" name="price_per_three_week"
+                                                id="price_per_three_week" value="{{ old('price_per_three_week') }}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
+                                                </div>
+                                            </div>
+                                                @error('price_per_three_week')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                            
+                                        </div>
+                                    </div>
+
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Price Per Month</label>

@@ -329,12 +329,18 @@
     </ul>
 </li>
 @endif
+<li class="dropdown {{ request()->is('admin/chat*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
+                <a href="{{ url('/admin/chat') }}" class="nav-link"><i
+                        data-feather="message-square"></i><span>Chat</span></a>
+            </li>
+            
 @if($isAdmin || (isset($subadminPermissions['ContactUs']) && $subadminPermissions['ContactUs']->view == 1))
             <li class="dropdown {{ request()->is('admin/ContactUs*') ? 'active' : '' }}">
                 <a href="{{ route('ContactUs.index') }}" class="nav-link"><span><i
                             data-feather="mail"></i>Contact Us</span></a>
             </li>
 @endif
+ 
 
             {{-- @if($isAdmin || isset($subadminPermissions['privacy_policy'])) --}}
                 @if($isAdmin || (isset($subadminPermissions['privacy_policy']) && $subadminPermissions['privacy_policy']->view == 1))
@@ -356,10 +362,7 @@
                         data-feather="info"></i><span>About Us</span></a>
             </li>
             @endif
-            <li class="dropdown {{ request()->is('admin/chat*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
-                <a href="{{ url('/admin/chat') }}" class="nav-link"><i
-                        data-feather="message-square"></i><span>Chat</span></a>
-            </li>
+           
         </ul>
     </aside>
 </div> 

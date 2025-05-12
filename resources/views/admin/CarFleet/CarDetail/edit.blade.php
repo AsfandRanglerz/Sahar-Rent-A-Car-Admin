@@ -54,6 +54,38 @@
                                             @enderror
                                         </div>
                                     </div>
+
+                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Price Per Two Week</label>
+                                        <div class="input-group">
+                                            <input type="number" placeholder="Enter Price Per Two Week" name="price_per_two_week"
+                                                id="price_per_two_week" value="{{ old('price_per_two_week', $CarDetail->price_per_two_week) }}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
+                                                </div>
+                                        </div>
+                                                @error('price_per_two_week')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Price Per three Week</label>
+                                        <div class="input-group">
+                                            <input type="number" placeholder="Enter Price Per Three Week" name="price_per_three_week"
+                                                id="price_per_three_week" value="{{ old('price_per_three_week', $CarDetail->price_per_three_week) }}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" style="border: 2px solid #cbd2d8;">AED</span>
+                                                </div>
+                                        </div>
+                                                @error('price_per_three_week')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Price Per Month</label>
