@@ -49,6 +49,10 @@
                                             <th>Pickup Address</th>
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th>
+                                            <th>City</th>
+                                            <th>Charge</th>
+                                            <th>Total Days</th>
+                                            <th>VAT</th>
                                             {{-- <th>Self Drop Off</th>
                                             <th>Drop Off Address</th>
                                             <th>Drop Off Date</th>
@@ -169,10 +173,38 @@ if ($requestbooking->status == 2) {
                                                 </td>
                                                 <td>
                                                 @if($requestbooking->pickup_time)    
-                                                    {{ $requestbooking->pickup_time }}
+                                                     {{ \Carbon\Carbon::createFromFormat('H:i:s', $requestbooking->pickup_time)->format('g:i A') }}
                                                 @else
                                                 <span>--</span>
                                                 @endif
+                                                </td>
+                                                <td>
+                                                    @if($requestbooking->city)
+                                                        {{ $requestbooking->city }}
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($requestbooking->transfer_charge)
+                                                    {{ $requestbooking->transfer_charge }}
+                                                    @else
+                                                    <span>--</span>
+                                                @endif 
+                                                </td>
+                                                <td>
+                                                    @if($requestbooking->total_days)
+                                                        {{ $requestbooking->total_days }}
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($requestbooking->vat)
+                                                        {{ $requestbooking->vat }}%
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
                                                 </td>
                                                 {{-- <td>{{ $requestbooking->self_dropoff }}</td>
                                                 <td>

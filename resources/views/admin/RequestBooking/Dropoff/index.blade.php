@@ -275,6 +275,10 @@
                                             <th>Drop Off Address</th>
                                             <th>Drop Off Date</th>
                                             <th>Drop Off Time</th>
+                                            <th>City</th>
+                                            <th>Charge</th>
+                                            <th>Total Days</th>
+                                            <th>VAT</th>
                                             <th>Additional Notes</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -414,10 +418,38 @@ if ($dropoff->status == 2) {
                                                 </td>
                                                 <td>
                                                     @if($dropoff->dropoff_time)
-                                                    {{ $dropoff->dropoff_time }}
+                                                     {{ \Carbon\Carbon::createFromFormat('H:i:s', $dropoff->dropoff_time)->format('g:i A') }}
                                                 @else
                                                 <span>--</span>
                                                 @endif
+                                            </td>
+                                            <td>
+                                                @if($dropoff->city)
+                                                    {{ $dropoff->city }}
+                                                @else
+                                                    <span>--</span>
+                                                @endif
+                                            </td>
+                                                <td>
+                                                @if($dropoff->transfer_charge)
+                                                    {{ $dropoff->transfer_charge }}
+                                                    @else
+                                                    <span>--</span>
+                                                @endif 
+                                                </td>
+                                                <td>
+                                                    @if($dropoff->total_days)
+                                                        {{ $dropoff->total_days }}
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($dropoff->vat)
+                                                        {{ $dropoff->vat }}%
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                 @if($dropoff->driver_required) 

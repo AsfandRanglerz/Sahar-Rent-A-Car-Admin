@@ -69,6 +69,10 @@
                                             <th>Drop Off Address</th>
                                             <th>Drop Off Date</th>
                                             <th>Drop Off Time</th>
+                                            <th>City</th>
+                                            <th>Charge</th>
+                                            <th>Total Days</th>
+                                            <th>VAT</th>
                                             <th>Additional Notes</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -149,8 +153,8 @@
                                                 @endif
                                                 </td>
                                                 <td>
-                                                @if($booking->pickup_time)    
-                                                    {{ $booking->pickup_time }}
+                                                @if($booking->pickup_time) 
+                                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $booking->pickup_time)->format('g:i A') }}
                                                 @else
                                                 <span>--</span>
                                                 @endif
@@ -172,7 +176,35 @@
                                                 </td>
                                                 <td>
                                                     @if($booking->dropoff_time)
-                                                    {{ $booking->dropoff_time }}
+                                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $booking->dropoff_time)->format('g:i A') }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->city)    
+                                                    {{ $booking->city }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->transfer_charge)    
+                                                    {{ $booking->transfer_charge }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->total_days)    
+                                                    {{ $booking->total_days }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->vat)    
+                                                    {{ $booking->vat }}%
                                                     @else
                                                     <span>--</span>
                                                     @endif
