@@ -85,7 +85,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function getWalletHistory()
+public function getWalletHistory()
 {
     $userId = Auth::id(); // Get logged-in user ID
 

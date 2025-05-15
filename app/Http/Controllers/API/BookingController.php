@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Driver;
 use App\Models\Booking;
 use App\Models\CarDetails;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
@@ -61,10 +62,18 @@ class BookingController extends Controller
     //         'data' => $booking,
     //     ], 200);
     // }
+$userId = Auth::id();
+    $availableBalance = Transaction::where('user_id', $userId)
+        ->where('status', 'approved')
+        ->sum('amount');
 
+    if ($availableBalance < $request->price) {
+        return response()->json(['message' => 'Insufficient wallet balance.'], 400);
+    }
+    
     if ($request->self_pickup === "Yes" && $request->self_dropoff === "Yes") {
         $booking = Booking::create([
-        'user_id' => Auth::id(),
+        'user_id' => $userId,
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -97,6 +106,11 @@ class BookingController extends Controller
 
         ]);
         
+        Transaction::create([
+            'user_id' => $userId,
+            'amount' => -$request->price,
+            'status' => 'approved',
+        ]);
 // Assign loyalty points if available for this car
 // $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
 // if ($loyaltyPoints) {
@@ -154,7 +168,7 @@ class BookingController extends Controller
     else {
         // Otherwise, create a request booking
         $requestBooking = RequestBooking::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -186,6 +200,11 @@ class BookingController extends Controller
            
         ]);
         
+         Transaction::create([
+            'user_id' => $userId,
+            'amount' => -$request->price,
+            'status' => 'approved',
+        ]);
 // Assign loyalty points if available for this car
     // $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
     // if ($loyaltyPoints) {
@@ -364,7 +383,7 @@ public function getUserBookings()
             ];
         });
 
-        $allBookings = $bookings->merge($requestBookings)->sortByDesc('booking_date')->values();
+       $allBookings = collect($bookings)->merge(collect($requestBookings))->sortByDesc('booking_date')->values();
     return response()->json([
         'bookings' => $allBookings
     ]);
@@ -441,7 +460,7 @@ public function UserHistoryBookings()
                 'price_per_week' => $booking->price_per_week,
             ];
         });
-        $allBookings = $bookings->merge($requestBookings)->sortByDesc('booking_date')->values();
+    $allBookings = collect($bookings)->merge(collect($requestBookings))->sortByDesc('booking_date')->values();
     return response()->json([
         'history' => $allBookings
     ]);

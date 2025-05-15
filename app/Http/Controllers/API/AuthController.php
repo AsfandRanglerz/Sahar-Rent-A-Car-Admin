@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 
+use Exception;
 use Carbon\Carbon;
 use App\Models\OTP;
 use App\Models\User;
@@ -592,6 +593,22 @@ public function getProfile(Request $request)
             ],
         ], 200);
     }
+
+public function getAllUser($id)
+    {
+         try {
+            $user = User::where('id', '!=', $id)->latest()->get();
+           return response()->json([
+            'status' => 'success',
+            'message' => 'data get successfully.',
+            'user' => $user,
+        ], 200);
+ 
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'message' => 'Failed to delete notification.', 'error' => $e->getMessage()], 500);
+        }
+    }
+ 
 
     public function customerdeactivateAccount(Request $request)
     {
@@ -1215,5 +1232,20 @@ return response()->json([
     }
     
     
+    public function getAllDriver($id)
+    {
+         try {
+            $driver = Driver::where('id', '!=', $id)->latest()->get();
+           return response()->json([
+            'status' => 'success',
+            'message' => 'data get successfully.',
+            'driver' => $driver,
+        ], 200);
+ 
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed', 'message' => 'Failed to delete notification.', 'error' => $e->getMessage()], 500);
+        }
+    }
+ 
     
 }
