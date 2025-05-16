@@ -290,43 +290,26 @@ public function getUserLoyaltyPoints()
 
 public function redeemLoyaltyPoints(Request $request)
 {
-    $userId = Auth::id();
-    $redeemPoints = $request->input('redeemed_points');
+   $userId = Auth::id();
 
-    // Validate the request
-    if (!$redeemPoints || $redeemPoints <= 0) {
-        return response()->json(['message' => 'Invalid points to redeem'], 400);
-    }
-
-    // Fetch user's total loyalty points
-    $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+    // Fetch the latest user loyalty data
+    $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->orderBy('id', 'desc')->first();
 
     if (!$userLoyalty) {
-        return response()->json(['message' => 'No loyalty points found'], 400);
+        return response()->json([
+            'status' => false,
+            'message' => 'No loyalty points found.',
+            'total_points' => 0,
+            'redeemable_points' => 0,
+        ], 200);
     }
-
-    // Get total available points
-    $totalPoints = $userLoyalty->total_points;
-
-    // Check if user has enough points
-    if ($redeemPoints > $totalPoints) {
-        return response()->json(['message' => 'Insufficient loyalty points'], 400);
-    }
-
-    // Subtract redeemed points and update total_points
-    $userLoyalty->total_points -= $redeemPoints;
-    $userLoyalty->save();
-
-    // Store redemption history
-    LoyaltyRedemption::create([
-        'user_id' => $userId,
-        'redeemed_points' => $redeemPoints,
-    ]);
 
     return response()->json([
-        'message' => 'Loyalty points redeemed successfully',
-        'total_points' => $userLoyalty->total_points // Updated total points
-    ]);
+        'status' => true,
+        'message' => 'Loyalty points fetched successfully.',
+        'total_points' => $userLoyalty->total_points,
+        // 'redeemable_points' => $userLoyalty->total_points, // Can customize if business logic changes
+    ], 200);
 }
 
 public function getRedemptionHistory()

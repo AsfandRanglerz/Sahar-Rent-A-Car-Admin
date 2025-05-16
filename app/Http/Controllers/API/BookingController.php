@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
+use App\Models\LoyaltyRedemption;
 use App\Models\DriverNotification;
 use App\Models\UserLoyaltyEarning;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,28 @@ class BookingController extends Controller
     //     ], 200);
     // }
 $userId = Auth::id();
+
+$redeemedPoints = $request->input('redeemed_points', 0);
+
+    // Optional: booking input validation here
+
+    // 🔽 Deduct Loyalty Points only if redeeming
+    if ($redeemedPoints > 0) {
+        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+
+        if (!$userLoyalty || $userLoyalty->total_points < $redeemedPoints) {
+            return response()->json(['message' => 'Invalid or insufficient loyalty points.'], 400);
+        }
+
+        $userLoyalty->total_points -= $redeemedPoints;
+        $userLoyalty->save();
+
+        LoyaltyRedemption::create([
+            'user_id' => $userId,
+            'redeemed_points' => $redeemedPoints,
+        ]);
+    }
+
     $availableBalance = Transaction::where('user_id', $userId)
         ->where('status', 'approved')
         ->sum('amount');
@@ -93,6 +116,7 @@ $userId = Auth::id();
             'city' => $request->city,
             'total_days' => $request->total_days,   
             'vat' => 5, 
+            'redeemed_points' => $redeemedPoints,
             // 'price_per_week' => $request->price_per_week,
             // 'price_per_two_week' => $request->price_per_two_week,
             // 'price_per_three_week' => $request->price_per_three_week,
@@ -186,7 +210,8 @@ $userId = Auth::id();
             'transfer_charge' => $request->transfer_charge,
             'city' => $request->city,
             'total_days' => $request->total_days,   
-            'vat' => 5, 
+            'vat' => 5,
+            'redeemed_points' => $redeemedPoints, 
             // 'price_per_week' => $request->price_per_week,
             // 'price_per_two_week' => $request->price_per_two_week,
             // 'price_per_three_week' => $request->price_per_three_week,

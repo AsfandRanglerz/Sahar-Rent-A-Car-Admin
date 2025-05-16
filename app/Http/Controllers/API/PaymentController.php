@@ -101,8 +101,23 @@ public function getWalletHistory()
         ->orderBy('created_at', 'desc')
         ->get()
         ->map(function ($transaction) {
-            $transaction->created_date = Carbon::parse($transaction->created_at)->format('d:M:Y');
-            return $transaction;});
+            $type = null;
+
+            if ($transaction->amount > 0) {
+                $type = 'deposit';
+            } elseif ($transaction->amount < 0) {
+                $type = 'withdrawal'; // Optional: or leave as null
+            }
+           return [
+
+            
+                'id' => $transaction->id,
+                'amount' => $transaction->amount,
+                'status' => $transaction->status,
+                'type' => $type, // Add 'deposit' label
+                'created_date' => Carbon::parse($transaction->created_at)->format('d:M:Y'),
+            ];
+        });
 
     return response()->json([
         'available_balance' => Transaction::where('user_id', $userId)

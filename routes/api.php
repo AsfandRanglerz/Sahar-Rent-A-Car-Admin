@@ -28,7 +28,7 @@ Route::post('/driverdocument',[AuthController::class,'driverdocument'])->middlew
 Route::post('/driversregister',[AuthController::class,'driverregister']);
 Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
 Route::post('/driverlogout',[AuthController::class,'driverlogout'])->middleware('auth:sanctum');
-Route::post('/getalldriver/{id}', [AuthController::class, 'getAllDriver']);
+Route::get('/getalldriver/{id}', [AuthController::class, 'getAllDriver']);
 
 //##################### driver account #####################
 Route::post('/account',[DriverController::class,'deleteAccount'])->middleware('auth:sanctum');
@@ -60,7 +60,7 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login'])->name('login');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:sanctum');
-Route::post('/getalluser/{id}', [AuthController::class, 'getAllUser']);
+Route::get('/getalluser/{id}', [AuthController::class, 'getAllUser']);
 
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/forgot-verify-otp', [AuthController::class, 'forgotverifyOtp']);

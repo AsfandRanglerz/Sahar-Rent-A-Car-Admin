@@ -264,6 +264,7 @@ return response()->json([
             // 'otp_token' => $otpToken, // Send OTP token to frontend 
             'fcm_token' => $customer->fcm_token,
             'data' => [
+                'user_id' => $customer->id,
                 'name' => $customer->name,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
