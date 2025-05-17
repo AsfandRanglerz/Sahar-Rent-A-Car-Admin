@@ -17,12 +17,14 @@ use App\Models\UserDocument;
 use Illuminate\Http\Request;
 use App\Mail\UserCredentials;
 use App\Models\DeleteRequest;
+use App\Models\LoyaltyPoints;
 use App\Models\DriverDocument;
 use App\Mail\DriverCredentials;
 use App\Models\DriverForgotOTP;
 use App\Models\driversregister;
 use App\Models\LicenseApproval;
 use App\Models\DriverNotification;
+use App\Models\UserLoyaltyEarning;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerRegisteredMail;
@@ -107,6 +109,24 @@ if ($request->hasFile('image')) {
     $image = 'public/admin/assets/images/users/' . $filename;
 
     $customer->update(['image' => $image]);
+}
+
+// Check if referral code was used
+if ($request->filled('referral_code')) {
+    $referrer = User::where('referral_code', $request->referral_code)->first();
+
+    if ($referrer) {
+        // Get points
+        $loyaltyPoint = LoyaltyPoints::where('id', 14)->first();
+        if ($loyaltyPoint) {
+            $pointsEarned = $loyaltyPoint->on_referal;
+
+            // Update or create user loyalty
+            $userLoyalty = UserLoyaltyEarning::firstOrNew(['user_id' => $referrer->id]);
+            $userLoyalty->total_points += $pointsEarned;
+            $userLoyalty->save();
+        }
+    }
 }
 // $document->save();
 Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone));

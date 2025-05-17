@@ -103,7 +103,7 @@ Route::get('/loyalty', [LoyaltyPointController::class, 'getPoints']);
 
 //#################  Redeemed Loyalty Points  ##############################
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/redeem-loyalty-points', [LoyaltyPointController::class, 'redeemLoyaltyPoints']);
+    Route::get('/redeem-loyalty-points', [LoyaltyPointController::class, 'redeemLoyaltyPoints']);
     Route::get('/redemption-history', [LoyaltyPointController::class, 'getRedemptionHistory']);
 });
 
