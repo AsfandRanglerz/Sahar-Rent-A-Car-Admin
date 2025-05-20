@@ -356,16 +356,22 @@ public function getUserBookings()
         ->map(function ($booking) use ($adminPhone){
             $car = CarDetails::where('car_id', $booking->car_id)->first();
             $assigned = DB::table('assigned_requests')->where('request_booking_id', $booking->id)->get();
-            $pickupDriverPhone = null;
-            $dropoffDriverPhone = null;
+            // $pickupDriverPhone = null;
+            // $dropoffDriverPhone = null;
+             $pickupDriverInfo = null;
+            $dropoffDriverInfo = null;
+            $pickupDriverId = null;
+            $dropoffDriverId = null;
             foreach ($assigned as $assigned) {
-                if ($assigned->driver_id && !$pickupDriverPhone) {
+                if ($assigned->driver_id && $assigned->status != 1 && !$pickupDriverInfo) {
                     $pickupDriver = DB::table('drivers')->where('id', $assigned->driver_id)->first();
                     $pickupDriverPhone = $pickupDriver ? $pickupDriver->phone : null;
+                    $pickupDriverId = $assigned->driver_id;
                 }
-                if ($assigned->dropoff_driver_id && !$dropoffDriverPhone) {
+                if ($assigned->dropoff_driver_id && $assigned->status == 1 && !$dropoffDriverInfo) {
                     $dropoffDriver = DB::table('drivers')->where('id', $assigned->dropoff_driver_id)->first();
                     $dropoffDriverPhone = $dropoffDriver ? $dropoffDriver->phone : null;
+                    $dropoffDriverId = $assigned->dropoff_driver_id;
                 }
             }
             return [
@@ -403,8 +409,13 @@ public function getUserBookings()
                 'city' => $booking->city,
                 'total_days' => $booking->total_days,
                 'vat' => $booking->vat,
-                'pickup_driver_phone' => $pickupDriverPhone,
-                'dropoff_driver_phone' => $dropoffDriverPhone,
+                'pickup_driver_id' => $pickupDriverId,
+                'dropoff_driver_id' => $dropoffDriverId,
+                // 'pickup_driver_phone' => $pickupDriverPhone,
+                // 'dropoff_driver_phone' => $dropoffDriverPhone,
+                'pickup_driver_info' => $pickupDriverInfo,
+                'dropoff_driver_info' => $dropoffDriverInfo,
+                
             ];
         });
 
