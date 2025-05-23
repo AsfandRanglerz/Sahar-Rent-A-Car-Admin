@@ -24,6 +24,7 @@ use App\Http\Controllers\API\NotificationController;
 */
 
 //#################  Driver ########################
+Route::get('/drivers', [AuthController::class, 'getDrivers']);
 Route::post('/driverdocument',[AuthController::class,'driverdocument'])->middleware('auth:sanctum');
 Route::post('/driversregister',[AuthController::class,'driverregister']);
 Route::post('/driverlogin',[AuthController::class,'driverlogin'])->name('driverlogin');
@@ -55,6 +56,7 @@ Route::middleware('auth:sanctum')->post('/driverlocation', [DriverController::cl
 Route::middleware('auth:sanctum')->get('/getdriverlocation', [DriverController::class, 'getDriverLocation']);
 
 //################# Customer ###########################
+Route::get('/customers', [AuthController::class, 'getCustomers']);
 Route::post('/userdocument',[AuthController::class,'uploadDocument'])->middleware('auth:sanctum');
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login'])->name('login');

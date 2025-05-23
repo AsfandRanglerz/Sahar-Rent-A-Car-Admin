@@ -381,6 +381,16 @@ return response()->json([
     ], 200);
     }
 
+public function getCustomers(){
+        $customers = User::all();
+
+        return response()->json([
+            'message' => 'Customers fetched successfully',
+            'data' => $customers
+        ], 200);
+}
+
+
 public function forgotPassword(Request $request)
 {
     // Validate the email input
@@ -1053,6 +1063,14 @@ public function driverresetPassword(Request $request)
     ], 200);
 }
 
+public function getDrivers(){
+    $drivers = Driver::all();
+
+    return response()->json([
+        'message' => 'Drivers fetched successfully',
+        'data' => $drivers
+    ], 200);
+}
 
 public function driverlogout(Request $request){
     // $customer = $request->customer();
