@@ -273,4 +273,49 @@ public function getPoints()
     ]);
 }
 
+public function lastLoyaltyTransaction(Request $request)
+{
+    $userId = Auth::user();
+
+    $booking = Booking::where('user_id', $userId)
+                ->where('status', 1)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+    $requestBooking = RequestBooking::where('user_id', $userId)
+                        ->where('status', 1)
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+
+    $latest = null;
+    if ($booking && $requestBooking) {
+        $latest = $booking->created_at > $requestBooking->created_at ? $booking : $requestBooking;
+    } elseif ($booking) {
+        $latest = $booking;
+    } elseif ($requestBooking) {
+        $latest = $requestBooking;
+    }
+
+    if (!$latest) {
+        return response()->json([
+            'message' => 'No completed transactions found.',
+            'total_purchase' => 0,
+            'earned_points' => 0,
+        ]);
+    }
+
+    $carId = $latest->car_id;
+    $price = $latest->price;
+
+    $points = DB::table('loyalty_points')
+                ->where('car_id', $carId)
+                ->value('on_car') ?? 0;
+
+    return response()->json([
+        'total_purchase' => $price,
+        'earned_points' => $points,
+    ]);
+}
+
+
 }

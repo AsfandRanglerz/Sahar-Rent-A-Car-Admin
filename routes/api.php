@@ -102,6 +102,8 @@ Route::middleware('auth:sanctum')->get('/loyalty-points', [LoyaltyPointControlle
 Route::post('/share-referral', [LoyaltyPointController::class, 'earnLoyaltyPoints'])->middleware('auth:sanctum');
 Route::get('/redeem-points', [LoyaltyPointController::class, 'getUserLoyaltyPoints'])->middleware('auth:sanctum');
 Route::get('/loyalty', [LoyaltyPointController::class, 'getPoints']);
+Route::middleware('auth:sanctum')->get('/loyaltylast-transaction', [LoyaltyPointController::class, 'lastLoyaltyTransaction']);
+
 
 //#################  Redeemed Loyalty Points  ##############################
 Route::middleware('auth:sanctum')->group(function () {
