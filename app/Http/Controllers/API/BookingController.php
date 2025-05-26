@@ -365,12 +365,21 @@ public function getUserBookings()
             foreach ($assigned as $assigned) {
                 if ($assigned->driver_id && $assigned->status != 1 && !$pickupDriverInfo) {
                     $pickupDriver = DB::table('drivers')->where('id', $assigned->driver_id)->first();
-                    $pickupDriverPhone = $pickupDriver ? $pickupDriver->phone : null;
+                    // $pickupDriverPhone = $pickupDriver ? $pickupDriver->phone : null;
+                    $pickupDriverInfo = $pickupDriver;
                     $pickupDriverId = $assigned->driver_id;
                 }
-                if ($assigned->dropoff_driver_id && $assigned->status == 1 && !$dropoffDriverInfo) {
+
+                $requiresPickup = $booking->self_pickup == 'No';
+                $pickupCompleted = DB::table('assigned_requests')
+                    ->where('request_booking_id', $booking->id)
+                    ->whereNotNull('driver_id')
+                    ->where('status', 1) // assuming status 1 means pickup completed
+                    ->exists();
+                if ($assigned->dropoff_driver_id && (!$requiresPickup || $pickupComplete) && !$dropoffDriverInfo) {
                     $dropoffDriver = DB::table('drivers')->where('id', $assigned->dropoff_driver_id)->first();
-                    $dropoffDriverPhone = $dropoffDriver ? $dropoffDriver->phone : null;
+                    // $dropoffDriverPhone = $dropoffDriver ? $dropoffDriver->phone : null;
+                    $dropoffDriverInfo = $dropoffDriver;
                     $dropoffDriverId = $assigned->dropoff_driver_id;
                 }
             }
