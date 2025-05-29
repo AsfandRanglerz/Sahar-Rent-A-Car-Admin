@@ -307,9 +307,15 @@ public function lastLoyaltyTransaction(Request $request)
     $carId = $latest->car_id;
     $price = $latest->price;
 
-    $points = DB::table('loyalty_points')
-                ->where('car_id', $carId)
-                ->value('on_car') ?? 0;
+   $car = DB::table('car_details')->where('car_id', $latest->car_id)->first();
+    $carDetailsId = $car ? $car->id : null;
+
+    $points = 0;
+    if ($carDetailsId) {
+        $points = DB::table('loyalty_points')
+                    ->where('car_id', $carDetailsId)
+                    ->value('on_car') ?? 0;
+    }
 
     return response()->json([
         'total_purchase' => $price,
