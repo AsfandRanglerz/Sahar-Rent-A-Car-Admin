@@ -1286,5 +1286,80 @@ return response()->json([
         }
     }
  
+    use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+public function socialLogin(Request $request)
+{
+   
+
+    $socialColumn = $request->login_type === 'apple' ? 'apple_social_id' : 'google_social_id';
+
+    // Try to find user by social_id
+    $user = User::where($socialColumn, $request->social_id)->first();
+
+    if ($user) {
+        $user->fcm_token = $request->fcm_token ?? $user->fcm_token;
+        $user->save();
+
+        // $token = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'User login successful',
+            'user' => $user,
+            // 'token' => $token,
+        ]);
+    }
+
+    // Handle file uploads
+    $emirate_id = null;
+    $passport = null;
+    $driving_license = null;
+
+    if ($request->hasFile('emirate_id')) {
+        $file = $request->file('emirate_id');
+        $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $emirate_id = 'public/admin/assets/images/users/' . $filename;
+    }
+
+    if ($request->hasFile('passport')) {
+        $file = $request->file('passport');
+        $filename = time() . '_passport_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $passport = 'public/admin/assets/images/users/' . $filename;
+    }
+
+    if ($request->hasFile('driving_license')) {
+        $file = $request->file('driving_license');
+        $filename = time() . '_driving_license_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $driving_license = 'public/admin/assets/images/users/' . $filename;
+    }
+
+    // Create new user
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password), // fallback password
+        'fcm_token' => $request->fcm_token,
+        $socialColumn => $request->social_id,
+        // 'status' => 1,
+        'emirate_id' => $emirate_id,
+        'passport' => $passport,
+        'driving_license' => $driving_license,
+    ]);
+
+    // $token = $user->createToken('API Token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'User registered via social login',
+        'user' => $user,
+        // 'token' => $token,
+    ]);
+}
+
     
 }

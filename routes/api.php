@@ -76,6 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getprofile', [AuthController::class, 'getProfile']);
     Route::post('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/documentprofile', [AuthController::class, 'updateDocument']);
+    Route::post('/sociallogin', [AuthController::class, 'socialLogin']);
 });
 
 //#################  Bookings  ###########################

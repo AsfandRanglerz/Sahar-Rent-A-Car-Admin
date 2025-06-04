@@ -11,7 +11,7 @@ class NotificationHelper
     {
         try {
             $client = new Client();
-            $client->setAuthConfig(storage_path('app/daud-transport-firebase-adminsdk-mhl0q-18343637cd.json'));
+            $client->setAuthConfig(storage_path('app/sahar-rent-a-car-firebase-adminsdk-fbsvc-f2d7fa9fb4.json'));
             $client->addScope('https://www.googleapis.com/auth/cloud-platform');
             $accessToken = $client->fetchAccessTokenWithAssertion();
             Log::info('Access Token Retrieved Successfully.');
@@ -37,7 +37,7 @@ class NotificationHelper
                 ],
             ];
 
-            $url = 'https://fcm.googleapis.com/v1/projects/daud-transport/messages:send';
+            $url = 'https://fcm.googleapis.com/v1/projects/sahar-rent-a-car/messages:send';
             $headers = [
                 'Authorization: Bearer ' . $accessToken,
                 'Content-Type: application/json',

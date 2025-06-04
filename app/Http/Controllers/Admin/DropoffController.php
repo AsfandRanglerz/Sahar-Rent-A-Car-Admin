@@ -121,6 +121,16 @@ public function markDropoffCompleted($id)
 {
     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
 
+     $pickupRequired = $requestBooking->self_pickup === 'No';
+
+    $pickupNotCompleted = $pickupRequired && !$requestBooking->assign->contains(function ($assigned) {
+        return !is_null($assigned->driver_id) && $assigned->status == 1;
+    });
+
+    if ($pickupNotCompleted) {
+        return redirect()->back()->with('error', 'Please complete the Pickup driver before marking Dropoff driver as Completed');
+    }
+
     foreach ($requestBooking->assign as $assigned) {
         // Only mark dropoff driver complete if assigned and not already completed
         if (!is_null($assigned->dropoff_driver_id) && $assigned->status != 1) {
@@ -150,24 +160,24 @@ public function markDropoffCompleted($id)
         ]);
     }
     // Check if all assigned rows have both drivers (if assigned) marked completed
-    $allCompleted = $requestBooking->assign->every(function ($assigned) {
-        $pickupDone = is_null($assigned->driver_id) || $assigned->status == 1;
-        $dropoffDone = is_null($assigned->dropoff_driver_id) || $assigned->status == 1;
-        return $pickupDone && $dropoffDone;
+    $pickupCompleted = !$pickupRequired || $requestBooking->assign->contains(function ($assigned) {
+        return !is_null($assigned->driver_id) && $assigned->status == 1;
     });
 
-    if ($allCompleted) {
+    $dropoffCompleted = $requestBooking->self_dropoff === 'No'
+        ? $requestBooking->assign->contains(function ($assigned) {
+            return !is_null($assigned->dropoff_driver_id) && $assigned->status == 1;
+        })
+        : true;
+
+    if ($pickupCompleted && $dropoffCompleted) {
         $requestBooking->status = 1; // Main booking completed
         $requestBooking->save();
 
-        $hasPickup = $requestBooking->assign->contains(function ($assigned) {
-            return !is_null($assigned->driver_id);
-        });
-    
-        if ($hasPickup) {
+       
             // Pickup existed, now completed => assign loyalty points once here
             $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
-        }
+        
     }
 
     return redirect()->back()->with('success', 'Dropoff marked as completed successfully!');
