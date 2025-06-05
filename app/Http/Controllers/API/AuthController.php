@@ -847,6 +847,7 @@ public function driverlogin(Request $request){
         'fcm_token' => $driver->fcm_token,
         'token' => $driver->createToken("API Token")->plainTextToken,
         'data'=> ([
+            'driver_id' => $driver->id,
             'name' => $driver->name,
             'email' => $driver->email,
             'phone' => $driver->phone,
