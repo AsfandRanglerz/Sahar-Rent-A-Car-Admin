@@ -97,6 +97,7 @@ Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::cl
 
 //#################  ContactUs  ##########################
 Route::post('/contactus',[ContactUsController::class,'contact']);
+Route::get('/drivercontactus', [ContactUsController::class, 'contactUs']);
 
 //#################  Loyalty Points  #####################
 Route::middleware('auth:sanctum')->get('/loyalty-points', [LoyaltyPointController::class, 'getLoyaltyPoints']);

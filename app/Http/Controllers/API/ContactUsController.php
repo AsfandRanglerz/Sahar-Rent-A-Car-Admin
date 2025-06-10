@@ -43,4 +43,14 @@ class ContactUsController extends Controller
         'data' => $contact
     ],200);
     }
+
+    public function contactUs()
+    {
+        $contact = ContactUs::select('email', 'phone')->first();
+ 
+        return response()->json([
+            'message' => 'Contact Us details retrieved successfully',
+            'data' => $contact
+        ]);
+    }
 }
