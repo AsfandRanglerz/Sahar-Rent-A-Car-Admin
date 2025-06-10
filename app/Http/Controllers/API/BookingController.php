@@ -552,10 +552,13 @@ public function getDriverBookings(Request $request)
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             'pickup_address' => $booking->pickup_address,
             // 'dropoff_address' => $booking->dropoff_address,
             'pickup_date' => $booking->pickup_date,
             'pickup_time' => $booking->pickup_time,
+            'price' => $booking->price,
             // 'dropoff_date' => $booking->dropoff_date,
             // 'dropoff_time' => $booking->dropoff_time,
             'car' => $booking->car,
@@ -579,20 +582,25 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             // 'pickup_address' => $booking->pickup_address,
             'dropoff_address' => $booking->dropoff_address,
             // 'pickup_date' => $booking->pickup_date,
             // 'pickup_time' => $booking->pickup_time,
             'dropoff_date' => $booking->dropoff_date,
             'dropoff_time' => $booking->dropoff_time,
+            'price' => $booking->price,
             'car' => $booking->car,
         ];
     });
-
+$combinedRequests = $pickupRequests->merge($dropoffRequests)->sortBy('id')->values();
     return response()->json([
         // 'current_bookings' => $requestBookings
-        'pickup_requests' => $pickupRequests,
-        'dropoff_requests' => $dropoffRequests
+        // 'pickup_requests' => $pickupRequests,
+        // 'dropoff_requests' => $dropoffRequests
+        'message' => 'Driver bookings fetched successfully',
+        'driver_bookings' => $combinedRequests
     ], 200);
 }
 
