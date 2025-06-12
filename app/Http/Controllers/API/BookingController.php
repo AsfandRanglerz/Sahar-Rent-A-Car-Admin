@@ -578,13 +578,15 @@ public function getDriverBookingRequests(Request $request)
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             'pickup_address' => $booking->pickup_address,
             // 'dropoff_address' => $booking->dropoff_address,
             'pickup_date' => $booking->pickup_date,
             'pickup_time' => $booking->pickup_time,
+            'price' => $booking->price,
             // 'dropoff_date' => $booking->dropoff_date,
             // 'dropoff_time' => $booking->dropoff_time,
-            'car' => $booking->car,
         ];
     });
 
@@ -605,13 +607,15 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             // 'pickup_address' => $booking->pickup_address,
             'dropoff_address' => $booking->dropoff_address,
             // 'pickup_date' => $booking->pickup_date,
             // 'pickup_time' => $booking->pickup_time,
             'dropoff_date' => $booking->dropoff_date,
             'dropoff_time' => $booking->dropoff_time,
-            'car' => $booking->car,
+            'price' => $booking->price,
         ];
     });
 
@@ -789,7 +793,7 @@ public function DriverBookingHistory(Request $request)
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 1)->where('driver_id', $driverId);
     }, 'car' => function ($query) {
-        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+        $query->select('car_id');
     }])
     ->get()
     ->map(function ($booking) {
@@ -798,13 +802,15 @@ public function DriverBookingHistory(Request $request)
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             'pickup_address' => $booking->pickup_address,
             // 'dropoff_address' => $booking->dropoff_address,
             'pickup_date' => $booking->pickup_date,
             'pickup_time' => $booking->pickup_time,
+            'price' => $booking->price,
             // 'dropoff_date' => $booking->dropoff_date,
             // 'dropoff_time' => $booking->dropoff_time,
-            'car' => $booking->car,
         ];
     });
 
@@ -816,7 +822,7 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 1)->where('dropoff_driver_id', $driverId);
     }, 'car' => function ($query) {
-        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+        $query->select('car_id');
     }])
     ->get()
     ->map(function ($booking) {
@@ -825,13 +831,15 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
             'id' => $booking->id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
+            'phone' => $booking->phone,
+            'total_days' => $booking->total_days,
             // 'pickup_address' => $booking->pickup_address,
             'dropoff_address' => $booking->dropoff_address,
             // 'pickup_date' => $booking->pickup_date,
             // 'pickup_time' => $booking->pickup_time,
             'dropoff_date' => $booking->dropoff_date,
             'dropoff_time' => $booking->dropoff_time,
-            'car' => $booking->car,
+            'price' => $booking->price,
         ];
     });
     return response()->json([
