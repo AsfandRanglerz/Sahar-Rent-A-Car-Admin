@@ -66,19 +66,14 @@ class CarController extends Controller
     {
         $userId = Auth::id(); // Get logged-in user ID
         
-        // if (!$userId) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
+      
         $carId = $request->input('id');
         $carDetails = CarDetails::
         select(['car_id', 'price_per_day', 'price_per_week','price_per_two_week','price_per_three_week', 'price_per_month'])
         ->where('id', $carId)
         ->first();
 
-        // if (!$carDetails) {
-        //     return response()->json(['message' => 'Car details not found'], 404);
-        // }
-
+       
         return response()->json([
             'price_details' => $carDetails,
             // 'user_id' => $userId, // Include the authenticated user ID in the response
@@ -188,9 +183,7 @@ class CarController extends Controller
 
 public function show(Request $request, $car_id)
 {
-    // $request->validate([
-    //     'car_id' => 'required|integer|exists:car_details,car_id',
-    // ]);
+   
 
     $userId = Auth::id(); // Get the logged-in user's ID
 
@@ -245,10 +238,7 @@ public function filterCars(Request $request)
     $userId = Auth::id(); // Get logged-in user ID
     // $user = User::find($userId); // Fetch user details
 
-    // if (!$user) {
-    //     return response()->json(['success' => false, 'message' => 'User not found'], 404);
-    // }
-
+    
     $query = CarDetails::select([
         'id', 'car_id', 'car_name','call_number','price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month', 'passengers', 'luggage', 
         'doors', 'car_type','feature', 'image'
@@ -266,9 +256,6 @@ public function filterCars(Request $request)
         $query->where('location', 'LIKE', '%' . $location . '%');
     }
 
-    // if (!empty($vehicleType)) {
-    //     $query->where('vehicle_type', $vehicleType);
-    // }
     if (!empty($vehicleType)) {
         $query->where('car_type', $vehicleType);
     }
