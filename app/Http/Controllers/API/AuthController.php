@@ -1106,6 +1106,7 @@ return response()->json([
             // 'status' => true,
             'message' => 'User profile retrieved successfully',
             'data' => [
+                'driver_id' => $driver->id,
                 'name' => $driver->name,
                 'email' => $driver->email,
                 'phone' => $driver->phone,

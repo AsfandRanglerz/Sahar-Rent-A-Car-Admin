@@ -569,13 +569,14 @@ public function getDriverBookingRequests(Request $request)
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 3)->where('driver_id', $driverId);
     }, 'car' => function ($query) {
-        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+        $query->select('car_id');
     }])
     ->get()
     ->map(function ($booking) {
         return [
             'assigned_id' => optional($booking->assign->first())->id,
             'id' => $booking->id,
+            'user_id' => $booking->user_id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
             'phone' => $booking->phone,
@@ -598,13 +599,14 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 3)->where('dropoff_driver_id', $driverId);
     }, 'car' => function ($query) {
-        $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
+        $query->select('car_id');
     }])
     ->get()
     ->map(function ($booking) {
         return [
             'assigned_id' => optional($booking->assign->first())->id,
             'id' => $booking->id,
+            'user_id' => $booking->user_id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
             'phone' => $booking->phone,
@@ -626,6 +628,23 @@ return response()->json([
     'pickup_requests' => $pickupRequests,
         'dropoff_requests' => $dropoffRequests
 ], 200);
+}
+
+public function getUserDetails($user_id)
+{
+    $user = User::select('name', 'phone', 'email', 'image')
+                ->find($user_id);
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'User not found.',
+        ], 400);
+    }
+
+    return response()->json([
+        'message' => 'User details retrieved successfully',
+        'data' => $user,
+    ], 200);
 }
 
 public function updateBookingStatus(Request $request)

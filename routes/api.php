@@ -91,6 +91,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/bookinghistory', [BookingController::class, 'DriverBookingHistory']);
     Route::get('/driverrequests', [BookingController::class, 'getDriverBookingRequests']);
 });
+Route::get('/userdetails/{user_id}', [BookingController::class, 'getUserDetails']);
+
 //#################  Payment  ############################
 Route::post('/deposit', [PaymentController::class, 'processDeposit'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->get('/wallet-history', [PaymentController::class, 'getWalletHistory']);
