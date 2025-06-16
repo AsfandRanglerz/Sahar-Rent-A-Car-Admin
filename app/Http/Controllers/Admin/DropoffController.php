@@ -174,9 +174,6 @@ public function markDropoffCompleted($id)
         $requestBooking->status = 1; // Main booking completed
         $requestBooking->save();
 
-       
-            // Pickup existed, now completed => assign loyalty points once here
-            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
         
     }
 

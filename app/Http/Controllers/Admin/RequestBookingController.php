@@ -12,6 +12,7 @@ use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
 use App\Models\UserLoyaltyEarning;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -452,7 +453,9 @@ public function markCompleted($id)
             $requestBooking->save();
 
             //Assign Loyalty Points when request booking is completed
-            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
+             if (!$this->hasLoyaltyPointsAssigned($requestBooking->user_id, $requestBooking->id)) {
+            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id, $requestBooking->id);
+            }
         }
     }
      elseif ($selfPickup === 'No' && $selfDropoff === 'Yes') {
@@ -488,14 +491,24 @@ public function markCompleted($id)
             $requestBooking->save();
 
             // 🎯 Assign Loyalty Points when request booking is completed
-            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id);
+           if (!$this->hasLoyaltyPointsAssigned($requestBooking->user_id, $requestBooking->id)) { 
+            $this->assignLoyaltyPoints($requestBooking->user_id, $requestBooking->car_id, $requestBooking->id);
+           }
         }
     }
 
     return redirect()->back()->with('success', 'Booking marked as completed successfully');
 }
 
-private function assignLoyaltyPoints($userId, $carId)
+protected function hasLoyaltyPointsAssigned($userId, $bookingId)
+{
+    return DB::table('user_loyalty_earnings')
+        ->where('user_id', $userId)
+        ->where('booking_id', $bookingId)
+        ->exists();
+}
+
+private function assignLoyaltyPoints($userId, $carId, $bookingId)
 {
     $carDetails = CarDetails::where('car_id', $carId)->first();
 
@@ -508,6 +521,7 @@ private function assignLoyaltyPoints($userId, $carId)
 
             UserLoyaltyEarning::create([
                 'user_id'       => $userId,
+                'booking_id'    => $bookingId,
                 'total_points'  => $totalPoints,
                 'earned_points' => $loyaltyPoints->on_car,
                 'car_name'      => $carDetails->car_name,
