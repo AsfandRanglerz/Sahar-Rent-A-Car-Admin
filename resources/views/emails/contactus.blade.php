@@ -51,6 +51,6 @@ Thanks,
     </p>
 
     <p>Thanks,<br>
-    <strong>Sahar Rent A Car</strong></p>
+    <strong>Sahar Team</strong></p>
 </body>
 </html>
