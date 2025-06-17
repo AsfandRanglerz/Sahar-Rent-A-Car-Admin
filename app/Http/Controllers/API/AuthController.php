@@ -920,29 +920,69 @@ public function driverlogin(Request $request){
     }
 
     public function getLicenseStatus()
-    {
-        $driverId = Auth::id(); // Get the authenticated driver ID
+{
+    $driverId = Auth::id(); // Get the authenticated driver ID
 
-        // Fetch driver license document with its approval status
-        $licenses = DriverDocument::where('driver_id', $driverId)
-            ->select('driver_id', 'license') // Selecting relevant columns
-            ->with(['licenseApproval' => function ($query) use ($driverId) {
-                $query->where('driver_id', $driverId)->select('driver_id', 'status');
-            }])
-            ->get();
-           
-            $formattedLicenses = $licenses->map(function ($document) {
-                return [
-                    'driver_id' => $document->driver_id,
-                    'license' => $document->license,
-                    'status' => optional($document->licenseApproval)->status == 1 ? 'Approved' : 'Rejected',
-                ];
-            });
+    $license = DriverDocument::where('driver_id', $driverId)
+        ->select('id', 'driver_id', 'license')
+        ->with(['licenseApproval' => function ($query) use ($driverId) {
+            $query->where('driver_id', $driverId)->select('driver_id', 'status');
+        }])
+        ->first();
 
+        if (!$license) {
         return response()->json([
-            'licenses' => $formattedLicenses
+            'message' => 'License status retrieved successfully',
+            'data' => (object) []  
         ], 200);
     }
+   
+    $status = optional($license->licenseApproval)->status;
+
+    // Determine readable status
+    if ($status == 1) {
+        $statusText = 'Approved';
+    } elseif ($status == 0) {
+        $statusText = 'Rejected';
+    } elseif ($status == 2) {
+        $statusText = 'Pending';
+    } else {
+        $statusText = 'Unknown';
+    }
+
+    return response()->json([
+        'message' => 'License status retrieved successfully',
+       'data' => [
+        'id'            => $license->id,
+        'driver_id'     => $license->driver_id,
+        'license'       => $license->license,
+        'license_name'  => basename($license->license),
+        'status'        => $statusText,
+    ]
+    ], 200);
+}
+
+public function driverdocumentdestroy($id)
+{
+    $driverId = Auth::id(); // Authenticated driver
+
+    $document = DriverDocument::where('id', $id)
+                ->where('driver_id', $driverId)
+                ->first();
+
+// Delete related license approval if exists
+    LicenseApproval::where('driver_id', $driverId)->delete();
+
+    
+    // Delete the document
+    $document->delete();
+    
+        return response()->json([
+            'message' => 'Document deleted'
+        ], 200);
+    
+}
+
 
 public function driverforgotPassword(Request $request)
 {

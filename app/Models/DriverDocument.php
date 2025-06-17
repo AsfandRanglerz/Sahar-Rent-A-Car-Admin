@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use App\Models\Driver;
 use App\Models\driversregister;
+use App\Models\LicenseApproval;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

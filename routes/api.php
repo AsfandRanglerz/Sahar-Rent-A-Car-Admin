@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->post('/driveravailability', [DriverController
 
 //################ licenseStatus ########################
 Route::get('/license-status', [AuthController::class, 'getLicenseStatus'])->middleware('auth:sanctum');
-
+Route::delete('/driverdocumentdelete/{id}', [AuthController::class, 'driverdocumentdestroy'])->middleware('auth:sanctum');
 //################ Driver profile #######################
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getdriverprofile', [AuthController::class, 'getDriverProfile']);
