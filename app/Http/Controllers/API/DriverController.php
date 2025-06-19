@@ -77,6 +77,23 @@ class DriverController extends Controller
         ], 200);
     }
 
+    public function getAvailability()
+{
+    $driver = Auth::user(); // Authenticated driver
+
+    // Make sure driver exists and has the 'is_available' field
+    if (!$driver || !isset($driver->is_available)) {
+        return response()->json([
+            'message' => 'Driver not found or availability status not set',
+        ], 404);
+    }
+
+    return response()->json([
+        'message' => 'Driver availability status retrieved successfully',
+        'is_available' => $driver->is_available
+    ], 200);
+}
+
     public function deleteAccount(Request $request)
 {
     $driverId = Auth::id(); // Get authenticated driver

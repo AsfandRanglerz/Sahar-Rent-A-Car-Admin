@@ -41,7 +41,7 @@ Route::post('/driverreset', [AuthController::class, 'driverresetPassword']);
 
 //################ driver availability #####################
 Route::middleware('auth:sanctum')->post('/driveravailability', [DriverController::class, 'updateAvailability']);
-
+Route::middleware('auth:sanctum')->get('/getdriveravailability', [DriverController::class, 'getAvailability']);
 //################ licenseStatus ########################
 Route::get('/license-status', [AuthController::class, 'getLicenseStatus'])->middleware('auth:sanctum');
 Route::delete('/driverdocumentdelete/{id}', [AuthController::class, 'driverdocumentdestroy'])->middleware('auth:sanctum');

@@ -1142,6 +1142,20 @@ return response()->json([
         $driver = Auth::user();
         $driverLicense = DriverDocument::where('driver_id', $driver->id)
         ->value('license');
+         $status = DB::table('license_approvals')
+        ->where('driver_id', $driver->id)
+        ->value('status');
+
+    // Convert status to readable format
+    if ($status === 1) {
+        $statusText = 'Approved';
+    } elseif ($status === 0) {
+        $statusText = 'Rejected';
+    } elseif ($status === 2) {
+        $statusText = 'Pending';
+    } else {
+        $statusText = 'Unknown';
+    }
         return response()->json([
             // 'status' => true,
             'message' => 'User profile retrieved successfully',
@@ -1151,7 +1165,8 @@ return response()->json([
                 'email' => $driver->email,
                 'phone' => $driver->phone,
                 'image' => $driver->image, 
-                'license' => $driverLicense
+                'license' => $driverLicense,
+                'status' => $statusText,
             ],
         ], 200);
     }
@@ -1328,80 +1343,125 @@ return response()->json([
         }
     }
  
-    use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+
 
 public function socialLogin(Request $request)
-{
+    {
+        try {
+            $data = $request->only(['social_id', 'login_type', 'fcm_token', 'email', 'name', 'image']);
+ 
+            $socialColumn = $data['login_type'] === 'apple' ? 'apple_social_id' : 'google_social_id';
+ 
+            // Case 1: User exists by email but no social ID yet
+            $user = User::whereNull($socialColumn)
+                ->where('email', $data['email'])
+                ->first();
+ 
+            if ($user) {
+                $user->$socialColumn = $data['social_id'];
+                $user->login_type = $data['login_type'];
+                $user->fcm_token = $data['fcm_token'];
+                $user->name = $data['name'] ?? $user->name;
+                $user->image = $data['image'] ?? $user->image;
+                $user->save();
+ 
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'message' => 'User login successfully!',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            }
+ 
+            // Case 2: User exists by social ID
+            $user = User::where($socialColumn, $data['social_id'])->first();
+ 
+            if ($user) {
+                $user->fcm_token = $data['fcm_token'];
+                $user->name = $data['name'] ?? $user->name;
+                $user->image = $data['image'] ?? $user->image;
+                $user->login_type = $request->login_type;
+                $user->save();
+ 
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'message' => 'User login successfully!',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            }
+ 
+            // Case 3: New user registration
+            $user = new User();
+            $user->email = $data['email'];
+            $user->fcm_token = $data['fcm_token'];
+            $user->login_type = $data['login_type'];
+            $user->name = $data['name'] ?? null;
+            $user->image = $data['image'] ?? null;
+            $user->$socialColumn = $data['social_id'];
+            $user->save();
+ 
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'message' => 'User Login Successfully!',
+                'type' => 'new',
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+ 
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+ 
    
-
-    $socialColumn = $request->login_type === 'apple' ? 'apple_social_id' : 'google_social_id';
-
-    // Try to find user by social_id
-    $user = User::where($socialColumn, $request->social_id)->first();
-
-    if ($user) {
-        $user->fcm_token = $request->fcm_token ?? $user->fcm_token;
-        $user->save();
-
-        // $token = $user->createToken('API Token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'User login successful',
-            'user' => $user,
-            // 'token' => $token,
-        ]);
+    public function appleLogin(Request $request)
+    {
+        try {
+            $data = $request->only(['social_id', 'fcm_token']);
+   
+            if (empty($data['social_id'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Apple ID (social_id) is required.',
+                ], 400);
+            }
+   
+            $socialColumn = 'apple_social_id';
+   
+            // Check if user already exists by Apple social ID
+            $user = User::where($socialColumn, $data['social_id'])->first();
+   
+            if (!$user) {
+                // Create new user since email is not provided
+                $user = new User();
+                $user->$socialColumn = $data['social_id'];
+            }
+   
+            // Update or set values
+            $user->login_type = $request->input('login_type', 'apple');
+            $user->fcm_token = $data['fcm_token'] ?? $user->fcm_token;
+            $user->save();
+   
+            // Generate token
+            $token = $user->createToken('auth_token')->plainTextToken;
+   
+            return response()->json([
+                'message' => 'Apple login successful!',
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+           
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Apple login error: ' . $e->getMessage(),
+            ], 500);
+        }
     }
-
-    // Handle file uploads
-    $emirate_id = null;
-    $passport = null;
-    $driving_license = null;
-
-    if ($request->hasFile('emirate_id')) {
-        $file = $request->file('emirate_id');
-        $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
-        $file->move(public_path('admin/assets/images/users'), $filename);
-        $emirate_id = 'public/admin/assets/images/users/' . $filename;
-    }
-
-    if ($request->hasFile('passport')) {
-        $file = $request->file('passport');
-        $filename = time() . '_passport_' . $file->getClientOriginalName();
-        $file->move(public_path('admin/assets/images/users'), $filename);
-        $passport = 'public/admin/assets/images/users/' . $filename;
-    }
-
-    if ($request->hasFile('driving_license')) {
-        $file = $request->file('driving_license');
-        $filename = time() . '_driving_license_' . $file->getClientOriginalName();
-        $file->move(public_path('admin/assets/images/users'), $filename);
-        $driving_license = 'public/admin/assets/images/users/' . $filename;
-    }
-
-    // Create new user
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password), // fallback password
-        'fcm_token' => $request->fcm_token,
-        $socialColumn => $request->social_id,
-        // 'status' => 1,
-        'emirate_id' => $emirate_id,
-        'passport' => $passport,
-        'driving_license' => $driving_license,
-    ]);
-
-    // $token = $user->createToken('API Token')->plainTextToken;
-
-    return response()->json([
-        'message' => 'User registered via social login',
-        'user' => $user,
-        // 'token' => $token,
-    ]);
-}
 
     
 }
