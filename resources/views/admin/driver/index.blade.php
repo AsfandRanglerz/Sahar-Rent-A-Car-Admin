@@ -117,8 +117,8 @@
                                                      ">chat</a>
                                                 </td> --}}
                                                 <td>
-                                                    <div class="badge {{ $driver->availability == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
-                                                        {{ $driver->availability == 1 ? 'Available' : 'Not Available' }}
+                                                    <div class="badge {{ $driver->is_available == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
+                                                        {{ $driver->is_available == 1 ? 'Available' : 'Not Available' }}
                                                     </div>
                                                 </td>
                                                 <td>

@@ -912,8 +912,15 @@ public function driverlogin(Request $request){
         $document->license = $licensePath;
         $document->save();
 
-        LicenseApproval::where('driver_id', $driver->id)
-        ->update(['image' => $licensePath]);
+       LicenseApproval::firstOrCreate(
+    ['driver_id' => $driver->id], // Search condition
+    [
+        'email' => $driver->email,
+        'name' => $driver->name,
+        'image' => $licensePath,
+    ]
+);
+
         }
 
         return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);

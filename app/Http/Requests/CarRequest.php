@@ -81,6 +81,7 @@ class CarRequest extends FormRequest
     'price_per_day.regex' => 'The Price Per Hour must be a valid number with up to two decimal places.',
 
     'image.required' => 'The image is required.',
+    'image.max' => 'The image must not exceed 2MB.',
 
         ];
     }

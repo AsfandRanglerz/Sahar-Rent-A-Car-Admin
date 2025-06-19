@@ -78,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/documentprofile', [AuthController::class, 'updateDocument']);
     Route::post('/sociallogin', [AuthController::class, 'socialLogin']);
 });
-
+Route::post('/applelogin',[AuthController::class,'appleLogin']);
 //#################  Bookings  ###########################
 Route::post('/bookings',[BookingController::class,'createBooking'])->middleware('auth:sanctum');
 Route::get('/getbookings',[BookingController::class,'getUserBookings'])->middleware('auth:sanctum');

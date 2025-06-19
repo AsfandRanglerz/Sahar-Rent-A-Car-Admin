@@ -72,7 +72,7 @@ class DriverController extends Controller
         $driver->update(['is_available' => $request->is_available]);
 
         return response()->json([
-            'message' => 'Availability status updated successfully',
+            'message' => "You are now marked as {{ $driver->is_available ? 'available' : 'unavailable' }}",
             'is_available' => $driver->is_available
         ], 200);
     }
