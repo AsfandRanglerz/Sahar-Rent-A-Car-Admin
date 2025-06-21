@@ -130,6 +130,51 @@
     });
 </script>
 
+<script>
+
+    function updatechatCounter() {
+
+        $.ajax({
+
+            url: "{{ route('chat.counter') }}",
+
+            type: 'GET',
+
+            dataType: 'json',
+
+            success: function(response) {
+
+                let count = response.count || 0;
+
+                $('#chatRequestCounter').text(count > 10 ? '10+' : count);
+
+            },
+
+            error: function(xhr, status, error) {
+
+                console.error("chat Counter Error:", error);
+
+            }
+
+        });
+
+    }
+
+
+
+    // Run once on page load
+
+    $(document).ready(function () {
+
+        updatechatCounter();
+
+        setInterval(updatechatCounter, 10000); // Update every 10 seconds
+
+    });
+
+</script>
+
+
     <!-- General JS Scripts -->
     <script src="{{ asset('public/admin/assets/js/app.min.js') }}"></script>
     <!-- JS Libraies -->
@@ -208,6 +253,7 @@
 
     @yield('js')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @stack('scripts')
 </body>
 
 

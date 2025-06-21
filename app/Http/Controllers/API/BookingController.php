@@ -504,6 +504,7 @@ public function getDriverBookings(Request $request)
         return [
             'assigned_id' => optional($booking->assign->first())->id,
             'id' => $booking->id,
+            'customer_id' => $booking->user_id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
             'phone' => $booking->phone,
@@ -534,6 +535,7 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
         return [
             'assigned_id' => optional($booking->assign->first())->id,
             'id' => $booking->id,
+            'customer_id' => $booking->user_id,
             'car_id' => $booking->car_id,
             'full_name' => $booking->full_name,
             'phone' => $booking->phone,

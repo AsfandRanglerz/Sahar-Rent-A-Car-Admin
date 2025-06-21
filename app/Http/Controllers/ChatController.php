@@ -62,6 +62,31 @@ class ChatController extends Controller
         ]);
     }
 
+    public function chatpendingCounter()
+{
+    $users = $this->firebase->getUsers(); // Fetch all chats
+
+    $unreadCount = 0;
+
+    foreach ($users as $user) {
+        $chatId = $user['id'] ?? null;
+        if ($chatId) {
+            $messages = $this->firebase->getMessages($chatId);
+            foreach ($messages ?? [] as $msg) {
+                if (
+                    isset($msg['read']) &&
+                    !$msg['read'] &&
+                    ($msg['mytype'] ?? '') !== 'admin'
+                ) {
+                    $unreadCount++;
+                }
+            }
+        }
+    }
+
+    return response()->json(['count' => $unreadCount]);
+}
+
     /**
      * Send a message to a specific chat.
      */

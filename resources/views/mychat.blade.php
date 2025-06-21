@@ -91,6 +91,8 @@
             font-size: 0.8rem;
         }
     </style>
+    @php use Carbon\Carbon; @endphp
+
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="row border">
@@ -122,7 +124,13 @@
                                 </div>
                             </div>
                             <div>
-                                <small>{{ $user['lastMessageTime'] ?? 'N/A' }}</small>
+                                @php
+                                    $time = isset($user['lastMessageTime'])
+                                        ? Carbon::parse($user['lastMessageTime'])->format('d M Y, h:i A') // 12-hour format
+                                        : 'N/A';
+                                @endphp
+                                <small>{{ $time }}</small>
+
                                 
                                 @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0 && $user['mytype'] !== "admin")
                                     <span class="badge badge-danger">{{ $user['unreadCount'] }}</span>

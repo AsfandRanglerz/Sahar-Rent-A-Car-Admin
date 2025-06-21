@@ -70,9 +70,9 @@ class DriverController extends Controller
         $driver = Driver::find($driver->id);
         // Update driver's availability
         $driver->update(['is_available' => $request->is_available]);
-
+        $status = $driver->is_available ? 'available' : 'unavailable';
         return response()->json([
-            'message' => "You are now marked as {{ $driver->is_available ? 'available' : 'unavailable' }}",
+            'message' => "You are now $status",
             'is_available' => $driver->is_available
         ], 200);
     }

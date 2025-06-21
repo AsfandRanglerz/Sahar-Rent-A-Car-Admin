@@ -331,7 +331,21 @@
 @endif
 <li class="dropdown {{ request()->is('admin/chat*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
                 <a href="{{ url('/admin/chat') }}" class="nav-link"><i
-                        data-feather="message-square"></i><span>Chat</span></a>
+                        data-feather="message-square"></i><span>Chat</span>
+                    <div id="chatRequestCounter" 
+
+                class="badge {{ request()->is('admin/chat*') ? 'bg-white text-dark' : 'bg-primary text-white' }} rounded-circle"
+
+                style="display: inline-flex; justify-content: center; align-items: center; 
+
+            min-width: 22px; height: 22px; border-radius: 50%; 
+
+            text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
+
+               0
+
+           </div>
+                    </a>
             </li>
             
 @if($isAdmin || (isset($subadminPermissions['ContactUs']) && $subadminPermissions['ContactUs']->view == 1))

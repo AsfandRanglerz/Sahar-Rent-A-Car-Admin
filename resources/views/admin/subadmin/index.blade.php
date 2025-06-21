@@ -1,6 +1,11 @@
 @extends('admin.layout.app')
 @section('title', 'Users')
 @section('content')
+ <style>
+        .dashTd ~ td:not(:nth-child(4)) {
+            display: none;
+        }
+    </style>
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="section-body">
@@ -151,7 +156,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Dashboard</td>
+                                <td class="dashTd">Dashboard</td>
                                 {{-- <td><label>Add <input type="checkbox" name="permissions[dashboard][add]" ></label></td>
                                 <td><label>Edit <input type="checkbox" name="permissions[dashboard][edit]" ></label></td>
                                 <td><label>View <input type="checkbox" name="permissions[dashboard][view]"></label></td>

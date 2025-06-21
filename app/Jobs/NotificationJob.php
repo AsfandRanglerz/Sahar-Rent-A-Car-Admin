@@ -23,7 +23,7 @@ class NotificationJob implements ShouldQueue
     protected $fcmToken;
     protected $title;
     protected $description;
-protected $data;
+      protected $data;
     public function __construct($fcmToken,$title,$description, $data)
     {
         $this->fcmToken = $fcmToken;

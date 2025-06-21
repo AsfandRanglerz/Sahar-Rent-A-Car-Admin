@@ -799,30 +799,20 @@ public function driverlogin(Request $request){
             'message' => 'Invalid password',
         ], 401);
     }
-    // $otp = rand(100000, 999999);
-    // $otpToken = Str::uuid(); // Unique token for OTP verification
-    // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
-
-    // Store OTP in the database
-    // OTP::create([
-    //     'identifier' => $identifier,
-    //     'otp' => $otp,
-    //     'otp_token' => $otpToken,
-    //     // 'expires_at' => $expiresAt,
-    // ]);
-
-    // Send OTP via email (or SMS)
-    // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-    //     Mail::to($identifier)->send(new OTPMail($otp));
-    // }
-
+    
+     if ($driver->status == 0) {
+        return response()->json([
+            'message' => 'Your account has been deactivated by the admin',
+        ], 403);
+    }
+    
     $driver->update([
         'login_date' => Carbon::now(),
         'availability' => 1,
     ]);
     
         if ($request->fcm_token) {
-            $customer->update(['fcm_token' => $request->fcm_token]);
+            $driver->update(['fcm_token' => $request->fcm_token]);
         }
 
     // if (!$customer) {
@@ -1424,7 +1414,88 @@ public function socialLogin(Request $request)
         }
     }
  
-   
+   public function driversocialLogin(Request $request)
+    {
+        try {
+            $data = $request->only(['social_id', 'login_type', 'fcm_token', 'email', 'name', 'image']);
+ 
+            $socialColumn = $data['login_type'] === 'apple' ? 'apple_social_id' : 'google_social_id';
+ 
+            // Case 1: User exists by email but no social ID yet
+            $user = Driver::whereNull($socialColumn)
+                ->where('email', $data['email'])
+                ->first();
+ 
+            if ($user) {
+                if ($user->status == 0) {
+                return response()->json([
+                    'message' => 'Your account has been deactivated by the admin',
+                ], 403);
+            }
+                $user->$socialColumn = $data['social_id'];
+                $user->login_type = $data['login_type'];
+                $user->fcm_token = $data['fcm_token'];
+                $user->name = $data['name'] ?? $user->name;
+                $user->image = $data['image'] ?? $user->image;
+                $user->save();
+ 
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'message' => 'User login successfully!',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            }
+ 
+            // Case 2: User exists by social ID
+            $user = Driver::where($socialColumn, $data['social_id'])->first();
+ 
+            if ($user) {
+                if ($user->status == 0) {
+                return response()->json([
+                    'message' => 'Your account has been deactivated by the admin',
+                ], 403);
+            }
+                $user->fcm_token = $data['fcm_token'];
+                $user->name = $data['name'] ?? $user->name;
+                $user->image = $data['image'] ?? $user->image;
+                $user->login_type = $request->login_type;
+                $user->save();
+ 
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'message' => 'User login successfully!',
+                    'user' => $user,
+                    'token' => $token,
+                ], 200);
+            }
+ 
+            // Case 3: New user registration
+            $user = new Driver();
+            $user->email = $data['email'];
+            $user->fcm_token = $data['fcm_token'];
+            $user->login_type = $data['login_type'];
+            $user->name = $data['name'] ?? null;
+            $user->image = $data['image'] ?? null;
+            $user->$socialColumn = $data['social_id'];
+            $user->save();
+ 
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'message' => 'User Login Successfully!',
+                'type' => 'new',
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+ 
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function appleLogin(Request $request)
     {
         try {

@@ -31,7 +31,7 @@ class NotificationHelper
                     'token' => $fcmToken,
                     'notification' => [
                         'title' => $title,
-                        'description' => $description,
+                        'body' => $description,
                     ],
                     'data' => array_map('strval', $data),
                 ],
