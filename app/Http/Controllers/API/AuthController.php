@@ -267,6 +267,12 @@ return response()->json([
     //     'otp_token' => $otpToken, // Send OTP token to frontend
     // ], 200);
     
+    if ($driver->status == 0) {
+        return response()->json([
+            'message' => 'Your account has been deactivated by the admin',
+        ], 403);
+    }
+
     $customer->update([
         'login_date' => Carbon::now(),
         'availability' => 1,
@@ -1355,6 +1361,11 @@ public function socialLogin(Request $request)
                 ->first();
  
             if ($user) {
+                 if ($user->status == 0) {
+                return response()->json([
+                    'message' => 'Your account has been deactivated by the admin',
+                ], 403);
+            }
                 $user->$socialColumn = $data['social_id'];
                 $user->login_type = $data['login_type'];
                 $user->fcm_token = $data['fcm_token'];
@@ -1374,6 +1385,11 @@ public function socialLogin(Request $request)
             $user = User::where($socialColumn, $data['social_id'])->first();
  
             if ($user) {
+                 if ($user->status == 0) {
+                return response()->json([
+                    'message' => 'Your account has been deactivated by the admin',
+                ], 403);
+            }
                 $user->fcm_token = $data['fcm_token'];
                 $user->name = $data['name'] ?? $user->name;
                 $user->image = $data['image'] ?? $user->image;

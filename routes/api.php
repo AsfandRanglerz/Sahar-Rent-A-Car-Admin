@@ -32,7 +32,7 @@ Route::post('/driverlogout',[AuthController::class,'driverlogout'])->middleware(
 Route::get('/getalldriver/{id}', [AuthController::class, 'getAllDriver']);
 
 //##################### driver account #####################
-Route::post('/account',[DriverController::class,'deleteAccount'])->middleware('auth:sanctum');
+Route::post('/accountdelete',[DriverController::class,'deleteAccount'])->middleware('auth:sanctum');
 Route::post('/account-deactivate', [DriverController::class, 'deactivateAccount'])->middleware('auth:sanctum');
 
 Route::post('/driverforgot-password', [AuthController::class, 'driverforgotPassword']);
