@@ -15,7 +15,7 @@
                             @else
                                 <p class="text-muted">Enter Your New Password</p>
                             @endif
-                            <form method="POST" action="{{url('admin-reset-password')}}">
+                            <form method="POST" action="{{url('admin-reset-password')}}" class="mb-0">
                                  @csrf
                                 <input value="{{$user->email}}" type="hidden" name="email" >
                                 {{-- <div class="form-group">
@@ -45,7 +45,7 @@
                                     </div>
                                     @error('confirmed') <span class="text-danger">{{$errors->first('confirmed')}}</span> @enderror
                                 </div>
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
                                         Reset Password
                                     </button>

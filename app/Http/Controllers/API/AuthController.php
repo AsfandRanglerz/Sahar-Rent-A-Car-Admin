@@ -58,7 +58,7 @@ return response()->json([
 $emirate_id = null;
 $passport = null;
 $driving_license = null;
-
+$plainPassword = $request->password;
 // if ($request->hasFile('emirate_id')) {
 //     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
 //     // $document->emirate_id = "storage/app/public/{$path}";
@@ -96,7 +96,7 @@ $customer = User::create([
     'name' => $request->name,
     'email' => $request->email,
     'phone' => $request->phone,
-    'password' => bcrypt($request->password),
+    'password' => Hash::make($plainPassword),
     'emirate_id' => $emirate_id,
     'passport' => $passport,
     'driving_license' => $driving_license,
@@ -129,7 +129,7 @@ if ($request->filled('referral_code')) {
     }
 }
 // $document->save();
-Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone));
+Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
 return response()->json([
     // 'status' => true,
     'message' => 'Your account has been created successfully',
@@ -267,7 +267,7 @@ return response()->json([
     //     'otp_token' => $otpToken, // Send OTP token to frontend
     // ], 200);
     
-    if ($driver->status == 0) {
+    if ($customer->status == 0) {
         return response()->json([
             'message' => 'Your account has been deactivated by the admin',
         ], 403);
@@ -691,6 +691,8 @@ $request->all(),
 ]
 );
 
+$plainPassword = $request->password;
+
 if($validateUser->fails()){
 return response()->json([
 // 'status' => false,
@@ -703,7 +705,7 @@ $driver = Driver::create([
 'name' => $request->name,
 'email' => $request->email,
 'phone' => $request->phone,
-'password' => bcrypt($request->password),
+'password' => Hash::make($plainPassword),
 ]);
 
 LicenseApproval::create([
@@ -742,7 +744,7 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
-Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $request->password,'driver'));     
+Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));     
 
 return response()->json([
 // 'status' => true,

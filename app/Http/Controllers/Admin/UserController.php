@@ -21,7 +21,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('documents')->get();
+        $users = User::with('documents')->latest()->get();
         return view('admin.user.index', compact('users'));
     }
 
