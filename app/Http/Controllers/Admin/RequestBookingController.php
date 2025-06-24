@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
+use App\Models\LicenseApproval;
 use App\Models\UserLoyaltyEarning;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -97,6 +98,15 @@ if ($request->self_pickup === 'No') {
     // Validate if the driver exists
     if (!$driver) {
         return response()->json(['message' => 'Driver not found.'], 404);
+    }
+
+    // Check if driver's license is approved
+    $licenseApproval = LicenseApproval::where('driver_id', $request->driver_id)->first();
+    if (!$licenseApproval || $licenseApproval->status == '0' || $licenseApproval->status == '2') {
+        $statusText = $licenseApproval ? ($licenseApproval->status == '0' ? 'Rejected' : 'Pending') : 'Not Submitted';
+        return response()->json([
+            'message' => 'Driver license not approved yet.'
+        ], 400);
     }
 
    
@@ -207,6 +217,14 @@ $requestBooking->driver_id = $request->driver_id;
 
         if (!$dropoffDriver) {
             return response()->json(['message' => 'Dropoff driver not found or unavailable.'], 404);
+        }
+
+        // Check if dropoff driver's license is approved
+        $dropoffLicenseApproval = LicenseApproval::where('driver_id', $request->dropoff_driver_id)->first();
+        if (!$dropoffLicenseApproval || $dropoffLicenseApproval->status == '0' || $dropoffLicenseApproval->status == '2') {
+            return response()->json([
+                'message' => 'Driver license not approved yet.'
+            ], 400);
         }
 
     $isDropoffDriverAssigned = RequestBooking::where('dropoff_driver_id', $request->dropoff_driver_id)
@@ -504,7 +522,7 @@ protected function hasLoyaltyPointsAssigned($userId, $bookingId)
 {
     return DB::table('user_loyalty_earnings')
         ->where('user_id', $userId)
-        ->where('booking_id', $bookingId)
+        ->where('request_booking_id', $bookingId)
         ->exists();
 }
 
@@ -521,7 +539,7 @@ private function assignLoyaltyPoints($userId, $carId, $bookingId)
 
             UserLoyaltyEarning::create([
                 'user_id'       => $userId,
-                'booking_id'    => $bookingId,
+                'request_booking_id'    => $bookingId,
                 'total_points'  => $totalPoints,
                 'earned_points' => $loyaltyPoints->on_car,
                 'car_name'      => $carDetails->car_name,

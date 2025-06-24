@@ -100,8 +100,14 @@ class DriverController extends Controller
         // Validate the incoming request
         $request->validate([
             'name' => 'required|string|max:255',
-            // 'email' => 'required|email|unique:drivers,email,' . $id,
+            'email' => 'required',
             'phone' => 'required|string|max:11',
+        ],
+        [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'phone.required' => 'Phone Number is required',
+            
         ]);
 
         $license = null;

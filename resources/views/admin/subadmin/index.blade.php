@@ -187,6 +187,32 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Chat</td>
+                                {{-- <td><input type="checkbox" name="permissions[terms_conditions][add]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][edit]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][view]" ></td>
+                                <td><input type="checkbox" name="permissions[terms_conditions][delete]" ></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][add]" id="terms_conditionsAdd">
+                                        <label class="form-check-label" for="terms_conditionsAdd">Add</label>
+                                    </div>
+                                </td> --}}
+                                
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[chat][view]" id="chatView">
+                                        <label class="form-check-label" for="chatView">View</label>
+                                    </div>
+                                </td>
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[terms_conditions][delete]" id="terms_conditionsDelete">
+                                        <label class="form-check-label" for="terms_conditionsDelete">Delete</label>
+                                    </div>
+                                </td> --}}
+                            </tr>
+                            <tr>
                                 <td>Sub Admins</td>
                                 {{-- <td><input type="checkbox" name="permissions[sub_admins][add]"></td>
                                 <td><input type="checkbox" name="permissions[sub_admins][edit]"></td>

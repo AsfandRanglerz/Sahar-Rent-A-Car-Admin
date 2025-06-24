@@ -520,7 +520,11 @@ if ($requestbooking->status == 2) {
             },
             error: function(xhr, status, error) {
                 console.error("Error Details:", xhr.responseText);
-                alert('This driver is already assigned for this date and time. Please select another driver.');
+                let msg = 'This driver is already assigned for this date and time. Please select another driver.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                alert(msg);
             },
             complete: function() {
                 // Hide spinner, show text, enable button after request completes

@@ -36,7 +36,7 @@
                                     </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>On Car Rental</label>
+                                            <label>On Car Rental <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Points i.e 5" name="on_car"
                                                 id="on_car" value="{{ old('on_car', $loyaltyPoint->on_car) }}" class="form-control">
                                             @error('on_car')
@@ -56,7 +56,7 @@
                                     </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Discount</label>
+                                            <label>Discount <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" style="border: 2px solid #cbd2d8;">Loyalty Points</span>

@@ -10,11 +10,11 @@
                     <div class="card">
                         <div class="padding-20">
                             <ul class="nav nav-tabs" id="myTab2" role="tablist">
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link" id="home-tab2" data-toggle="tab" href="#about" role="tab" aria-selected="false">About</a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="profile-tab2" data-toggle="tab" href="#settings" role="tab" aria-selected="true">Setting</a>
+                                    <a class="nav-link active" id="profile-tab2" data-toggle="tab" href="#settings" role="tab" aria-selected="true">Settings</a>
                                 </li>
                             </ul>
                             <div class="tab-content tab-bordered" id="myTab3Content">
@@ -69,7 +69,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group col-md-7 col-12">
+                                                <div class="form-group col-md-6 col-12">
                                                     <label>Profile Image</label>
                                                     <div class="custom-file">
                                                         <input type="file" name="image" class="custom-file-input" id="customFile">
@@ -80,7 +80,7 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-md-5 col-12">
+                                                {{-- <div class="form-group col-md-5 col-12">
                                                     <label>Phone</label>
                                                     <input type="tel" name="phone" value="{{ isset($data) ? $data->phone : '' }}"  class="form-control" value="">
                                                     @error('phone')
@@ -88,7 +88,7 @@
                                                         Please fill in the email
                                                     </div>
                                                     @enderror
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
                                         <div class="card-footer text-right">

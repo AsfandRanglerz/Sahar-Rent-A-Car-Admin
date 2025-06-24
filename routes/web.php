@@ -60,9 +60,7 @@ Route::get('/terms-conditions', function () {
 
 Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->group(function () {
     //  Chat routes
-    Route::get('/chat/count', [ChatController::class, 'chatpendingCounter'])->name('chat.counter');
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    
 
     Route::get('dashboard', [AdminController::class, 'getdashboard']);
     Route::get('profile', [AdminController::class, 'getProfile']);
@@ -72,6 +70,12 @@ Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->grou
     Route::post('/adminnotifications/mark-read', [AdminController::class, 'markNotificationsRead'])->name('admin.notifications.mark-read');
     Route::post('/adminnotifications/mark-all-read', [AdminController::class, 'markAllNotificationsRead'])
         ->name('admin.notifications.mark-all-read');
+
+        Route::controller(ChatController::class)->middleware(['admin', 'adminOrSubadmin:chat'])->group(function () {
+            Route::get('/chat/count', [ChatController::class, 'chatpendingCounter'])->name('chat.counter');
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+        });
 
     Route::controller(SecurityController::class)->middleware(['admin', 'adminOrSubadmin:privacy_policy'])->group(function () {
         Route::get('Privacy-policy', 'PrivacyPolicy');

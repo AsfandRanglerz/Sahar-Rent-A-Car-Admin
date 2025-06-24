@@ -105,7 +105,7 @@ class DriverController extends Controller
     ]);
 
     return response()->json([
-        'message' => 'Your account will be deleted within 14 days.',
+        'message' => 'Your account will be deleted within 14 days',
     ], 200);
 }
 
@@ -117,12 +117,12 @@ public function deactivateAccount(Request $request)
     $notification = new DriverNotification();
     $notification->driver_id = $driver->id;
     $notification->type = 'deactivation';
-    $notification->message = "Driver {$driver->name} has requested account deactivation.";
+    $notification->message = "Driver {$driver->name} has requested account deactivation";
     $notification->save();
 
     return response()->json([
         // 'status' => 'success',
-        'message' => 'Account deactivation request sent to admin.'
+        'message' => 'Account deactivation request sent to admin'
     ]);
 }
 

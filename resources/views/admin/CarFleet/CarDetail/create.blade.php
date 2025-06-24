@@ -15,7 +15,7 @@
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Car Name</label>
+                                            <label>Car Name <span class="text-danger">*</span></label>
                                             <input type="name" placeholder="Enter Car Name" name="car_name"
                                                 id="car_name" value="{{ old('car_name') }}" class="form-control">
                                             @error('car_name')
@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Day</label>
+                                            <label>Price Per Day <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                             <input type="number" placeholder="Enter Price Per day" name="price_per_day"
                                                 id="price_per_day" value="{{ old('price_per_day') }}" class="form-control">
@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per One Week</label>
+                                            <label>Price Per One Week <span class="text-danger">*</span></label>
                                             <div class ="input-group">
                                                 <input type="number" placeholder="Enter Price Per week" name="price_per_week"
                                                 id="price_per_week" value="{{ old('price_per_week') }}" class="form-control">
@@ -58,7 +58,7 @@
 
                                      <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Two Weeks</label>
+                                            <label>Price Per Two Weeks <span class="text-danger">*</span></label>
                                             <div class ="input-group">
                                                 <input type="number" placeholder="Enter Price Per Two weeks" name="price_per_two_week"
                                                 id="price_per_two_week" value="{{ old('price_per_two_week') }}" class="form-control">
@@ -75,7 +75,7 @@
 
                                      <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Three Weeks</label>
+                                            <label>Price Per Three Weeks <span class="text-danger">*</span></label>
                                             <div class ="input-group">
                                                 <input type="number" placeholder="Enter Price Per Three weeks" name="price_per_three_week"
                                                 id="price_per_three_week" value="{{ old('price_per_three_week') }}" class="form-control">
@@ -92,7 +92,7 @@
 
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Price Per Month</label>
+                                            <label>Price Per Month <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" placeholder="Enter Price Per Month" name="price_per_month" 
                                                     id="price_per_month" value="{{ old('price_per_month') }}" class="form-control">
@@ -122,7 +122,7 @@
                                     </div> --}}
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Phone Number</label>
+                                            <label>Phone Number <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Phone Number" name="call_number"
                                                 id="call_number" value="{{ old('call_number') }}" class="form-control">
                                             @error('call_number')
@@ -142,7 +142,7 @@
                                     </div> --}}
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Passengers</label>
+                                            <label>Passengers <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Passengers" name="passengers"
                                                 id="passengers" value="{{ old('passengers') }}" class="form-control">
                                             @error('passengers')
@@ -152,7 +152,7 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Luggage</label>
+                                            <label>Luggage <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Luggage Capacity" name="luggage"
                                                 id="luggage" value="{{ old('luggage') }}" class="form-control">
                                             @error('luggage')
@@ -162,7 +162,7 @@
                                     </div>
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Doors</label>
+                                            <label>Doors <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Car Doors" name="doors"
                                                 id="doors" value="{{ old('doors') }}" class="form-control">
                                             @error('doors')
@@ -182,7 +182,7 @@
                                     </div> --}}
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Car Type</label>
+                                            <label>Car Type <span class="text-danger">*</span></label>
                                             <select name="car_type" class="form-control">
                                                 <option disabled selected>Select value</option>
                                                 <option value="Auto" {{ old('car_type') == 'Auto' ? 'selected' : '' }}>Auto</option>
@@ -284,7 +284,7 @@
 
                                     <div class="col-sm-4 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Image</label>
+                                            <label>Image <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Your Image"name="image" value="{{ old('image') }}"
                                                 class="form-control">
                                                 <small text-muted>(Image should be of size 2MB)</small>

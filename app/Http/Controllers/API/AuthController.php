@@ -910,7 +910,7 @@ public function driverlogin(Request $request){
         $document->license = $licensePath;
         $document->save();
 
-       LicenseApproval::firstOrCreate(
+       LicenseApproval::updateOrCreate(
     ['driver_id' => $driver->id], // Search condition
     [
         'email' => $driver->email,
@@ -1137,7 +1137,7 @@ public function driverlogout(Request $request){
 
 return response()->json([
     // 'status' => true,
-    'message' => 'Logged Out successfully',
+    'message' => 'Logged out successfully',
 ], 200);
 }
 
@@ -1378,7 +1378,14 @@ public function socialLogin(Request $request)
                 $token = $user->createToken('auth_token')->plainTextToken;
                 return response()->json([
                     'message' => 'User login successfully!',
-                    'user' => $user,
+                    'user' => [
+                            'user_id' => $user->id,
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'phone' => $user->phone,
+                            'image' => $user->image,
+                        ],
+
                     'token' => $token,
                 ], 200);
             }
@@ -1420,7 +1427,14 @@ public function socialLogin(Request $request)
             return response()->json([
                 'message' => 'User Login Successfully!',
                 'type' => 'new',
-                'user' => $user,
+                'user' => [
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'image' => $user->image,
+                ],
+
                 'token' => $token,
             ], 200);
  

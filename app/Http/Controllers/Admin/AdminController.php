@@ -69,7 +69,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'phone' => 'required',
+            // 'phone' => 'required',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
                 ]);
 
@@ -80,7 +80,7 @@ class AdminController extends Controller
         $user = $admin ?? $Subadmin;
         
         // Data to be updated
-        $data = $request->only(['name', 'email', 'phone']);
+        $data = $request->only(['name', 'email']);
 
         // Handle image upload if a file is present
         if ($request->hasFile('image')) {

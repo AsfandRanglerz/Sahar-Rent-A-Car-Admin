@@ -40,6 +40,7 @@ class SubadminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:subadmins,email',
             'phone' => 'required|string|max:15',
+            'password' => 'required|string|min:8',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ],
         [
@@ -50,6 +51,9 @@ class SubadminController extends Controller
             'image.image' => 'The file must be an image',
             'image.mimes' => 'The Image must be a file of type: jpeg, png, jpg, gif',
             'image.max' => 'The Image may not be greater than 2MB',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 8 characters',
+
         ]);
 
         // $generatedPassword = random_int(10000000, 99999999);

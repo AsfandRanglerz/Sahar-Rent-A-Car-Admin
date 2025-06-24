@@ -258,7 +258,7 @@ class LicenseController extends Controller
 
         return redirect()->route('license.index')->with([
             'action' => true,
-            'message' => 'license Rejected Successfully',
+            'message' => 'License Rejected Successfully',
         ]);
     } catch (\Throwable $th) {
         return back()->with([

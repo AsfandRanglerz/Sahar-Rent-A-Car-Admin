@@ -423,6 +423,7 @@ public function UserHistoryBookings()
                 'price_per_hour' => $booking->price_per_hour,
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
+                'total_days' => $booking->total_days,
             ];
         });
 
@@ -457,6 +458,7 @@ public function UserHistoryBookings()
                 'price_per_hour' => $booking->price_per_hour,
                 'price_per_day' => $booking->price_per_day,
                 'price_per_week' => $booking->price_per_week,
+                'total_days' => $booking->total_days,
             ];
         });
     $allBookings = collect($bookings)->merge(collect($requestBookings))->sortByDesc('booking_date')->values();

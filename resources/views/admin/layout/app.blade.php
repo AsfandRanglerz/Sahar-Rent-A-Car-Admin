@@ -13,11 +13,11 @@
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/app.min.css') }}">
     <!-- Template CSS -->
-    <link rel="stylesheet" href="{{ asset('public/admin/assets/css/style.css') }}">
+    
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/components.css') }}">
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('public/admin/toastr/toastr.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/admin/assets/css/custom.css') }}">
+    
 
     <link rel="stylesheet"
     href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
@@ -26,7 +26,8 @@
 
 
     <link rel='shortcut icon' type='image/x-icon' href='{{ asset('public/admin/assets/img/Sahar_logo.png') }}' />
-
+<link rel="stylesheet" href="{{ asset('public/admin/assets/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('public/admin/assets/css/custom.css') }}">
 </head>
 
 <body>

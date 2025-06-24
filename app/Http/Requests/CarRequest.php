@@ -26,12 +26,14 @@ class CarRequest extends FormRequest
         return [
             'car_name' => 'required|string|max:255',
             'price_per_week' => 'required|numeric',
+            'price_per_two_week' => 'required|numeric',
+            'price_per_three_week' => 'required|numeric',
             'price_per_month' => 'required|numeric',
             'passengers' => 'required|numeric|max:10',
             'luggage' => 'required|numeric|max:255',
             'doors' => 'required|numeric|max:10',
             'car_type' => 'required|string|max:255',
-            // 'call_number' => 'required|numeric|digits:11',
+            'call_number' => 'required|numeric|digits:10',
             // 'whatsapp_number' => 'required|numeric|digits:11',
             'price_per_day' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'image' => 'required|image|max:2048',
@@ -48,6 +50,12 @@ class CarRequest extends FormRequest
     'price_per_week.required' => 'Price per day is required.',
     'price_per_week.numeric' => 'Price per day must be a number.',
     'price_per_week.max' => 'Price per day must not exceed 255.',
+
+    'price_per_two_week.required' => 'Price per two weeks is required.',
+    'price_per_two_week.numeric' => 'Price per two weeks must be a number.',
+
+    'price_per_three_week.required' => 'Price per three weeks is required.',
+    'price_per_three_week.numeric' => 'Price per three weeks must be a number.',
     
     'price_per_month.required' => 'Price per week is required.',
     'price_per_month.numeric' => 'Price per week must be a number.',
@@ -69,9 +77,9 @@ class CarRequest extends FormRequest
     'car_type.string' => 'The car type must be a string.',
     'car_type.max' => 'The car type must not exceed 255 characters.',
     
-    // 'call_number.required' => 'The Phone number is required.',
-    // 'call_number.numeric' => 'The Phone number must be a valid number.',
-    // 'call_number.min' => 'The Phone number must be at least 15 digits.',
+    'call_number.required' => 'The Phone number is required.',
+    'call_number.numeric' => 'The Phone number must be a valid number.',
+    'call_number.min' => 'The Phone number must be at least 10 digits.',
     
     // 'whatsapp_number.required' => 'The WhatsApp number is required.',
     // 'whatsapp_number.numeric' => 'The WhatsApp number must be a valid number.',
