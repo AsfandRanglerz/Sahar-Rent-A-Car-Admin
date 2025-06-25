@@ -34,7 +34,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
                                             <label>Phone <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Enter Your Phone" name="phone"
@@ -43,11 +43,11 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Image(Optional)</label>
+                                            <label>Image (Optional)</label>
                                             <input type="file" name="image" class="form-control">
                                             <small text-muted>(Image should be of size 2MB)</small>
                                             @error('image')

@@ -59,7 +59,7 @@
                                             @enderror
                                         </div>
                                     </div> --}}
-                                    <div class="col-sm-6 d-flex align-items-center">
+                                    <div class="col-sm-6 d-flex align-items-center pl-sm-0 pr-sm-3">
                                         <!-- Input to Upload New Image -->
                                         <div class="flex-grow-1">
                                             <div class="form-group mb-2">

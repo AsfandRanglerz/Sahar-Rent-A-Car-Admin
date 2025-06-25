@@ -1,4 +1,7 @@
-﻿.m-l--125 {
+﻿.cke_notification {
+    display: none;
+}
+.m-l--125 {
     margin-left: -125px;
 }
 .m-t--125 {

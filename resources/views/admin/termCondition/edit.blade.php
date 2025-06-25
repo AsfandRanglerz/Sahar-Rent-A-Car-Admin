@@ -12,7 +12,7 @@
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>Term&Condition</h4>
+                                    <h4>Terms & Conditions</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
@@ -20,8 +20,10 @@
                                         <textarea name="description" class="form-control">{{ isset($data) ? $data->description : '' }}</textarea>
                                     </div>
                                 </div>
-                                <div class="card-footer text-right">
-                                    <button type="submit" class="btn btn-primary mr-1" type="submit">Submit</button>
+                                <div class="card-footer text-center">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-success mr-1 btn-bg" id="submit">Update</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

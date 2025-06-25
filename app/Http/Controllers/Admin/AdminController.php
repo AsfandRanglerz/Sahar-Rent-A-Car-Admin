@@ -188,7 +188,15 @@ class AdminController extends Controller
     }
     public function logout()
     {
-        Auth::guard('admin')->logout();
+        // Auth::guard('admin')->logout();
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } elseif (Auth::guard('subadmin')->check()) {
+            Auth::guard('subadmin')->logout();
+        }  
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('admin')->with(['message' => 'Logout Successfully']);
     }
 

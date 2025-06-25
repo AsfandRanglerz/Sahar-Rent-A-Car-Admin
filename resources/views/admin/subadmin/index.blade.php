@@ -32,7 +32,7 @@
                                             <th>Sr.</th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Phone</th>
+                                            {{-- <th>Phone</th> --}}
                                             <th>Image</th>
                                             <th>Permission</th>
                                             <th>Actions</th>
@@ -48,7 +48,7 @@
                                                         <a href="mailto:{{ $subadmin->email }}">{{ $subadmin->email }}</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ $subadmin->phone }}</td>
+                                                {{-- <td>{{ $subadmin->phone }}</td> --}}
                                                 <td>
                                                     @if($subadmin->image)
                                                     <img src="{{ asset($subadmin->image) }}" alt="" height="50" width="50" class="image">

@@ -26,19 +26,19 @@ Thanks,
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <div style="text-align: center; margin-bottom: 30px;">
-        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Sahar Rent a Driver Logo" style="height: 100px;">
+        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Sahar Rent A Car Logo" style="height: 100px;">
     </div>
 
     <h2>Hi {{ $message['name'] }},</h2>
 
     <p>
-        Congratulations! Your account has been <strong>Activated</strong> by the <strong>Sahar Rent A Driver</strong> team.
+        Congratulations! Your account has been <strong>Activated</strong> by the <strong>Sahar Rent A Car</strong> team.
     </p>
 
    
     <p>
         Thanks,<br>
-        Sahar Rent a Driver
+        Sahar Rent A Car
     </p>
 </body>
 </html>

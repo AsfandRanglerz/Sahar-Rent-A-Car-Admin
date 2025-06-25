@@ -175,7 +175,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Rental Reward Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  Rental Reward Points",
+                'message' => "SubAdmin {$subadminName} Deleted  Rental Reward Points",
             ]);
         }
 
@@ -205,8 +205,8 @@ if ($editedBy) {
             // 'phone' => 'required|string|max:15',
             'on_referal' => 'required|integer',
         ],[
-            'on_referal.required' => 'Please Enter the Referal Points',
-            'on_referal.integer' => 'Referal Points must be a number',
+            'on_referal.required' => 'Please Enter the Referral Points',
+            'on_referal.integer' => 'Referral Points must be a number',
         ]
     );
         
@@ -226,7 +226,7 @@ if ($editedBy) {
 // Only log if a subadmin is editing
 if ($editedBy) {
     // $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
-    $message = "Referal Bonus point updated by SubAdmin: " . $editedBy->name ;
+    $message = "Referal Bonus point updated by SubAdmin " . $editedBy->name ;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
         'section' => 'Referal Link Points',
@@ -248,12 +248,12 @@ if ($editedBy) {
             $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Referal Link Points',
+                'section' => 'Referral Bonus Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  Referal Bonus Points",
+                'message' => "SubAdmin {$subadminName} Deleted Referral Bonus Points",
             ]);
         }
 
-        return redirect()->route('referals.index')->with(['message' => 'Referal Bonus Points Deleted Successfully']);
+        return redirect()->route('referals.index')->with(['message' => 'Referral Bonus Points Deleted Successfully']);
     }
 }

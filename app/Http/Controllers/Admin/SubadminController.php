@@ -39,7 +39,7 @@ class SubadminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:subadmins,email',
-            'phone' => 'required|string|max:15',
+            // 'phone' => 'required|string|max:15',
             'password' => 'required|string|min:8',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ],
@@ -47,7 +47,7 @@ class SubadminController extends Controller
             'name.required' => 'Name is required',
             'email.required' => 'Email is required',
             'email.unique' => 'Email already exists',
-            'phone.required' => 'Phone number is required',
+            // 'phone.required' => 'Phone number is required',
             'image.image' => 'The file must be an image',
             'image.mimes' => 'The Image must be a file of type: jpeg, png, jpg, gif',
             'image.max' => 'The Image may not be greater than 2MB',
@@ -66,7 +66,7 @@ class SubadminController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = null;
+            $image = 'public/admin/assets/images/avator.png'; 
         }
 
         $status = 1;
@@ -102,14 +102,14 @@ class SubadminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:subadmins,email,' . $id,
-            'phone' => 'required|string|max:15',
+            // 'phone' => 'required|string|max:15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ],
         [
             'name.required' => 'Name is required',
             'email.required' => 'Email is required',
             'email.unique' => 'Email already exists',
-            'phone.required' => 'Phone number is required',
+            // 'phone.required' => 'Phone number is required',
             'image.image' => 'The file must be an image',
             'image.mimes' => 'The Image must be a file of type: jpeg, png, jpg, gif',
             'image.max' => 'The Image may not be greater than 2MB',

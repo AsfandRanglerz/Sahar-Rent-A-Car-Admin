@@ -25,7 +25,7 @@ Thanks,
 <!DOCTYPE html>
 <html>
 <head>
-    <title>New Contact Us Message - Sahar Rent a Car</title>
+    <title>New Contact Us Message - Sahar Rent A Car</title>
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <div style="text-align: center; margin-bottom: 30px;">
@@ -51,6 +51,6 @@ Thanks,
     </p>
 
     <p>Thanks,<br>
-    <strong>Sahar Team</strong></p>
+    <strong>Sahar Rent A Car</strong></p>
 </body>
 </html>

@@ -52,8 +52,8 @@ class UserController extends Controller
             $image = 'public/admin/assets/images/users/' . $filename;
         } 
         else {
-            // $image = 'public/admin/assets/images/avator.png';
-            $image = null;
+            $image = 'public/admin/assets/images/avator.png';
+            // $image = null;
         }
 
         $status = 1;
@@ -143,23 +143,23 @@ class UserController extends Controller
             // 'name' => 'required|string|max:255',
             // 'email' => 'required|email|unique:users,email,' . $id,
             // 'phone' => 'required|string|max:15',
-            'emirate_id' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'passport' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'driving_license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'emirate_id' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+            'passport' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+            'driving_license' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
         ],[
             
             'emirate_id.required' => 'Emirate ID is required',
             'emirate_id.file' => 'Emirate ID must be a file',
-            'emirate_id.mimes' => 'Emirate ID must be a file of type: jpeg, png, jpg, gif, svg',
-            'emirate_id.max' => 'Emirate ID must not exceed 2MB',
+            'emirate_id.mimes' => 'Emirate ID must be a file of type: jpeg, png, jpg, svg',
+            'emirate_id.max' => 'Emirate ID must not exceed size 2MB',
             'passport.required' => 'Passport is required',
             'passport.file' => 'Passport must be a file',
-            'passport.mimes' => 'Passport must be a file of type: jpeg, png, jpg, gif, svg',
-            'passport.max' => 'Passport must not exceed 2MB',
+            'passport.mimes' => 'Passport must be a file of type: jpeg, png, jpg, svg',
+            'passport.max' => 'Passport must not exceed size 2MB',
             'driving_license.required' => 'Driving License is required',
             'driving_license.file' => 'Driving License must be a file',
-            'driving_license.mimes' => 'Driving License must be a file of type: jpeg, png, jpg, gif, svg',
-            'driving_license.max' => 'Driving License must not exceed 2MB',
+            'driving_license.mimes' => 'Driving License must be a file of type: jpeg, png, jpg, svg',
+            'driving_license.max' => 'Driving License must not exceed size 2MB',
         ]);
         // $validatedData = $request->validated();
 

@@ -30,7 +30,7 @@ Thanks,
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Logo"
         style="height: 100px; margin-bottom: 20px;">
-    <h3><strong>Welcome to <span>Sahar Rent a Driver</span></strong></h3>
+    <h3><strong>Welcome to <span>Sahar Rent A Car</span></strong></h3>
 </div>
 
 # Welcome, {{ $name }}!
@@ -60,5 +60,5 @@ Visit Website
 If you have any questions, feel free to contact us.
 
 Thanks,  
-**Sahar Rent a Driver**
+**Sahar Rent A Car**
 @endcomponent

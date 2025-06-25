@@ -17,14 +17,14 @@ Thanks,
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to Sahar Rent a Driver</title>
+    <title>Welcome to Sahar Rent A Car</title>
 </head>
 <body style="font-family: Arial, sans-serif;">
     <div style="text-align:center; margin-bottom: 20px;">
         <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" 
              alt="{{ config('app.name') }} Logo" 
              style="height: 100px; margin-bottom: 20px;">
-        <h3><strong>Welcome to <span style="color: #021642;">Sahar Rent a Driver</span></strong></h3>
+        <h3><strong>Welcome to <span style="color: #021642;">Sahar Rent A Car</span></strong></h3>
     </div>
 
     <p>Dear {{ $name ?? 'User' }},</p>
@@ -58,6 +58,6 @@ Thanks,
 
     <p>If you have any questions or need assistance, feel free to contact our support team anytime.</p>
 
-    <p>Thanks,<br><strong>Sahar Rent a Driver</strong></p>
+    <p>Thanks,<br><strong>Sahar Rent A Car</strong></p>
 </body>
 </html>

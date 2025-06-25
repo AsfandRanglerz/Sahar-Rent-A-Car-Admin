@@ -52,7 +52,7 @@ class DriverController extends Controller
             $file->move(public_path('admin/assets/images/users/'), $filename);
             $image = 'public/admin/assets/images/users/' . $filename;
         } else {
-            $image = null;
+            $image = 'public/admin/assets/images/avator.png'; 
         }
 
         

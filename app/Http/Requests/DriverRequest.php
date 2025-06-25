@@ -27,7 +27,7 @@ class DriverRequest extends FormRequest
             
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:drivers,email',
-                'phone' => 'required|string|max:11',
+                'phone' => 'required|string|min:10',
                 'password' => 'required|string|min:8',
                 'image' => 'nullable|file|max:2048',
                 // 'license' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -37,21 +37,21 @@ class DriverRequest extends FormRequest
     public function messages(): array
     {
         return [
-           'name.required' => 'The  Name is required.',
-    'name.string' => 'The  Name must be a string.',
-    'name.max' => 'The  Name must not exceed 255 characters.',
+           'name.required' => 'The  Name is required',
+    'name.string' => 'The  Name must be a string',
+    'name.max' => 'The  Name must not exceed 255 characters',
 
-    'email.required' => 'The  Email is required.',
-    'email.email' => 'The  Email must be a valid email address.',
-    'email.unique' => 'The  Email has already been taken.',
+    'email.required' => 'The  Email is required',
+    'email.email' => 'The  Email must be a valid email address',
+    'email.unique' => 'The  Email has already been taken',
     
-    'phone.required' => 'The  Phone Number is required.',
-    'phone.string' => 'The  Phone Number must be a string.',
-    'phone.max' => 'The  Phone Number must not exceed 11 characters.',
+    'phone.required' => 'The  Phone Number is required',
+    'phone.string' => 'The  Phone Number must be a string',
+    'phone.min' => 'The Phone Number must be at least 10 digits',
     
-    'password.required' => 'The Password is required.',
-    'password.string' => 'The Password must be a string.',
-    'password.min' => 'The Password must be at least 8 characters.',
+    'password.required' => 'The Password is required',
+    'password.string' => 'The Password must be a string',
+    'password.min' => 'The Password must be at least 8 characters',
 
     // 'license.required' => 'The License is required.',
     // 'license.mimes' => 'The License must be a file of type: jpeg, png, jpg, gif, svg.',

@@ -52,7 +52,10 @@ class AuthController extends Controller
 
     // Attempt Admin Login
     if (auth()->guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $remember_me)) {
+        auth()->guard('subadmin')->logout(); // logout other guard if active
+            $request->session()->regenerate();
         return redirect('admin/dashboard')->with(['message'=> 'Login Successfully']);
+        
     }
 
     // Check if user exists in the Subadmin table
@@ -66,6 +69,8 @@ class AuthController extends Controller
 
         // Attempt Subadmin Login
         if (auth()->guard('subadmin')->attempt(['email' => $request->email, 'password' => $request->password], $remember_me)) {
+            // $request->session()->regenerate();
+            auth()->guard('admin')->logout(); // logout other guard if active
             $request->session()->regenerate();
             return redirect('admin/dashboard')->with(['message' => 'Login Successfully']);
         }

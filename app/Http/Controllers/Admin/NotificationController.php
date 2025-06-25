@@ -100,7 +100,7 @@ class NotificationController extends Controller
                 'message' => 'Added  Notification',
             ]);
        }
-        return redirect()->route('notification.index')->with(['message' => 'Notifications Created Successfully']);
+        return redirect()->route('notification.index')->with(['message' => 'Notification Sent Successfully']);
     }
     
 
@@ -160,7 +160,7 @@ class NotificationController extends Controller
     public function deleteAll()
 {
     AdminNotification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
-    return redirect()->route('notification.index')->with('message', 'All notifications have been deleted.');
+    return redirect()->route('notification.index')->with('message', 'All notifications have been deleted');
 }
 
 }

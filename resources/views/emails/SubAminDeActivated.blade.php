@@ -22,7 +22,7 @@ Thanks,
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Account Deactivation - Sahar Rent a Car</title>
+    <title>Account Deactivation - Sahar Rent A Car</title>
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <div style="text-align: center; margin-bottom: 30px;">

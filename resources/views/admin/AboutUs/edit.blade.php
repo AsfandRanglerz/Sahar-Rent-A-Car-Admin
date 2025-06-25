@@ -20,8 +20,10 @@
                                         <textarea name="description" class="form-control"> {{ isset($data) ? $data->description : '' }}</textarea>
                                     </div>
                                 </div>
-                                <div class="card-footer text-right">
-                                    <button type="submit" class="btn btn-primary mr-1" type="submit">Submit</button>
+                                <div class="card-footer text-center">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-success mr-1 btn-bg" id="submit">Update</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

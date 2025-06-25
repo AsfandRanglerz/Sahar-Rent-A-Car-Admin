@@ -31,13 +31,13 @@ Thanks,
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <div style="text-align: center; margin-bottom: 30px;">
-        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Sahar Rent a Driver Logo" style="height: 100px;">
+        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" alt="Sahar Rent A Car Logo" style="height: 100px;">
     </div>
 
     <h2>Hi {{ $message['name'] }},</h2>
 
     <p style="font-size: 16px;">
-        We regret to inform you that your account has been <strong>Deactivated</strong> by the <strong>Sahar Rent A Driver</strong> team.
+        We regret to inform you that your account has been <strong>Deactivated</strong> by the <strong>Sahar Rent A Car</strong> team.
     </p>
 
     <h3>Reason:</h3>
@@ -45,7 +45,7 @@ Thanks,
 
     <p>
         Thanks,<br>
-        Sahar Rent A Driver
+        Sahar Rent A Car
     </p>
 </body>
 </html>
