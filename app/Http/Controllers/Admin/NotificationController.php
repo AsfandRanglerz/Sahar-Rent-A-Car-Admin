@@ -149,7 +149,7 @@ class NotificationController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Notifications',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted Notification",
+                'message' => "SubAdmin {$subadminName} Deleted Notification",
             ]);
         }
         $notification->delete();

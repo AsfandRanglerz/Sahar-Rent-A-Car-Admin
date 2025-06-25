@@ -44,8 +44,8 @@
                                                 <div class="d-flex gap-4">
 
                                                     @if($isAdmin || ($permissions && $permissions->edit == 1))
-                                                        <a href="{{ url('admin/About-us-edit') }}" class="btn btn-primary">
-                                                            <span class="fa fa-edit"></span>
+                                                        <a href="{{ url('admin/About-us-edit') }}" class="btn btn-primary" style="margin-left: 3px">
+                                                            Edit
                                                         </a>
                                                     @endif
                                                 </div>

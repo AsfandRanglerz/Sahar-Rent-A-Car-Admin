@@ -69,14 +69,14 @@ class LoyaltyPointsController extends Controller
         if (Auth::guard('subadmin')->check()) {
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Car Rental Points',
+                'section' => 'Rental Reward Points',
                 'action' => 'Add',
-                'message' => 'Added Car Rental Points ',
+                'message' => 'Added Rental Reward Points ',
             ]);
         }
         // Mail::to($loyaltyPoints->email)->send(new loyaltyPointsCredentials($loyaltyPoints->name, $loyaltyPoints->email, $generatedPassword));
 
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Created Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Rental Reward Points Created Successfully']);
     }
 
     public function edit($id)
@@ -149,10 +149,10 @@ class LoyaltyPointsController extends Controller
 // Only log if a subadmin is editing
 if ($editedBy) {
     // $message = "Car Rental Point updated by SubAdmin: " . $editedBy->name . " - Updated Car Rental Point: " . $request->name;
-    $message = "Car Rental Point updated by SubAdmin: " . $editedBy->name;
+    $message = "Rental Reward Point updated by SubAdmin: " . $editedBy->name;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
-        'section' => 'Car Rental Points',
+        'section' => 'Rental Reward Points',
         'action' => 'Edit',
         'message' => $message,
         'created_at' => now(),
@@ -160,7 +160,7 @@ if ($editedBy) {
     ]);
 }
         // Redirect back with a success message
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Updated Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Rental Reward Points Updated Successfully']);
     }
 
 
@@ -173,13 +173,13 @@ if ($editedBy) {
             $subadminName = $subadmin->name;
             SubAdminLog::create([
                 'subadmin_id' => Auth::guard('subadmin')->id(),
-                'section' => 'Car Rental Points',
+                'section' => 'Rental Reward Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  Car Rental Points",
+                'message' => "SubAdmin: {$subadminName} Deleted  Rental Reward Points",
             ]);
         }
 
-        return redirect()->route('loyaltypoints.index')->with(['message' => 'Car Rental Points Deleted Successfully']);
+        return redirect()->route('loyaltypoints.index')->with(['message' => 'Rental Reward Points Deleted Successfully']);
     }
 
     public function referalindex(){
@@ -226,7 +226,7 @@ if ($editedBy) {
 // Only log if a subadmin is editing
 if ($editedBy) {
     // $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
-    $message = "Referal Link point updated by SubAdmin: " . $editedBy->name ;
+    $message = "Referal Bonus point updated by SubAdmin: " . $editedBy->name ;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
         'section' => 'Referal Link Points',
@@ -237,7 +237,7 @@ if ($editedBy) {
     ]);
 }
         // Redirect back with a success message
-        return redirect()->route('referals.index')->with(['message' => 'Referal Link Points Updated Successfully']);
+        return redirect()->route('referals.index')->with(['message' => 'Referal Bonus Points Updated Successfully']);
     }
 
     public function referaldestroy(Request $request, $id)
@@ -250,10 +250,10 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Referal Link Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} Deleted  Referal Link Points",
+                'message' => "SubAdmin: {$subadminName} Deleted  Referal Bonus Points",
             ]);
         }
 
-        return redirect()->route('referals.index')->with(['message' => 'Referal Link Points Deleted Successfully']);
+        return redirect()->route('referals.index')->with(['message' => 'Referal Bonus Points Deleted Successfully']);
     }
 }

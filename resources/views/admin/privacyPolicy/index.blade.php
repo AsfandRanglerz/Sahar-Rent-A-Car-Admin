@@ -13,7 +13,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>About Us</h4>
+                                    <h4>Privacy Policy</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -44,8 +44,8 @@
                                                 <div class="d-flex gap-4">
 
                                                     @if($isAdmin || ($permissions && $permissions->edit == 1))
-                                                        <a href="{{ url('admin/privacy-policy-edit') }}" class="btn btn-primary">
-                                                            <span class="fa fa-edit"></span>
+                                                        <a href="{{ url('admin/privacy-policy-edit') }}" class="btn btn-primary" style="margin-left: 3px">
+                                                            Edit
                                                         </a>
                                                     @endif
                                                 </div>

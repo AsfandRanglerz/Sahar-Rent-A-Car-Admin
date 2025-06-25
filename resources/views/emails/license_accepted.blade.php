@@ -31,7 +31,7 @@ Thanks,
     <h2>Hi {{ $message['name'] }},</h2>
 
     <p>
-        Congratulations! Your license has been <strong>approved</strong> by the <strong>Sahar Rent A Car</strong> team.
+        Congratulations! Your license has been <strong>Approved</strong> by the <strong>Sahar Rent A Car</strong> team.
     </p>
 
 

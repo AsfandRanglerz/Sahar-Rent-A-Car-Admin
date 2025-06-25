@@ -129,7 +129,7 @@ $editedBy = Auth::guard('subadmin')->user();
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "ContactUs updated by SubAdmin: " . $editedBy->name;
+    $message = "ContactUs updated by SubAdmin " . $editedBy->name;
 
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
@@ -159,7 +159,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Customers',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} deleted customer: {$customerName}",
+                'message' => "SubAdmin {$subadminName} deleted customer {$customerName}",
             ]);
         }
         $user->delete();

@@ -165,7 +165,7 @@ class LicenseController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'License Approvals',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} deleted License: {$LicenseApprovalName}",
+                'message' => "SubAdmin {$subadminName} deleted License {$LicenseApprovalName}",
             ]);
         }
         $LicenseApproval->delete();
@@ -200,7 +200,7 @@ class LicenseController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'License Approvals',
                 'action' => 'Approve',
-                'message' => "SubAdmin: {$subadminName} Approved License: {$data->name}",
+                'message' => "SubAdmin {$subadminName} Approved License {$data->name}",
             ]);
         }
         try {
@@ -250,7 +250,7 @@ class LicenseController extends Controller
             'subadmin_id' => Auth::guard('subadmin')->id(),
             'section' => 'License Approvals',
             'action' => 'Reject',
-            'message' => "SubAdmin: {$subadminName} Rejected License: {$data->name}",
+            'message' => "SubAdmin {$subadminName} Rejected License {$data->name}",
         ]);
     }
     try {

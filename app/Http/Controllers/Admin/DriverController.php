@@ -170,7 +170,7 @@ $editedBy = Auth::guard('subadmin')->user();
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Driver updated by SubAdmin: " . $editedBy->name . " - Updated Driver: " . $request->name;
+    $message = "Driver updated by SubAdmin " . $editedBy->name . " - Updated Driver " . $request->name;
 
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,

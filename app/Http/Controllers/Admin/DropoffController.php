@@ -128,7 +128,7 @@ public function markDropoffCompleted($id)
     });
 
     if ($pickupNotCompleted) {
-        return redirect()->back()->with('error', 'Please complete the Pickup driver before marking Dropoff driver as Completed');
+        return redirect()->back()->with('error', 'Pickup driver request must be marked as Completed before completing the Dropoff driver request');
     }
 
     foreach ($requestBooking->assign as $assigned) {
@@ -156,7 +156,7 @@ public function markDropoffCompleted($id)
             'subadmin_id' => $subadmin->id,
             'section' => 'Bookings',
             'action' => 'Update Dropoff Status',
-            'message' => "SubAdmin: {$subadminName} marked dropoff as completed.",
+            'message' => "SubAdmin {$subadminName} marked dropoff as completed",
         ]);
     }
     // Check if all assigned rows have both drivers (if assigned) marked completed

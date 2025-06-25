@@ -32,7 +32,7 @@ Thanks,
     <h2>Hi {{ $message['name'] }},</h2>
 
     <p style="font-size: 16px;">
-        We regret to inform you that your account has been <strong>deactivated</strong> by the <strong>Sahar Rent A Car</strong> team.
+        We regret to inform you that your account has been <strong>Deactivated</strong> by the <strong>Sahar Rent A Car</strong> team.
     </p>
 
     <h3>Reason:</h3>

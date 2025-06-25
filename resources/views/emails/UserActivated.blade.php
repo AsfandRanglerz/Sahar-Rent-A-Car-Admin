@@ -31,7 +31,7 @@
     <h2>Hi {{ $message['name'] }},</h2>
 
     <p>
-        Congratulations! Your account has been <strong>activated</strong> by the <strong>Sahar Rent A Car</strong> team.
+        Congratulations! Your account has been <strong>Activated</strong> by the <strong>Sahar Rent A Car</strong> team.
     </p>
 
     <p>

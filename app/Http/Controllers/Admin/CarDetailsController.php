@@ -94,12 +94,12 @@ class CarDetailsController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Car Inventory',
                 'action' => 'Add',
-                'message' => 'Added Car Inventory: ' . $CarDetail->car_name,
+                'message' => 'Added Car Inventory ' . $CarDetail->car_name,
             ]);
         }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
 
-        return redirect()->route('car.index')->with(['message' => 'Car Inventory Created Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Cars Inventory Created Successfully']);
     }
 
     public function edit($id)
@@ -198,7 +198,7 @@ class CarDetailsController extends Controller
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Cars Inventory updated by SubAdmin: " . $editedBy->name . " - Updated Cars Inventory: " . $request->name;
+    $message = "Cars Inventory updated by SubAdmin " . $editedBy->name . " - Updated Cars Inventory " . $request->name;
 
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
@@ -210,7 +210,7 @@ if ($editedBy) {
     ]);
 }
         // Redirect back with a success message
-        return redirect()->route('car.index')->with(['message' => 'Car Inventory Updated Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Cars Inventory Updated Successfully']);
     }
 
 
@@ -230,6 +230,6 @@ if ($editedBy) {
             ]);
         }
         $carDetail->delete();
-        return redirect()->route('car.index')->with(['message' => 'Car Inventory Deleted Successfully']);
+        return redirect()->route('car.index')->with(['message' => 'Cars Inventory Deleted Successfully']);
     }
 }

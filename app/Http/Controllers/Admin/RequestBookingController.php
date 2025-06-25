@@ -349,7 +349,7 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
             'subadmin_id' => $subadmin->id,
             'section' => 'Request Bookings',
             'action' => 'Assign Driver',
-            'message' => "SubAdmin: {$subadminName} assigned Driver with Car ID: {$requestBooking->car_id} ",
+            'message' => "SubAdmin {$subadminName} assigned Driver with Car ID {$requestBooking->car_id}",
         ]);
     }
 
@@ -455,7 +455,7 @@ public function markCompleted($id)
                 'subadmin_id' => $subadmin->id,
                 'section' => 'Bookings',
                 'action' => 'Update Pickup Status',
-                'message' => "SubAdmin: {$subadminName} updated pickup booking status.",
+                'message' => "SubAdmin {$subadminName} updated pickup booking status",
             ]);
         }
 
@@ -500,7 +500,7 @@ public function markCompleted($id)
                 'subadmin_id' => $subadmin->id,
                 'section' => 'Bookings',
                 'action' => 'Update Pickup Status',
-                'message' => "SubAdmin: {$subadminName} updated pickup booking status.",
+                'message' => "SubAdmin {$subadminName} updated pickup booking status",
             ]);
         }
 
@@ -571,7 +571,7 @@ private function assignLoyaltyPoints($userId, $carId, $bookingId)
             'subadmin_id' => Auth::guard('subadmin')->id(),
             'section' => 'Request Bookings',
             'action' => 'Delete',
-            'message' => "SubAdmin: {$subadminName} Deleted Request Booking: {$requestbookingName}",
+            'message' => "SubAdmin {$subadminName} Deleted Request Booking {$requestbookingName}",
         ]);
     }
     $requestbooking->delete();

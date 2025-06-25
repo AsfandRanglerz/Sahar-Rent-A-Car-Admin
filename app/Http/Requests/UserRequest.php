@@ -58,17 +58,17 @@ class UserRequest extends FormRequest
     'emirate_id.required' => 'The Emirate ID is required.',
     'emirate_id.file' => 'The Emirate ID must be a file.',
     'emirate_id.mimes' => 'The Emirate ID must be a file of type: jpeg, png, jpg, gif, svg.',
-    'emirate_id.max' => 'The Emirate ID must not exceed 2048 kilobytes.',
+    'emirate_id.max' => 'The Emirate ID must not exceed size 2MB.',
 
     'passport.required' => 'The Passport is required.',
     'passport.file' => 'The Passport must be a file.',
     'passport.mimes' => 'The Passport must be a file of type: jpeg, png, jpg, gif, svg.',
-    'passport.max' => 'The Passport must not exceed 2048 kilobytes.',
+    'passport.max' => 'The Passport must not exceed size 2MB.',
 
     'driving_license.required' => 'The Driving License is required.',
     'driving_license.file' => 'The Driving License must be a file.',
     'driving_license.mimes' => 'The Driving License must be a file of type: jpeg, png, jpg, gif, svg.',
-    'driving_license.max' => 'The Driving License must not exceed 2048 kilobytes.',
+    'driving_license.max' => 'The Driving License must not exceed size 2MB.',
         ];
     }
 }
