@@ -34,7 +34,6 @@ Thanks,
     <p>With your account, you’ll be able to:</p>
     <ul>
         <li>View and accept assigned pickup and drop-off requests</li>
-        <li>Track and manage your booking schedule</li>
         <li>Accept or reject new requests</li>
     </ul>
 

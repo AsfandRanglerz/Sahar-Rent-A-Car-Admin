@@ -93,6 +93,7 @@ Thanks,
     </ul>
 
     @if ($type == 'sub_admins')
+     <p>Your account has been created. You will be able to manage specific sections of the system based on the permissions granted by the admin.</p>
         <p style="text-align: center; margin-top: 20px;">
             <a href="{{ url('/admin') }}" 
                style="display: inline-block; padding:10px 20px; background:#021642; color:#fff; text-decoration:none; border-radius:5px;">
