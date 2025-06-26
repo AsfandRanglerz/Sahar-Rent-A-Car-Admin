@@ -339,7 +339,7 @@
                 $isAdmin ||
                     (isset($subadminPermissions['chat']) && $subadminPermissions['chat']->view == 1))
             <li
-                class="dropdown {{ request()->is('admin/chat*') || request()->is('admin/About-us-edit*') ? 'active' : '' }}">
+                class="dropdown {{ request()->is('admin/chat*')  ? 'active' : '' }}">
                 <a href="{{ url('/admin/chat') }}" class="nav-link"><i
                         data-feather="message-square"></i><span>Chat</span>
                     <div id="chatRequestCounter"

@@ -788,35 +788,7 @@
     </script>
 
     <script type="text/javascript">
-        // $(document).ready(function() {
-        //     // Show Permissions Modal when clicking "View" button
-        //     $(".view-permissions").click(function() {
-        //         let subadminId = $(this).data('subadmin-id');
-        //         $("#subadmin_id").val(subadminId); // Set the subadmin ID in the hidden field
-                
-        //         $("#permissionsModal").modal("show"); // Show the modal
-        //     });
-    
-        //     // Submit Permissions Form via AJAX
-        //     $("#permissionsForm").submit(function(e) {
-        //         e.preventDefault();
-        //         let formData = $(this).serialize();
-    
-        //         $.ajax({
-        //             url: "{{ route('subadmin.savePermissions') }}",
-        //             type: "POST",
-        //             data: formData,
-        //             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-        //             success: function(response) {
-        //                 alert(response.message);
-        //                 $("#permissionsModal").modal("hide");
-        //             },
-        //             error: function() {
-        //                 alert("Error saving permissions.");
-        //             }
-        //         });
-        //     });
-        // });
+        
 
         $(document).ready(function() {
     // Show Permissions Modal when clicking "View" button
@@ -875,7 +847,7 @@
             data: formData,
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
             success: function(response) {
-                // alert(response.message);
+                 toastr.success(response.message);
                 $("#permissionsModal").modal("hide");
             },
             // error: function() {

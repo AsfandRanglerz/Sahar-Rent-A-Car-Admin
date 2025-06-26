@@ -25,6 +25,7 @@
                                 <table class="responsive table " id="table-1">
                                     <thead>
                                         <tr>
+                                            <th>Sr.</th>
                                             <th>SubAdmin Name</th>
                                             <th>Section</th>
                                             <th>Action</th>
@@ -36,6 +37,7 @@
                                     <tbody>
                                         @foreach($logs as $log)
                                         <tr>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $log->subadmin->name ?? 'N/A' }}</td>
                                             <td>{{ $log->section }}</td>
                                             <td>{{ ucfirst($log->action) }}</td>
@@ -76,11 +78,7 @@
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function() {
-            $('#table_id_events').DataTable();
-        });
-    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
 

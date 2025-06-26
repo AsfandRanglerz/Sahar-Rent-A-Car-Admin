@@ -128,7 +128,8 @@ Route::middleware('auth:sanctum')->get('/drivernotifications', [NotificationCont
 Route::get('/notification/{id}', [NotificationController::class, 'showNotification'])->middleware('auth:sanctum');
 Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
 Route::post('/driverclearnotification', [NotificationController::class, 'Driverclearall'])->middleware('auth:sanctum');
-
+Route::post('/sendnotification', [NotificationController::class, 'sendNotification']);
+Route::post('/senddrivernotification', [NotificationController::class, 'driversendNotification']);
 
 //#################  Favorite ##############################
 Route::middleware('auth:sanctum')->group(function () {

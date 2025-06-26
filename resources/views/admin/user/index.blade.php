@@ -150,7 +150,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="badge {{ $user->availability == 1 ? 'badge-success' : 'badge-danger' }} badge-shadow">
-                                                        {{ $user->availability == 1 ? 'Available' : 'Not Available' }}
+                                                        {{ $user->availability == 1 ? 'Online' : 'Offline' }}
                                                     </div>
                                                 </td>
                                                 

@@ -76,14 +76,8 @@ Thanks,
 
     <p>Your account has been successfully created.</p>
 
-    <p>With your account, you’ll be able to:</p>
-    <ul>
-        <li>Manage and assign drivers to customer bookings</li>
-        <li>Oversee booking schedules and availability</li>
-        <li>Update car status</li>
-        <li>Coordinate with drivers for pickup and drop-off arrangements</li>
-        <li>Monitor booking status</li>
-    </ul>
+    <p>Your account has been created. You will be able to manage specific sections of the system based on the permissions granted by the admin.</p>
+    
 
     <h3>Your Account Details:</h3>
     <ul>
@@ -93,7 +87,6 @@ Thanks,
     </ul>
 
     @if ($type == 'sub_admins')
-     <p>Your account has been created. You will be able to manage specific sections of the system based on the permissions granted by the admin.</p>
         <p style="text-align: center; margin-top: 20px;">
             <a href="{{ url('/admin') }}" 
                style="display: inline-block; padding:10px 20px; background:#021642; color:#fff; text-decoration:none; border-radius:5px;">

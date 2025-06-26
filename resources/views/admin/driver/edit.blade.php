@@ -16,7 +16,7 @@
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Name</label>
+                                            <label>Name <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Enter Your Name" name="name"
                                                 id="name" value="{{ old('name', $driver->name) }}" class="form-control">
                                             @error('name')
@@ -26,7 +26,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Email</label>
+                                            <label>Email <span class="text-danger">*</span></label>
                                             <input type="email" placeholder="Enter Your Email" name="email"
                                                 id="email" value="{{ old('email', $driver->email) }}" class="form-control">
                                             @error('email')
@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Phone Number</label>
+                                            <label>Phone Number <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Your Phone" name="phone"
                                                 id="phone" value="{{ old('phone', $driver->phone) }}" class="form-control">
                                             @error('phone')

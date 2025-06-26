@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\User;
+use App\Models\Driver;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationJob;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -126,4 +129,86 @@ public function Driverclearall()
         'message' => 'Notifications cleared successfully'
     ]);
 }
+
+public function sendNotification(Request $request)
+    {
+         $request->validate([
+            'receiver_id' => 'required|exists:drivers,id',
+            'sender_id'   => 'required|exists:users,id',
+        ]);
+        
+        $sender = User::find($request->sender_id);
+        $receiver = Driver::find($request->receiver_id);
+
+       
+
+    $uploadedImagePath = null;
+
+    // Use your provided upload code
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $uploadedImagePath = 'public/admin/assets/images/users/' . $filename;
+    }
+        $data = [
+        'receiver_id'   => $receiver->id,
+        'sender_id'     => $sender->id,
+        'sender_name'   => $sender->name,
+        // 'sender_image'  => $sender->image ? asset($sender->image) : null,
+        'image'         => $uploadedImagePath,
+        'message'       => $request->message,
+        ];
+
+        // Dispatch FCM job
+        dispatch(new NotificationJob(
+            $receiver->fcm_token,
+            $request->title,
+            $request->message,
+            $data
+        ));
+
+        return response()->json(['message' => 'Notification sent successfully']);
+    }
+
+    public function driversendNotification(Request $request)
+    {
+         $request->validate([
+            'sender_id' => 'required|exists:drivers,id',
+            'receiver_id'   => 'required|exists:users,id',
+        ]);
+        
+        $sender = Driver::find($request->sender_id);
+        $receiver = User::find($request->receiver_id);
+
+       
+
+    $uploadedImagePath = null;
+
+    // Use your provided upload code
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $uploadedImagePath = 'public/admin/assets/images/users/' . $filename;
+    }
+        $data = [
+        'receiver_id'   => $receiver->id,
+        'sender_id'     => $sender->id,
+        'sender_name'   => $sender->name,
+        // 'sender_image'  => $sender->image ? asset($sender->image) : null,
+        'image'         => $uploadedImagePath,
+        'message'       => $request->message,
+        ];
+
+        // Dispatch FCM job
+        dispatch(new NotificationJob(
+            $receiver->fcm_token,
+            $request->title,
+            $request->message,
+            $data
+        ));
+
+        return response()->json(['message' => 'Notification sent successfully']);
+    }
 }

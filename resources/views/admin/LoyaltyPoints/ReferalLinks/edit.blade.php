@@ -16,7 +16,7 @@
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>On Referral Link</label>
+                                            <label>On Referral Link <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Points i.e 5" name="on_referal"
                                                 id="on_referal" value="{{ old('on_referal', $loyaltyPoint->on_referal) }}" class="form-control">
                                             @error('on_referal')

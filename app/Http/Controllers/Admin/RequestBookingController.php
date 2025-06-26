@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use Log;
+use App\Models\User;
 use App\Models\Driver;
 use App\Models\Booking;
 use App\Models\CarDetails;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationJob;
 use App\Models\LoyaltyPoints;
 use App\Models\RequestBooking;
 use App\Models\AssignedRequest;
@@ -545,6 +547,19 @@ private function assignLoyaltyPoints($userId, $carId, $bookingId)
                 'car_name'      => $carDetails->car_name,
                 'discount'      => $loyaltyPoints->discount,
             ]);
+            // 🔔 Send FCM Notification via Job
+            $user = User::find($userId);
+            if ($user && $user->fcm_token) {
+                $title = 'Loyalty Points Earned';
+                $description = "You've earned {$loyaltyPoints->on_car} loyalty points for booking {$carDetails->car_name}!";
+                $data = [
+                    'type' => 'loyalty_points',
+                    'points' => $loyaltyPoints->on_car,
+                    'car' => $carDetails->car_name,
+                ];
+
+                dispatch(new NotificationJob($user->fcm_token, $title, $description, $data));
+            }
         }
     }
 }

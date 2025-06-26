@@ -59,9 +59,7 @@ Route::get('/terms-conditions', function () {
 });
 
 Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->group(function () {
-    //  Chat routes
     
-
     Route::get('dashboard', [AdminController::class, 'getdashboard']);
     Route::get('profile', [AdminController::class, 'getProfile']);
     Route::post('update-profile', [AdminController::class, 'update_profile']);
@@ -71,8 +69,8 @@ Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->grou
     Route::post('/adminnotifications/mark-all-read', [AdminController::class, 'markAllNotificationsRead'])
         ->name('admin.notifications.mark-all-read');
 
-        Route::controller(ChatController::class)->middleware(['admin', 'adminOrSubadmin:chat'])->group(function () {
-            Route::get('/chat/count', [ChatController::class, 'chatpendingCounter'])->name('chat.counter');
+Route::controller(ChatController::class)->middleware(['admin', 'adminOrSubadmin:chat'])->group(function () {
+    Route::get('/chat/count', [ChatController::class, 'chatpendingCounter'])->name('chat.counter');
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
         });

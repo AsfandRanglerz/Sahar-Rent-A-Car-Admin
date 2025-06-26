@@ -16,7 +16,7 @@
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Name</label>
+                                            <label>Name <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Enter Your Name" name="name"
                                                 id="name" value="{{ old('name', $user->name) }}" class="form-control">
                                             @error('name')
@@ -26,7 +26,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Email</label>
+                                            <label>Email <span class="text-danger">*</span></label>
                                             <input type="email" placeholder="Enter Your Email" name="email"
                                                 id="email" value="{{ old('email', $user->email) }}" class="form-control">
                                             @error('email')
@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Phone Number</label>
+                                            <label>Phone Number <span class="text-danger">*</span></label>
                                             <input type="number" placeholder="Enter Your Phone" name="phone"
                                                 id="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
                                             @error('phone')
@@ -56,7 +56,7 @@
                                     </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3 d-none">
                                         <div class="form-group mb-2">
-                                            <label>Password</label>
+                                            <label>Password <span class="text-danger">*</span></label>
                                             <input type="password" placeholder="Enter Your Password" name="password"
                                                 id="password" value="{{ old('password',$user->password) }}" class="form-control">
                                             @error('password')
@@ -90,7 +90,7 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Emirate Id</label>
+                                            <label>Emirate Id <span class="text-danger">*</span></label>
                                             <input type="file" name="emirate_id" id="emirate_id" class="form-control">
                                             
                                             @if ($user->emirate_id)
@@ -109,7 +109,7 @@
                                     
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Passport</label>
+                                            <label>Passport <span class="text-danger">*</span></label>
                                             <input type="file" name="passport" id="passport" class="form-control">
                                             
                                             @if ($user->passport)
@@ -128,7 +128,7 @@
                                     
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Driving License</label>
+                                            <label>Driving License <span class="text-danger">*</span></label>
                                             <input type="file" name="driving_license" id="driving_license" class="form-control">
                                             
                                             @if ($user->driving_license)

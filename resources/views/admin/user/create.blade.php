@@ -15,7 +15,7 @@
                                 <div class="row mx-0 px-4">
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Name</label>
+                                            <label>Name <span class="text-danger">*</span></label>
                                             <input type="text" placeholder="Enter Name" name="name"
                                                 id="name" value="{{ old('name') }}" class="form-control">
                                             @error('name')
@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Email</label>
+                                            <label>Email <span class="text-danger">*</span></label>
                                             <input type="email" placeholder="Enter Email" name="email"
                                                 id="email"  value="{{ old('email') }}" class="form-control">
                                             @error('email')
@@ -55,7 +55,7 @@
                                     </div> --}}
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2 position-relative">
-                                            <label>Password</label>
+                                            <label>Password <span class="text-danger">*</span></label>
                                             <input type="password" placeholder="Enter Password" name="password"
                                                 id="password" value="{{ old('password') }}"  class="form-control">
                                                 <span class="fa fa-eye-slash position-absolute" style="top: 2.67rem; right:0.5rem" id="togglePassword"></span>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Emirate Id</label>
+                                            <label>Emirate Id <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Document"name="emirate_id" value="{{ old('emirate_id') }}"
                                                 class="form-control">
                                             @error('emirate_id')
@@ -77,7 +77,7 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Passport</label>
+                                            <label>Passport <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Document"name="passport" value="{{ old('passport') }}"
                                                 class="form-control">
                                             @error('passport')
@@ -88,7 +88,7 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Driving License</label>
+                                            <label>Driving License <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Document"name="driving_license" value="{{ old('driving_license') }}"
                                                 class="form-control">
                                             @error('driving_license')

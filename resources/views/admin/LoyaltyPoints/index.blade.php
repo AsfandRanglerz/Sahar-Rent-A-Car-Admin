@@ -28,7 +28,7 @@
                                             <th>Car ID</th>
                                             <th>Car Name</th>
                                             {{-- <th>Referal Link</th> --}}
-                                            <th>Car Rental</th>
+                                            <th>Points</th>
                                             {{-- <th>Phone</th> --}}
                                             <th>Discount</th>
                                             {{-- <th>Availability</th> --}}

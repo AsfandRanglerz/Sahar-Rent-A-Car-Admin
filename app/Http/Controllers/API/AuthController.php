@@ -269,7 +269,7 @@ return response()->json([
     
     if ($customer->status == 0) {
         return response()->json([
-            'message' => 'Your account has been deactivated by the admin',
+            'message' => 'Your account has been deactivated',
         ], 403);
     }
 
@@ -810,7 +810,7 @@ public function driverlogin(Request $request){
     
      if ($driver->status == 0) {
         return response()->json([
-            'message' => 'Your account has been deactivated by the admin',
+            'message' => 'Your account has been deactivated',
         ], 403);
     }
     
@@ -1365,7 +1365,7 @@ public function socialLogin(Request $request)
             if ($user) {
                  if ($user->status == 0) {
                 return response()->json([
-                    'message' => 'Your account has been deactivated by the admin',
+                    'message' => 'Your account has been deactivated',
                 ], 403);
             }
                 $user->$socialColumn = $data['social_id'];
@@ -1396,7 +1396,7 @@ public function socialLogin(Request $request)
             if ($user) {
                  if ($user->status == 0) {
                 return response()->json([
-                    'message' => 'Your account has been deactivated by the admin',
+                    'message' => 'Your account has been deactivated',
                 ], 403);
             }
                 $user->fcm_token = $data['fcm_token'];
@@ -1461,7 +1461,7 @@ public function socialLogin(Request $request)
             if ($user) {
                 if ($user->status == 0) {
                 return response()->json([
-                    'message' => 'Your account has been deactivated by the admin',
+                    'message' => 'Your account has been deactivated',
                 ], 403);
             }
                 $user->$socialColumn = $data['social_id'];
@@ -1485,7 +1485,7 @@ public function socialLogin(Request $request)
             if ($user) {
                 if ($user->status == 0) {
                 return response()->json([
-                    'message' => 'Your account has been deactivated by the admin',
+                    'message' => 'Your account has been deactivated',
                 ], 403);
             }
                 $user->fcm_token = $data['fcm_token'];
