@@ -79,7 +79,7 @@ class DriverController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Drivers',
                 'action' => 'Add',
-                'message' => 'Added driver: ' . $driver->name,
+                'message' => 'Added driver ' . $driver->name,
             ]);
         }
         Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
@@ -170,7 +170,7 @@ $editedBy = Auth::guard('subadmin')->user();
 
 // Only log if a subadmin is editing
 if ($editedBy) {
-    $message = "Driver updated by SubAdmin " . $editedBy->name . " - Updated Driver " . $request->name;
+    $message = "Driver Updated by SubAdmin " . $editedBy->name . " - Updated Driver " . $request->name;
 
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
@@ -198,7 +198,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Drivers',
                 'action' => 'Delete',
-                'message' => "SubAdmin: {$subadminName} deleted driver: {$driverName}",
+                'message' => "SubAdmin {$subadminName} Deleted Driver {$driverName}",
             ]);
         }
         $driver->delete();

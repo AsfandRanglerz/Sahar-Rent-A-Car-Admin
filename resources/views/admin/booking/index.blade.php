@@ -70,7 +70,9 @@
                                             <th>Drop Off Date</th>
                                             <th>Drop Off Time</th>
                                             <th>City</th>
-                                            <th>Charge</th>
+                                            <th>Price (AED)</th>
+                                            <th>Delivery Charge (AED)</th>
+                                            <th>Redeemend Points</th>
                                             <th>Total Days</th>
                                             <th>VAT</th>
                                             <th>Additional Notes</th>
@@ -189,8 +191,22 @@
                                                     @endif
                                                 </td>
                                                 <td>
+                                                @if($booking->price)
+                                                    {{ $booking->price }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
                                                 @if($booking->transfer_charge)    
                                                     {{ $booking->transfer_charge }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->redeemed_points)
+                                                    {{ $booking->redeemed_points }}
                                                     @else
                                                     <span>--</span>
                                                     @endif

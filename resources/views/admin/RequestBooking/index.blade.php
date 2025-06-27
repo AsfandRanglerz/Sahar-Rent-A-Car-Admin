@@ -11,7 +11,7 @@
                                 <div class="col-12">
                                     <form id="statusFilterForm" action="{{ route('requestbooking.index') }}" method="GET">
                                         <div class="d-flex justify-content-between align-items-center w-100">
-                                            <h4>Pickup Requests</h4>
+                                            <h4>Dropoff Requests</h4>
                                             <select name="status" id="statusFilter" class="form-control form-select w-auto rounded">
                                                 <option value="">All</option>
                                                 <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
@@ -50,7 +50,9 @@
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th>
                                             <th>City</th>
-                                            <th>Charge</th>
+                                            <th>Price (AED)</th>
+                                            <th>Delivery Charge (AED)</th>
+                                            <th>Redeemed Points</th>
                                             <th>Total Days</th>
                                             <th>VAT</th>
                                             {{-- <th>Self Drop Off</th>
@@ -186,11 +188,25 @@ if ($requestbooking->status == 2) {
                                                     @endif
                                                 </td>
                                                 <td>
+                                                @if($requestbooking->price)
+                                                    {{ $requestbooking->price }}
+                                                @else
+                                                    <span>--</span>
+                                                @endif
+                                                </td>
+                                                <td>
                                                 @if($requestbooking->transfer_charge)
                                                     {{ $requestbooking->transfer_charge }}
                                                     @else
                                                     <span>--</span>
                                                 @endif 
+                                                </td>
+                                                <td>
+                                                @if($requestbooking->redeemed_points)   
+                                                    {{ $requestbooking->redeemed_points }}
+                                                @else
+                                                    <span>--</span>
+                                                @endif
                                                 </td>
                                                 <td>
                                                     @if($requestbooking->total_days)

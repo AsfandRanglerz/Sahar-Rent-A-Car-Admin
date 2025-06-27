@@ -303,7 +303,7 @@ Route::controller(ChatController::class)->middleware(['admin', 'adminOrSubadmin:
         // Route::delete('/requestbooking-destroy/{id}',  'destroy')->name('requestbooking.destroy');
     });
     Route::controller(DropoffController::class)->middleware(['admin', 'adminOrSubadmin:requestbookings,view'])->group(function () {
-        Route::get('/dropoffrequest', 'index')->name('dropoffs.index');
+        Route::get('/pickuprequest', 'index')->name('dropoffs.index');
         Route::get('/dropoff/count', 'dropoffCounter')->name('dropoff.counter');
         Route::post('/dropoff/{id}/complete', 'markDropoffCompleted')->name('dropoff.markCompleted');
         // Route::get('/booking-create',  'create')->name('booking.create');

@@ -82,7 +82,7 @@ class CarDetailsController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Car Inventory',
                 'action' => 'Add',
-                'message' => 'Added Car Inventory ' . $CarDetail->car_name,
+                'message' => 'Added Cars Inventory ' . $CarDetail->car_name,
             ]);
         }
         // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $generatedPassword));
@@ -214,7 +214,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Car Inventory',
                 'action' => 'delete',
-                'message' => "SubAdmin {$subadminName} deleted Car Inventory {$carDetailName}",
+                'message' => "SubAdmin {$subadminName} deleted Cars Inventory {$carDetailName}",
             ]);
         }
         $carDetail->delete();

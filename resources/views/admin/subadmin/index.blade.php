@@ -368,37 +368,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Referral Bonus Points</td>
-                                {{-- <td><input type="checkbox" name="permissions[referal_links][add]" ></td>
-                                <td><input type="checkbox" name="permissions[referal_links][edit]"  ></td>
-                                <td><input type="checkbox" name="permissions[referal_links][view]"  ></td>
-                                <td><input type="checkbox" name="permissions[referal_links][delete]"  ></td> --}}
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][add]" id="referal_linksAdd">
-                                        <label class="form-check-label" for="referal_linksAdd">Add</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][edit]" id="referal_linksEdit">
-                                        <label class="form-check-label" for="referal_linksEdit">Edit</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][view]" id="referal_linksView">
-                                        <label class="form-check-label" for="referal_linksView">View</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-check d-flex align-items-center">
-                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][delete]" id="referal_linksDelete">
-                                        <label class="form-check-label" for="referal_linksDelete">Delete</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td>Notifications</td>
                                 {{-- <td><input type="checkbox" name="permissions[notifications][add]" ></td>
                                 <td><input type="checkbox" name="permissions[notifications][edit]" ></td>
@@ -459,6 +428,37 @@
                                         <label class="form-check-label" for="requestbookingsDelete">Delete</label>
                                     </div>
                                 </td>
+                            </tr>
+                             <tr>
+                                <td>Referral Bonus Points</td>
+                                {{-- <td><input type="checkbox" name="permissions[referal_links][add]" ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][edit]"  ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][view]"  ></td>
+                                <td><input type="checkbox" name="permissions[referal_links][delete]"  ></td> --}}
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][add]" id="referal_linksAdd">
+                                        <label class="form-check-label" for="referal_linksAdd">Add</label>
+                                    </div>
+                                </td> --}}
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][edit]" id="referal_linksEdit">
+                                        <label class="form-check-label" for="referal_linksEdit">Edit</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][view]" id="referal_linksView">
+                                        <label class="form-check-label" for="referal_linksView">View</label>
+                                    </div>
+                                </td>
+                                {{-- <td>
+                                    <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input me-1" type="checkbox" name="permissions[referal_links][delete]" id="referal_linksDelete">
+                                        <label class="form-check-label" for="referal_linksDelete">Delete</label>
+                                    </div>
+                                </td> --}}
                             </tr>
                             <tr>
                                 <td>License Approvals</td>

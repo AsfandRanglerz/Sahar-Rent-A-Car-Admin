@@ -218,7 +218,7 @@ $requestBooking->driver_id = $request->driver_id;
             ->first();
 
         if (!$dropoffDriver) {
-            return response()->json(['message' => 'Dropoff driver not found or unavailable.'], 404);
+            return response()->json(['message' => 'Pickup driver not found or unavailable.'], 404);
         }
 
         // Check if dropoff driver's license is approved
@@ -327,32 +327,30 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     
     $requestBooking->status = 3; //  '3' means requested
     $requestBooking->save();
-    // $driver->is_available = 0; //false
-    // $driver->save();
-// **Check if booking is completed (status = 1), then free the driver**
-// if ($requestBooking->status == 1) {
-//     if ($requestBooking->driver_id) {
-//         Driver::where('id', $requestBooking->driver_id)->update(['is_available' => 1]);
-//     }
-//     if ($requestBooking->dropoff_driver_id) {
-//         Driver::where('id', $requestBooking->dropoff_driver_id)->update(['is_available' => 1]);
-//     }
-// }
-    // if ($requestBooking->status == 1) {
-    //     $driver->is_available = 1; // Mark driver as available true
-    //     $driver->save();
-    // }
+    
 
     if (Auth::guard('subadmin')->check()) {
         $subadmin = Auth::guard('subadmin')->user();
         $subadminName = $subadmin->name;
-    
+    if ($request->self_pickup === 'No' && isset($request->driver_id)) {
+        $pickupDriver = Driver::find($request->driver_id);
         SubAdminLog::create([
             'subadmin_id' => $subadmin->id,
-            'section' => 'Request Bookings',
+            'section' => 'Dropoff Requests',
             'action' => 'Assign Driver',
-            'message' => "SubAdmin {$subadminName} assigned Driver with Car ID {$requestBooking->car_id}",
+            'message' => "SubAdmin {$subadminName} assigned Dropoff Driver {$pickupDriver->name}  with Car ID {$requestBooking->car_id}",
         ]);
+    }
+
+    if ($request->self_dropoff === 'No' && isset($request->dropoff_driver_id)) {
+        $dropoffDriver = Driver::find($request->dropoff_driver_id);
+        SubAdminLog::create([
+            'subadmin_id' => $subadmin->id,
+            'section' => 'Pickup Requests',
+            'action' => 'Assign Driver',
+            'message' => "SubAdmin {$subadminName} assigned Pickup Driver {$dropoffDriver->name}  with Car ID {$requestBooking->car_id}",
+        ]);
+    }
     }
 
     if ($request->self_pickup === 'No') {
@@ -455,9 +453,9 @@ public function markCompleted($id)
 
             SubAdminLog::create([
                 'subadmin_id' => $subadmin->id,
-                'section' => 'Bookings',
-                'action' => 'Update Pickup Status',
-                'message' => "SubAdmin {$subadminName} updated pickup booking status",
+                'section' => 'Dropoff Requests',
+                'action' => 'Update Dropoff Status',
+                'message' => "SubAdmin {$subadminName} marked Dropoff request as Completed",
             ]);
         }
 
@@ -500,9 +498,9 @@ public function markCompleted($id)
 
             SubAdminLog::create([
                 'subadmin_id' => $subadmin->id,
-                'section' => 'Bookings',
-                'action' => 'Update Pickup Status',
-                'message' => "SubAdmin {$subadminName} updated pickup booking status",
+                'section' => 'Dropoff Requests',
+                'action' => 'Update Dropoff Status',
+                'message' => "SubAdmin {$subadminName} marked Dropoff request as Completed",
             ]);
         }
 
@@ -517,7 +515,7 @@ public function markCompleted($id)
         }
     }
 
-    return redirect()->back()->with('success', 'Booking marked as completed successfully');
+    return redirect()->route('requestbooking.index')->with('message', 'Dropoff Request Marked as Completed Successfully');
 }
 
 protected function hasLoyaltyPointsAssigned($userId, $bookingId)
@@ -584,13 +582,13 @@ private function assignLoyaltyPoints($userId, $carId, $bookingId)
         $subadminName = $subadmin->name;
         SubAdminLog::create([
             'subadmin_id' => Auth::guard('subadmin')->id(),
-            'section' => 'Request Bookings',
+            'section' => ' Dropoff Requests',
             'action' => 'Delete',
-            'message' => "SubAdmin {$subadminName} Deleted Request Booking {$requestbookingName}",
+            'message' => "SubAdmin {$subadminName} Deleted Dropoff Request of Customer {$requestbookingName}",
         ]);
     }
     $requestbooking->delete();
-    return redirect()->route('requestbooking.index')->with(['message' => 'Ride Request Deleted Successfully']);
+    return redirect()->route('requestbooking.index')->with(['message' => 'Dropoff Request Deleted Successfully']);
     }
 }
 

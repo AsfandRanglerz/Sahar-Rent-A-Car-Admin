@@ -149,7 +149,7 @@ class LoyaltyPointsController extends Controller
 // Only log if a subadmin is editing
 if ($editedBy) {
     // $message = "Car Rental Point updated by SubAdmin: " . $editedBy->name . " - Updated Car Rental Point: " . $request->name;
-    $message = "Rental Reward Point updated by SubAdmin: " . $editedBy->name;
+    $message = "Rental Reward Points updated by SubAdmin " . $editedBy->name;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
         'section' => 'Rental Reward Points',
@@ -175,7 +175,7 @@ if ($editedBy) {
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'Rental Reward Points',
                 'action' => 'Delete',
-                'message' => "SubAdmin {$subadminName} Deleted  Rental Reward Points",
+                'message' => "SubAdmin {$subadminName} Deleted Rental Reward Points",
             ]);
         }
 
@@ -226,10 +226,10 @@ if ($editedBy) {
 // Only log if a subadmin is editing
 if ($editedBy) {
     // $message = "Referal Link point updated by SubAdmin: " . $editedBy->name . " - Updated Referal Link Point: " . $request->name;
-    $message = "Referal Bonus point updated by SubAdmin " . $editedBy->name ;
+    $message = "Referal Bonus points updated by SubAdmin " . $editedBy->name ;
     SubAdminLog::create([
         'subadmin_id' => $editedBy->id,
-        'section' => 'Referal Link Points',
+        'section' => 'Referal Bonus Points',
         'action' => 'Edit',
         'message' => $message,
         'created_at' => now(),

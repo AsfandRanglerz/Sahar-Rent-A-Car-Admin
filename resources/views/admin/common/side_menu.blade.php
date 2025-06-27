@@ -261,7 +261,7 @@
                                 <a href="{{ route('requestbooking.index') }}"
                                     class="nav-link  {{ request()->is('admin/requestbooking*') ? 'active bg-primary text-white' : '' }}">
                                     <i data-feather="calendar"></i>
-                                    <span>Pickup Requests</span>
+                                    <span>Dropoff Requests</span>
                                     <div id="pendingRequestCounter"
                                         class="badge {{ request()->is('admin/requestbooking*') ? 'bg-white text-dark' : 'bg-primary text-white' }} rounded-circle"
                                         style="display: inline-flex; justify-content: center; align-items: center; 
@@ -278,7 +278,7 @@
                                 <a href="{{ route('dropoffs.index') }}"
                                     class="nav-link {{ request()->is('admin/dropoff*') ? 'active bg-primary text-white' : '' }}">
                                     <i data-feather="calendar"></i>
-                                    <span>Dropoff Requests</span>
+                                    <span>Pickup Requests</span>
                                     <div id="dropoffCounter"
                                         class="badge {{ request()->is('admin/dropoff*') ? 'bg-white text-dark' : 'bg-primary text-white' }}"
                                         style="display: inline-flex; justify-content: center; align-items: center; 

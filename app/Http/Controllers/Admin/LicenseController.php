@@ -165,7 +165,7 @@ class LicenseController extends Controller
                 'subadmin_id' => Auth::guard('subadmin')->id(),
                 'section' => 'License Approvals',
                 'action' => 'Delete',
-                'message' => "SubAdmin {$subadminName} deleted License {$LicenseApprovalName}",
+                'message' => "SubAdmin {$subadminName} Deleted License {$LicenseApprovalName}",
             ]);
         }
         $LicenseApproval->delete();

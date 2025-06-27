@@ -123,7 +123,7 @@ class BookingController extends Controller
             'subadmin_id' => $subadmin->id,
             'section' => 'Bookings',
             'action' => 'Update Status',
-            'message' => "SubAdmin {$subadminName} updated  status",
+            'message' => "SubAdmin {$subadminName} Updated  Status",
         ]);
     }
     return response()->json(['success' => true, 'message' => 'Status updated successfully.']);
@@ -251,7 +251,7 @@ private function assignLoyaltyPoints($userId, $carId)
             'subadmin_id' => Auth::guard('subadmin')->id(),
             'section' => 'Bookings',
             'action' => 'Delete',
-            'message' => "SubAdmin {$subadminName} deleted a booking",
+            'message' => "SubAdmin {$subadminName} Deleted a booking",
         ]);
     }
     $booking->delete();

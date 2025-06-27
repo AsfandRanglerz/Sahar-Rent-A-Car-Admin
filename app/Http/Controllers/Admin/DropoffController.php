@@ -131,7 +131,7 @@ public function markDropoffCompleted($id)
     });
 
     if ($pickupNotCompleted) {
-        return redirect()->back()->with('error', 'Pickup driver request must be marked as Completed before completing the Dropoff driver request');
+        return redirect()->back()->with('error', 'Dropoff driver request must be marked as Completed before completing the Pickup driver request');
     }
 
     foreach ($requestBooking->assign as $assigned) {
@@ -157,9 +157,9 @@ public function markDropoffCompleted($id)
 
         SubAdminLog::create([
             'subadmin_id' => $subadmin->id,
-            'section' => 'Bookings',
-            'action' => 'Update Dropoff Status',
-            'message' => "SubAdmin {$subadminName} marked dropoff as completed",
+            'section' => 'Pickup Requests',
+            'action' => 'Update Pickup Status',
+            'message' => "SubAdmin {$subadminName} marked Pickup request as Completed",
         ]);
     }
     // Check if all assigned rows have both drivers (if assigned) marked completed
@@ -180,7 +180,7 @@ public function markDropoffCompleted($id)
         
     }
 
-    return redirect()->back()->with('success', 'Dropoff marked as completed successfully!');
+    return redirect()->route('dropoffs.index')->with('message', 'Pickup Request Marked as Completed Successfully');
 }
 
 public function assignLoyaltyPoints($userId, $carId)
@@ -233,7 +233,18 @@ public function assignLoyaltyPoints($userId, $carId)
     public function destroy($id)
     {
         $dropoff = RequestBooking::find($id);
+        $requestbookingName = $dropoff->full_name;
+    if (Auth::guard('subadmin')->check()) {
+        $subadmin = Auth::guard('subadmin')->user();
+        $subadminName = $subadmin->name;
+        SubAdminLog::create([
+            'subadmin_id' => Auth::guard('subadmin')->id(),
+            'section' => ' Pickup Requests',
+            'action' => 'Delete',
+            'message' => "SubAdmin {$subadminName} Deleted Pickup Request of Customer {$requestbookingName}",
+        ]);
+    }
         $dropoff->delete();
-        return redirect()->route('dropoffs.index')->with(['message' => 'Dropoff Deleted Successfully']);
+        return redirect()->route('dropoffs.index')->with(['message' => 'Pickup Request Deleted Successfully']);
     }
 }
