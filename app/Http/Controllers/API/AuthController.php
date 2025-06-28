@@ -120,15 +120,26 @@ if ($request->filled('referral_code')) {
         $loyaltyPoint = LoyaltyPoints::where('id', 14)->first();
         if ($loyaltyPoint) {
             $pointsEarned = $loyaltyPoint->on_referal;
+          
+            $latestLoyalty = UserLoyaltyEarning::where('user_id', $referrer->id)
+                ->orderByDesc('id')
+                ->first();
 
-            // Update or create user loyalty
-            $userLoyalty = UserLoyaltyEarning::firstOrNew(['user_id' => $referrer->id]);
-            $userLoyalty->total_points += $pointsEarned;
-            $userLoyalty->save();
+            if ($latestLoyalty) {
+                $latestLoyalty->total_points += $pointsEarned;
+                $latestLoyalty->save();
+            } else {
+                // Create a new entry if none exists
+                UserLoyaltyEarning::create([
+                    'user_id' => $referrer->id,
+                    'total_points' => $pointsEarned
+                ]);
+            }
         }
     }
 }
 // $document->save();
+
 Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
 return response()->json([
     // 'status' => true,
@@ -245,28 +256,7 @@ return response()->json([
                 'message' => 'Invalid password',
             ], 401);
         }
-    //     $otp = rand(100000, 999999);
-    // $otpToken = Str::uuid(); // Unique token for OTP verification
-    // $expiresAt = Carbon::now()->addMinutes(5); // OTP expires in 5 minutes
-
-    // Store OTP in the database
-    // OTP::create([
-    //     'identifier' => $identifier,
-    //     'otp' => $otp,
-    //     'otp_token' => $otpToken,
-    //     // 'expires_at' => $expiresAt,
-    // ]);
-
-    // Send OTP via email (or SMS)
-    // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-    //     Mail::to($identifier)->send(new OTPMail($otp));
-    // }
-
-    // return response()->json([
-    //     'message' => 'OTP sent successfully.',
-    //     'otp_token' => $otpToken, // Send OTP token to frontend
-    // ], 200);
-    
+   
     if ($customer->status == 0) {
         return response()->json([
             'message' => 'Your account has been deactivated',
@@ -647,37 +637,7 @@ public function getAllUser($id)
     }
  
 
-    public function customerdeactivateAccount(Request $request)
-    {
-        $customer = Auth::user();
-    
-        // Store notification for admin
-        $notification = new DriverNotification();
-        $notification->user_id = $customer->id;
-        $notification->type = 'deactivation';
-        $notification->message = "Customer {$customer->name} has requested account deactivation.";
-        $notification->save();
-    
-        return response()->json([
-            // 'status' => 'success',
-            'message' => 'Account deactivation request sent to admin'
-        ]);
-    }
-
-public function customerdeleteAccount(Request $request)
-{
-    $customerId = Auth::id(); // Get authenticated driver
-
-    // Store the deactivation request
-    DeleteRequest::create([
-        'user_id' => $customerId,
-        'deactivation_date' => Carbon::now()->toDateString(), // Store current date
-    ]);
-
-    return response()->json([
-        'message' => 'Your account will be deleted within 14 days',
-    ], 200);
-}
+ 
 
 public function driverregister(Request $request){
     // return "ok";
@@ -1374,10 +1334,16 @@ public function socialLogin(Request $request)
                 $user->name = $data['name'] ?? $user->name;
                 $user->image = $data['image'] ?? $user->image;
                 $user->save();
- 
+                $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
                 $token = $user->createToken('auth_token')->plainTextToken;
                 return response()->json([
-                    'message' => 'User login successfully!',
+                    'message' => 'Logged in successfully',
                     'user' => [
                             'user_id' => $user->id,
                             'name' => $user->name,
@@ -1404,10 +1370,17 @@ public function socialLogin(Request $request)
                 $user->image = $data['image'] ?? $user->image;
                 $user->login_type = $request->login_type;
                 $user->save();
- 
+
+                $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
                 $token = $user->createToken('auth_token')->plainTextToken;
                 return response()->json([
-                    'message' => 'User login successfully!',
+                    'message' => 'Logged in successfully',
                     'user' => $user,
                     'token' => $token,
                 ], 200);
@@ -1422,10 +1395,16 @@ public function socialLogin(Request $request)
             $user->image = $data['image'] ?? null;
             $user->$socialColumn = $data['social_id'];
             $user->save();
- 
+            $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
             $token = $user->createToken('auth_token')->plainTextToken;
             return response()->json([
-                'message' => 'User Login Successfully!',
+                'message' => 'Logged in successfully',
                 'type' => 'new',
                 'user' => [
                     'user_id' => $user->id,
@@ -1470,10 +1449,16 @@ public function socialLogin(Request $request)
                 $user->name = $data['name'] ?? $user->name;
                 $user->image = $data['image'] ?? $user->image;
                 $user->save();
- 
+                $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
                 $token = $user->createToken('auth_token')->plainTextToken;
                 return response()->json([
-                    'message' => 'User login successfully!',
+                    'message' => 'Logged in successfully',
                     'user' => $user,
                     'token' => $token,
                 ], 200);
@@ -1493,10 +1478,16 @@ public function socialLogin(Request $request)
                 $user->image = $data['image'] ?? $user->image;
                 $user->login_type = $request->login_type;
                 $user->save();
- 
+                $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
                 $token = $user->createToken('auth_token')->plainTextToken;
                 return response()->json([
-                    'message' => 'User login successfully!',
+                    'message' => 'Logged in successfully',
                     'user' => $user,
                     'token' => $token,
                 ], 200);
@@ -1511,10 +1502,16 @@ public function socialLogin(Request $request)
             $user->image = $data['image'] ?? null;
             $user->$socialColumn = $data['social_id'];
             $user->save();
- 
+            $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
             $token = $user->createToken('auth_token')->plainTextToken;
             return response()->json([
-                'message' => 'User Login Successfully!',
+                'message' => 'Logged in successfully',
                 'type' => 'new',
                 'user' => $user,
                 'token' => $token,

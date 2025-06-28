@@ -69,8 +69,8 @@ Route::post('/forgot-verify-otp', [AuthController::class, 'forgotverifyOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 //################# customer account #####################
-Route::post('/customeraccount', [AuthController::class, 'customerdeactivateAccount'])->middleware('auth:sanctum');
-Route::post('/customerdelete',[AuthController::class,'customerdeleteAccount'])->middleware('auth:sanctum');
+Route::post('/customeraccountdelete',[DriverController::class,'customerdeleteAccount'])->middleware('auth:sanctum');
+Route::post('/customeraccountdeactivate',[DriverController::class, 'customerdeactivateAccount'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getprofile', [AuthController::class, 'getProfile']);

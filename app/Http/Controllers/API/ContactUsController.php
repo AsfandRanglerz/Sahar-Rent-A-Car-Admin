@@ -46,7 +46,7 @@ class ContactUsController extends Controller
 
     public function contactUs()
     {
-        $contact = ContactUs::select('email', 'phone')->first();
+        $contact = ContactUs::select('email', 'phone', 'address')->first();
  
         return response()->json([
             'message' => 'Contact Us details retrieved successfully',

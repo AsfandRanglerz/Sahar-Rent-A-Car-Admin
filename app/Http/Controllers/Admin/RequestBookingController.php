@@ -202,6 +202,25 @@ if ($isDriverAssigned) {
 $requestBooking->driver_id = $request->driver_id;
 // $driver->is_available = 0;
 // $driver->save();
+if ($driver && $driver->fcm_token) {
+    dispatch(new NotificationJob(
+        $driver->fcm_token,
+        'New Dropoff Request Assigned',
+        'A new dropoff request has been assigned to you.',
+        [
+            'request_booking_id' => $requestBooking->id,
+            'type' => 'dropoff'
+        ]
+    ));
+}
+
+Notification::create([
+    'driver_id'    => $driver->id,
+    'user_type'  => 'driver',
+    'title'      => 'New Dropoff Request Assigned',
+    'description'    => 'A new dropoff request has been assigned to you.',
+]);
+
 }
     // Generate a unique 4-digit car_id if it doesn't exist
     // if (!$requestBooking->car_id) {
@@ -317,6 +336,26 @@ if ($isDropoffDriverAssigned) {
 $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
         // $dropoffDriver->is_available = 0;
         // $dropoffDriver->save();
+
+        if ($dropoffDriver && $dropoffDriver->fcm_token) {
+    dispatch(new NotificationJob(
+        $dropoffDriver->fcm_token,
+        'New Pickup Request Assigned',
+        'A new pickup request has been assigned to you.',
+        [
+            'request_booking_id' => $requestBooking->id,
+            'type' => 'pickup'
+        ]
+    ));
+}
+
+Notification::create([
+    'driver_id'    => $dropoffDriver->id,
+    'user_type'  => 'driver',
+    'title'      => 'New Pickup Request Assigned',
+    'description'    => 'A new pickup request has been assigned to you.',
+]);
+
     }
 
     if ($request->car_id) {
@@ -391,44 +430,6 @@ $requestBooking->dropoff_driver_id = $request->dropoff_driver_id;
     
     }
 
-//     public function markCompleted($id)
-// {
-//     $requestBooking = RequestBooking::with('assign')->findOrFail($id);
-
-//     foreach ($requestBooking->assign as $assigned) {
-
-//         // Update assigned_request status to 1 (completed) if driver exists
-//         if ($assigned->driver_id ) {
-//             $assigned->status = 1;
-//             $assigned->save();
-
-//             // Make driver available again
-//             Driver::where('id', $assigned->driver_id)->update(['is_available' => 1]);
-//         }
-
-//         // If there's a dropoff driver assigned, do the same
-//         // if ($assigned->dropoff_driver_id ) {
-//         //     $assigned->status = 1;
-//         //     $assigned->save();
-
-//         //     Driver::where('id', $assigned->dropoff_driver_id)->update(['is_available' => 1]);
-//         // }
-//     }
-//     $allCompleted = true;
-//     foreach ($requestBooking->assign as $assigned) {
-//         if (($assigned->driver_id && $assigned->status != 1) || 
-//             ($assigned->dropoff_driver_id && $assigned->status != 1)) {
-//             $allCompleted = false;
-//             break;
-//         }
-//     }
-
-//     if ($allCompleted) {
-//         $requestBooking->status = 1;
-//         $requestBooking->save();
-//     }
-//     return redirect()->back()->with('success', 'Booking marked as completed successfully!');
-// }
 
 public function markCompleted($id)
 {
@@ -562,17 +563,7 @@ private function assignLoyaltyPoints($userId, $carId, $bookingId)
     }
 }
 
-    // public function create(){
-    //     return view('admin.booking.create');
-    // }
-   
     
-    // public function store(Request $request)
-    // {
-        
-
-    //     return redirect()->route('requestbooking.index')->with(['message' => 'Booking Created Successfully']);
-    // } 
 
     public function destroy(Request $request, $id){
      $requestbooking = RequestBooking::find($id);

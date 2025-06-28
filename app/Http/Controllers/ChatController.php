@@ -29,6 +29,21 @@ class ChatController extends Controller
         $messages = $id ? $this->firebase->getMessages($id) ?? [] : []; // Fetch messages only if 'id' exists
         $users = $this->firebase->getUsers(); // Fetch all profiles from the chats node
 
+        // 🧹 Filter out deleted users
+    $users = array_filter($users, function ($user) {
+        if (!isset($user['id'], $user['usertype'])) return false;
+
+        if ($user['usertype'] === 'customer') {
+            return \App\Models\User::where('id', $user['id'])->exists();
+        }
+
+        if ($user['usertype'] === 'driver') {
+            return \App\Models\Driver::where('id', $user['id'])->exists();
+        }
+
+        return false;
+    });
+
         // Mark messages as read
         if ($id) {
             foreach ($messages as $key => $message) {

@@ -101,97 +101,107 @@
                         <input type="text" placeholder="Search User..." class="form-control" id="searchUser"
                             onkeyup="searchUser()" />
                     </div>
-                    @forelse ($users as $user)
-                        <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
-                            onclick="window.location.href='{{ route('chat.index', ['id' => $user['id'], 'type' => $user['usertype']]) }}'">
-                            <div style="gap: 10px;" class="d-flex justify-content-between align-items-center">
-                                <div class="user-image">
-                                    @php
-                                        $userModel =
-                                            $user['usertype'] == 'customer'
-                                                ? App\Models\User::where('id', $user['id'])->first()
-                                                : App\Models\Driver::where('id', $user['id'])->first();
+                        @forelse ($users as $user)
+                            <div class="user {{ $user['id'] == $currentChatId ? 'active' : '' }}"
+                                onclick="window.location.href='{{ route('chat.index', ['id' => $user['id'], 'type' => $user['usertype']]) }}'">
+                                <div style="gap: 10px;" class="d-flex justify-content-between align-items-center">
+                                    <div class="user-image">
+                                        @php
+                                            $userModel =
+                                                $user['usertype'] == 'customer'
+                                                    ? App\Models\User::where('id', $user['id'])->first()
+                                                    : App\Models\Driver::where('id', $user['id'])->first();
 
-                                        $image = $userModel ? $userModel->image : null;
-                                        $name = $userModel ? $userModel->name : 'Unknown';
+                                            $image = $userModel ? $userModel->image : null;
+                                            $name = $userModel ? $userModel->name : 'Unknown';
+                                        @endphp
+                                        <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
+                                            alt="" class="rounded-circle" style="width: 40px; height: 40px;">
+                                    </div>
+                                    <div>
+                                        <strong>{{ $name }}</strong>
+                                        <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @php
+                                        $time = isset($user['lastMessageTime'])
+                                            ? Carbon::parse($user['lastMessageTime'])->format('d M Y, h:i A') // 12-hour format
+                                            : 'N/A';
                                     @endphp
+                                    <small>{{ $time }}</small>
+
+                                    
+                                    @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0 && $user['mytype'] !== "admin")
+                                        <span class="badge badge-danger">{{ $user['unreadCount'] }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-center mt-2">No users available.</p>
+                        @endforelse
+                    </div>
+
+
+                    <div class="col-8 px-0 chat-container">
+                        @php
+                            // Find the current user based on $currentChatId
+                            $currentUser = collect($users)->firstWhere('id', $currentChatId);
+
+                            if ($currentUser) {
+                                $userModel =
+                                    $currentUser['usertype'] == 'customer'
+                                        ? App\Models\User::where('id', $currentUser['id'])->first()
+                                        : App\Models\Driver::where('id', $currentUser['id'])->first();
+
+                                $image = $userModel ? $userModel->image : null;
+                                $name = $userModel ? $userModel->name : 'Unknown';
+                            } else {
+                                $image = null;
+                                $name = 'Unknown';
+                            }
+                        @endphp
+
+                        <div class="chat-header">
+                            <div style="gap: 10px;" class="d-flex align-items-center">
+                                <div class="user-image">
                                     <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
                                         alt="" class="rounded-circle" style="width: 40px; height: 40px;">
                                 </div>
                                 <div>
-                                    <strong>{{ $name }}</strong>
-                                    <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
+                                    <h6 class="mb-0 text-white">{{ $name }}</h6>
+                                    <p style="font-size: 0.8rem; color: #d9d8d8; line-height: 1.1;" class="mb-0">
+                                        {{ $currentUser['usertype'] ?? 'N/A' }}
+                                    </p>
                                 </div>
                             </div>
-                            <div>
-                                @php
-                                    $time = isset($user['lastMessageTime'])
-                                        ? Carbon::parse($user['lastMessageTime'])->format('d M Y, h:i A') // 12-hour format
-                                        : 'N/A';
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            @foreach ($messages as $msg)
+                                <div
+                                    {{-- class="message {{ $msg['sendBy'] === (auth()->user()->id ?? 'Admin') ? 'sent' : 'received' }}">
+                                    <strong>{{ $msg['sendBy'] }}</strong>: {{ $msg['text'] }}
+                                    <div><small>{{ $msg['createdAt'] }}</small></div> --}}
+                                    @php
+                                    $sendBy = $msg['sendBy'] ?? 'System';
+                                    $text = $msg['text'] ?? '[No Message]';
+                                    $createdAt = $msg['createdAt'] ?? now();
+                                    $isSent = $sendBy == (auth()->user()->id ?? 'Admin');
                                 @endphp
-                                <small>{{ $time }}</small>
-
-                                
-                                @if (in_array($user['usertype'], ['customer', 'driver']) && $user['unreadCount'] > 0 && $user['mytype'] !== "admin")
-                                    <span class="badge badge-danger">{{ $user['unreadCount'] }}</span>
-                                @endif
-                            </div>
+                                <div
+                                    class="message {{ $isSent ? 'sent' : 'received' }}">
+                                    <strong>{{ $sendBy }}</strong>: {{ $text }}
+                                <div><small>{{ Carbon::parse($createdAt)->format('d M Y, h:i A') }}</small></div>
+                                </div>
+                            @endforeach
                         </div>
-                    @empty
-                        <p class="text-center mt-2">No users available.</p>
-                    @endforelse
-                </div>
-
-
-                <div class="col-8 px-0 chat-container">
-                    @php
-                        // Find the current user based on $currentChatId
-                        $currentUser = collect($users)->firstWhere('id', $currentChatId);
-
-                        if ($currentUser) {
-                            $userModel =
-                                $currentUser['usertype'] == 'customer'
-                                    ? App\Models\User::where('id', $currentUser['id'])->first()
-                                    : App\Models\Driver::where('id', $currentUser['id'])->first();
-
-                            $image = $userModel ? $userModel->image : null;
-                            $name = $userModel ? $userModel->name : 'Unknown';
-                        } else {
-                            $image = null;
-                            $name = 'Unknown';
-                        }
-                    @endphp
-
-                    <div class="chat-header">
-                        <div style="gap: 10px;" class="d-flex align-items-center">
-                            <div class="user-image">
-                                <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
-                                    alt="" class="rounded-circle" style="width: 40px; height: 40px;">
-                            </div>
-                            <div>
-                                <h6 class="mb-0 text-white">{{ $name }}</h6>
-                                <p style="font-size: 0.8rem; color: #d9d8d8; line-height: 1.1;" class="mb-0">
-                                    {{ $currentUser['usertype'] ?? 'N/A' }}
-                                </p>
-                            </div>
-                        </div>
+                        <form class="chat-input" id="chat-form">
+                            @csrf
+                            <textarea name="message" id="message" rows="1" placeholder="Type a message..." required></textarea>
+                            <button type="submit"><span data-feather="send"></span></button>
+                        </form>
                     </div>
-                    <div class="chat-messages" id="chat-messages">
-                        @foreach ($messages as $msg)
-                            <div
-                                class="message {{ $msg['sendBy'] === (auth()->user()->id ?? 'Admin') ? 'sent' : 'received' }}">
-                                <strong>{{ $msg['sendBy'] }}</strong>: {{ $msg['text'] }}
-                                <div><small>{{ $msg['createdAt'] }}</small></div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <form class="chat-input" id="chat-form">
-                        @csrf
-                        <textarea name="message" id="message" rows="1" placeholder="Type a message..." required></textarea>
-                        <button type="submit"><span data-feather="send"></span></button>
-                    </form>
                 </div>
-            </div>
 
 
         </section>

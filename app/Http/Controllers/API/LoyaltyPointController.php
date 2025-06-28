@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\User;
 use App\Models\Booking;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -175,10 +176,10 @@ public function earnLoyaltyPoints(Request $request)
     $user = User::find($userId);
 
     // Generate referral code if not already present
-    if (!$user->referral_code) {
+    
         $user->referral_code = strtoupper(Str::random(8));
         $user->save();
-    }
+    
 
     // Create referral link
     $referralLink = url('/register?ref=' . $user->referral_code);

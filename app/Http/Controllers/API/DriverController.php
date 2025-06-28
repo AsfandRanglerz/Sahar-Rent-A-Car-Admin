@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Driver;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -97,15 +98,30 @@ class DriverController extends Controller
     public function deleteAccount(Request $request)
 {
     $driverId = Auth::id(); // Get authenticated driver
-
+    $driver = Driver::find($driverId);
     // Store the deactivation request
-    DeleteRequest::create([
-        'driver_id' => $driverId,
-        'deactivation_date' => Carbon::now()->toDateString(), // Store current date
-    ]);
-
+    // DeleteRequest::create([
+    //     'driver_id' => $driverId,
+    //     'deactivation_date' => Carbon::now()->toDateString(), // Store current date
+    // ]);
+    $driver->delete();
     return response()->json([
-        'message' => 'Your account will be deleted within 14 days',
+        'message' => 'Your account has been deleted successfully',
+    ], 200);
+}
+
+public function customerdeleteAccount(Request $request)
+{
+    $customerId = Auth::id(); // Get authenticated driver
+    $customer = User::find($customerId);
+    // Store the deactivation request
+    // DeleteRequest::create([
+    //     'user_id' => $customerId,
+    //     'deactivation_date' => Carbon::now()->toDateString(), // Store current date
+    // ]);
+    $customer->delete();
+    return response()->json([
+        'message' => 'Your account has been deleted successfully',
     ], 200);
 }
 
@@ -121,8 +137,23 @@ public function deactivateAccount(Request $request)
     $notification->save();
 
     return response()->json([
-        // 'status' => 'success',
-        'message' => 'Account deactivation request sent to admin'
+        'message' => 'Account deactivation request sent'
+    ]);
+}
+
+public function customerdeactivateAccount(Request $request)
+{
+    $customer = Auth::user();
+
+    // Store notification for admin
+    $notification = new DriverNotification();
+    $notification->user_id = $customer->id;
+    $notification->type = 'deactivation';
+    $notification->message = "Customer {$customer->name} has requested account deactivation";
+    $notification->save();
+
+    return response()->json([
+        'message' => 'Account deactivation request sent'
     ]);
 }
 

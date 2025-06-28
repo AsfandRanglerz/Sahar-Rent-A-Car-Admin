@@ -121,8 +121,9 @@ class UserController extends Controller
             ]);
         }
 
+        // if (app()->environment('production')) {
         Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
-
+        // }
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
     }
 

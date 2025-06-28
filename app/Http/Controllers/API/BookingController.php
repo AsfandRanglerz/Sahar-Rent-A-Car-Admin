@@ -723,10 +723,10 @@ if ($pickupAccepted && $dropoffAccepted) {
         $roles = [];
 
         if ($assignedRequest->driver_id == $driverId) {
-            $roles[] = 'Pickup Driver';
+            $roles[] = 'Dropoff Driver';
         }
         if ($assignedRequest->dropoff_driver_id == $driverId) {
-            $roles[] = 'Dropoff Driver';
+            $roles[] = 'Pickup Driver';
         }
         
         $roleText = implode(' & ', $roles);
@@ -775,10 +775,10 @@ if ($pickupAccepted && $dropoffAccepted) {
         $roles = [];
 
         if ($assignedRequest->driver_id == $driverId) {
-            $roles[] = 'Pickup Driver';
+            $roles[] = 'Dropoff Driver';
         }
         if ($assignedRequest->dropoff_driver_id == $driverId) {
-            $roles[] = 'Dropoff Driver';
+            $roles[] = 'Pickup Driver';
         }
         
         $roleText = implode(' & ', $roles);
