@@ -81,9 +81,9 @@ class SubadminController extends Controller
             'status' => $status
 
         ]);
-
+        if (app()->environment('production')) {
         Mail::to($user->email)->send(new SubadminCredentials($user->name ,$user->email ,$user->phone , $plainPassword));
-
+        }
         return redirect()->route('subadmin.index')->with(['message' => 'Subadmin Created Successfully']);
     }
 
@@ -276,9 +276,9 @@ public function getPermissions(Request $request)
 
         try {
             // Send an email based on `sendCredentials`
-
+            if (app()->environment('production')) {
             Mail::to($data->email)->send(new SubAdminActivated($message));
-
+            }
 
             return redirect()->route('subadmin.index')->with([
                 'status' => true,
@@ -314,8 +314,9 @@ public function getPermissions(Request $request)
         $message['name'] = $data->name;
 
         try {
+            if (app()->environment('production')) {
             Mail::to($data->email)->send(new SubAdminDeActivated($message));
-
+            }
             return redirect()->route('subadmin.index')->with(['message' => 'SubAdmin Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());

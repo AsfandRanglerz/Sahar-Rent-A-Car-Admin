@@ -121,9 +121,9 @@ class UserController extends Controller
             ]);
         }
 
-        // if (app()->environment('production')) {
+        if (app()->environment('production')) {
         Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
-        // }
+        }
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
     }
 
@@ -316,9 +316,9 @@ if ($editedBy) {
 
         try {
             // Send an email based on `sendCredentials`
-
+            if (app()->environment('production')) {
             Mail::to($data->email)->send(new UserActivated($message));
-
+            }
 
             return redirect()->route('user.index')->with([
                 'status' => true,
@@ -350,7 +350,9 @@ if ($editedBy) {
         $message['name'] = $data->name;
 
         try {
+            if (app()->environment('production')) {
             Mail::to($data->email)->send(new UserDeActivated($message));
+            }
             return redirect()->route('user.index')->with(['message' => 'Customer Deactivated Successfully']);
         } catch (\throwable $th) {
             dd($th->getMessage());
