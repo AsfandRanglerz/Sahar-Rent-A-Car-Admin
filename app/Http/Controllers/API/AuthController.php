@@ -13,8 +13,10 @@ use App\Models\Customer;
 use App\Models\ForgotOTP;
 use App\Mail\ForgotOTPMail;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 use App\Models\UserDocument;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationJob;
 use App\Mail\UserCredentials;
 use App\Models\DeleteRequest;
 use App\Models\LoyaltyPoints;
@@ -113,6 +115,7 @@ if ($request->hasFile('image')) {
 
 // Check if referral code was used
 if ($request->filled('referral_code')) {
+    $referralCode = $request->referral_code;
     $referrer = User::where('referral_code', $request->referral_code)->first();
 
     if ($referrer) {
@@ -135,12 +138,35 @@ if ($request->filled('referral_code')) {
                     'total_points' => $pointsEarned
                 ]);
             }
+
+             $referrer->referral_code = null; // or regenerate: strtoupper(Str::random(8))
+            $referrer->save();
+            // 🔔 Send push notification via job
+            if ($referrer->fcm_token) {
+                dispatch(new NotificationJob(
+                    $referrer->fcm_token,
+                    'Referral Bonus',
+                    "You earned {$pointsEarned} loyalty points from a referral!",
+                    [
+                        'type' => 'referral_bonus',
+                        'points' => $pointsEarned,
+                        'referrer_id' => $referrer->id
+                    ]
+                ));
+            }
+             Notification::create([
+                'customer_id'  => $referrer->id,
+                'title'        => 'Referral Bonus Earned!',
+                'description'  => 'You earned ' . $pointsEarned . ' loyalty points from your referral.',
+                // 'seenByUser' => false, // uncomment if your table uses this
+            ]);
         }
     }
 }
 // $document->save();
-
+if (app()->environment('production')) {
 Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
+}
 return response()->json([
     // 'status' => true,
     'message' => 'Your account has been created successfully',
@@ -704,8 +730,9 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
+if (app()->environment('production')) {
 Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));     
-
+}
 return response()->json([
 // 'status' => true,
 'message' => 'Your account has been created successfully',
