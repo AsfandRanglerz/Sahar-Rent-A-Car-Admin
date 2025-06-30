@@ -49,7 +49,13 @@
                                                         <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ $user->phone }}</td>
+                                                <td>
+                                                    @if($user->phone)
+                                                    {{ $user->phone }}
+                                                    @else
+                                                    <span>No Phone Number</span>
+                                                    @endif
+                                                </td>
                                                 {{-- <td>{{ $user->address }}</td> --}}
                                                  {{-- <td>
                                                     @if ($user->emirate_id||$user->passport||$user->driving_license)

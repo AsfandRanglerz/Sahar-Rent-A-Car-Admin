@@ -136,4 +136,11 @@ class FirebaseService
 
         \Log::info("Message {$messageKey} in Chat ID {$chatId} marked as read.");
     }
+
+    public function deleteChat($userId)
+{
+    $chatRef = $this->database->getReference('chats/' . $userId);
+    $chatRef->remove(); // This deletes the chat node
+}
+
 }

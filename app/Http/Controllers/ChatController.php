@@ -28,21 +28,28 @@ class ChatController extends Controller
 
         $messages = $id ? $this->firebase->getMessages($id) ?? [] : []; // Fetch messages only if 'id' exists
         $users = $this->firebase->getUsers(); // Fetch all profiles from the chats node
-
+        
+        
         // 🧹 Filter out deleted users
     $users = array_filter($users, function ($user) {
         if (!isset($user['id'], $user['usertype'])) return false;
+$exists = false;
 
-        if ($user['usertype'] === 'customer') {
-            return \App\Models\User::where('id', $user['id'])->exists();
-        }
+    if ($user['usertype'] === 'customer') {
+        $exists = \App\Models\User::where('id', $user['id'])->exists();
+    }
 
-        if ($user['usertype'] === 'driver') {
-            return \App\Models\Driver::where('id', $user['id'])->exists();
-        }
+    if ($user['usertype'] === 'driver') {
+        $exists = \App\Models\Driver::where('id', $user['id'])->exists();
+    }
 
-        return false;
-    });
+    // ❌ If user not found in DB, delete their chat from Firebase
+    if (!$exists) {
+        app(\App\Services\FirebaseService::class)->deleteChat($user['id']);
+    }
+
+    return $exists;
+});
 
         // Mark messages as read
         if ($id) {
@@ -153,4 +160,12 @@ class ChatController extends Controller
 
         return $profiles;
     }
+
+    public function deleteChat($userId)
+{
+    $database = $this->firebase->getDatabase();
+    $chatRef = $database->getReference('chats/' . $userId);
+    $chatRef->remove(); // This deletes the chat node
+}
+
 }

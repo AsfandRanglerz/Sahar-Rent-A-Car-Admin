@@ -122,6 +122,8 @@ class ContactUsController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
         ]);
         
         // Check if a subadmin is logged in

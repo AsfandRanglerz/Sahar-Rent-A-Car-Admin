@@ -256,13 +256,21 @@ public function filterCars(Request $request)
         $query->where('location', 'LIKE', '%' . $location . '%');
     }
 
-    if (!empty($vehicleType)) {
-        $query->where('car_type', $vehicleType);
-    }
+    // if (!empty($vehicleType)) {
+    //     $query->where('car_type', $vehicleType);
+    // }
 
+    // if (!empty($minPrice) && !empty($maxPrice)) {
+    //     $query->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice]);
+    // }
+    
     if (!empty($minPrice) && !empty($maxPrice)) {
-        $query->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice]);
+        $query->whereRaw(
+            'LEAST(price_per_day, price_per_week, price_per_two_week, price_per_three_week, price_per_month) BETWEEN ? AND ?',
+            [(int)$minPrice, (int)$maxPrice]
+        );
     }
+    
 
     // Fetch filtered cars
     $cars = $query->get();
@@ -270,6 +278,18 @@ public function filterCars(Request $request)
     foreach ($cars as $car) {
         $car->feature = preg_split('/\r\n|\r|\n/', $car->feature);
         $car->feature = array_filter(array_map('trim', $car->feature));
+
+         $car->display_price = min(
+        array_filter([
+            $car->price_per_day,
+            $car->price_per_week,
+            $car->price_per_two_week,
+            $car->price_per_three_week,
+            $car->price_per_month
+        ])
+    );
+    $cars = $cars->sortBy('display_price')->values();
+
     }
     
     return response()->json([

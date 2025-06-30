@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Edit Subadmin')
+@section('title', 'Edit Contact Us')
 @section('content')
 
     <div class="main-content">
@@ -38,17 +38,21 @@
                                   
                                    
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
+                                    <div class="form-group mb-2">
                                             <label>Address</label>
-                                            <input type="text" placeholder="Enter Your Address" name="address"
-                                                id="address" value="{{ old('address', $contactus->address) }}" class="form-control">
+                                            <input type="text" id="autocomplete" name="address"
+                                                placeholder="Enter your address"
+                                                value="{{ old('address', $contactus->address ?? '') }}"
+                                                class="form-control" autocomplete="off">
                                             @error('address')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
-                                   
 
+                                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $contactus->latitude ?? '') }}">
+                                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $contactus->longitude ?? '') }}">
+
+                                </div>
                                 </div>
 
                                 <div class="card-footer text-center">
@@ -63,5 +67,91 @@
             </div>
         </section>
     </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5VajG6zbWb_yIBiO-WkUDbPvDMVL-1TQ&libraries=places"></script>
+<script>
+    function initAutocomplete() {
+        const input = document.getElementById('autocomplete');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+        let placeSelected = false;
+
+        const autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['geocode'],
+            componentRestrictions: { country: 'ae' }
+        });
+
+        // Disable Enter key (so form doesn't submit prematurely)
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') e.preventDefault();
+        });
+
+        // When user selects from Google suggestion
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry) {
+                showError();
+                return;
+            }
+
+            latInput.value = place.geometry.location.lat();
+            lngInput.value = place.geometry.location.lng();
+            placeSelected = true;
+        });
+
+        // Reset placeSelected if user types or pastes
+       ['input', 'paste', 'change'].forEach(eventType => {
+    input.addEventListener(eventType, () => {
+        placeSelected = false;
+        latInput.value = '';
+        lngInput.value = '';
+    });
+});
+
+
+        // Validate on form submit
+        const form = input.closest('form');
+         if (form) {
+            form.addEventListener('submit', function (e) {
+                const hasLatLng = latInput.value && lngInput.value;
+
+                if ((!placeSelected && !hasLatLng) || !input.value) {
+                    // Clear invalid data
+                    input.value = '';
+                    latInput.value = '';
+                    lngInput.value = '';
+                    placeSelected = false;
+
+                    // Prevent submit
+                    e.preventDefault();
+                    alert('Please select a valid location from the dropdown.');
+                    return false;
+                }
+            });
+        }
+
+
+        // Reverse geocode if lat/lng already exist (edit form)
+        function reverseGeocodeAndSetAddress() {
+            if (latInput.value && lngInput.value && !input.value) {
+                const geocoder = new google.maps.Geocoder();
+                const latlng = { lat: parseFloat(latInput.value), lng: parseFloat(lngInput.value) };
+                geocoder.geocode({ location: latlng }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        input.value = results[0].formatted_address;
+                        placeSelected = true;
+                    }
+                });
+            }
+        }
+
+        reverseGeocodeAndSetAddress();
+    }
+
+    document.addEventListener("DOMContentLoaded", initAutocomplete);
+</script>
 
 @endsection
+@section('js')
+
+

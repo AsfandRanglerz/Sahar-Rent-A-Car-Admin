@@ -346,6 +346,8 @@ if ($editedBy) {
             'status' => $request->status,
         ]);
 
+      $data->tokens()->delete();
+
         $message['reason'] = $reason;
         $message['name'] = $data->name;
 

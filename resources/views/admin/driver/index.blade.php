@@ -27,7 +27,7 @@
                                             <th>Sr.</th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Phone</th>
+                                            <th>Phone Number</th>
                                             {{-- <th>Document (License)</th> --}}
                                             <th>Image</th>
                                             <th>License</th>
@@ -47,7 +47,13 @@
                                                         <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
                                                     @endif
                                                 </td>
-                                                <td>{{ $driver->phone }}</td>
+                                                <td>
+                                                    @if($driver->phone)
+                                                    {{ $driver->phone }}
+                                                    @else
+                                                    <span>No Phone Number</span>
+                                                    @endif
+                                                </td>
                                                 {{-- <td>
                                                     @if ($driver->driverdocument)
                                                         <ul>
