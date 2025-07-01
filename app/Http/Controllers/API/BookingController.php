@@ -139,7 +139,7 @@ $redeemedPoints = $request->input('redeemed_points', 0);
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Booking created successfully.',
+            'message' => 'Booking created successfully',
             'data' => $booking,
         ], 200);
     } 
@@ -234,7 +234,7 @@ $redeemedPoints = $request->input('redeemed_points', 0);
 
         return response()->json([
             // 'status' => true,
-            'message' => 'Booking request created successfully.',
+            'message' => 'Booking request sent successfully',
             'data' => $requestBooking,
         ], 200);
     }
@@ -247,7 +247,7 @@ public function getUserBookings()
 
     $bookings = Booking::where('user_id', $userId)
         ->whereIn('status', [0, 2, 3]) // Fetch only active bookings
-        ->orderBy('created_at', 'desc')
+        ->orderBy('created_at', 'ASC')
         ->get()
         ->map(function ($booking) use ($adminPhone){
             // $car = CarDetails::find($booking->car_id);
@@ -305,7 +305,7 @@ public function getUserBookings()
 
         $requestBookings = RequestBooking::where('user_id', $userId)
         ->whereIn('status', [0, 2, 3])
-        ->orderBy('created_at', 'desc')
+        ->orderBy('created_at', 'ASC')
         ->get()
         ->map(function ($booking) use ($adminPhone){
             $car = CarDetails::where('car_id', $booking->car_id)->first();
@@ -394,7 +394,7 @@ public function UserHistoryBookings()
 
     $bookings = Booking::where('user_id', $userId)
         ->where('status', 1) // Fetch only active bookings
-        ->orderBy('created_at', 'desc')
+        ->orderBy('created_at', 'ASC')
         ->get()
         ->map(function ($booking) {
             // $car = CarDetails::find($booking->car_id);
@@ -430,7 +430,7 @@ public function UserHistoryBookings()
 
         $requestBookings = RequestBooking::where('user_id', $userId)
         ->where('status', 1) // Fetch only active bookings
-        ->orderBy('created_at', 'desc')
+        ->orderBy('created_at', 'ASC')
         ->get()
         ->map(function ($booking) {
             // $car = CarDetails::find($booking->car_id);

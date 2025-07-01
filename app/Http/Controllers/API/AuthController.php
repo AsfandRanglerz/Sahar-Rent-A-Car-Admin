@@ -164,9 +164,8 @@ if ($request->filled('referral_code')) {
     }
 }
 // $document->save();
-if (app()->environment('production')) {
 Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
-}
+
 return response()->json([
     // 'status' => true,
     'message' => 'Your account has been created successfully',
@@ -545,7 +544,7 @@ public function getProfile(Request $request)
 
         return response()->json([
             // 'status' => true,
-            'message' => 'User profile retrieved successfully',
+            'message' => 'Profile retrieved successfully',
             'data' => [
                 'user_id' => $customer->id,
                 'name' => $customer->name,
@@ -633,7 +632,7 @@ public function getProfile(Request $request)
     
         return response()->json([
             // 'status' => true,
-            'message' => 'Customer profile updated successfully',
+            'message' => 'Profile updated successfully',
             'data' => [
                 'name' => $customer->name,
                 'email' => $customer->email,
@@ -730,9 +729,8 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
-if (app()->environment('production')) {
 Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));     
-}
+
 return response()->json([
 // 'status' => true,
 'message' => 'Your account has been created successfully',
@@ -1150,7 +1148,7 @@ return response()->json([
     }
         return response()->json([
             // 'status' => true,
-            'message' => 'User profile retrieved successfully',
+            'message' => 'Profile retrieved successfully',
             'data' => [
                 'driver_id' => $driver->id,
                 'name' => $driver->name,
@@ -1195,7 +1193,7 @@ return response()->json([
     
         return response()->json([
             // 'status' => true,
-            'message' => 'Driver profile updated successfully',
+            'message' => 'Profile updated successfully',
             'data' => [
                 'name' => $driver->name,
                 'email' => $driver->email,

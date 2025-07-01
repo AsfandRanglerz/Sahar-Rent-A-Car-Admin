@@ -62,13 +62,13 @@
                                             <th>Email Address</th>
                                             <th>Phone Number</th>
                                             <th>Self Pickup</th>
-                                            <th>Pickup Address</th>
-                                            <th>Pickup Date</th>
-                                            <th>Pickup Time</th>
+                                            <th>Customer Doorstep/Pickup Address</th>
+                                            <th>Pickup/Drop Off Date</th>
+                                            <th>Pickup/Drop Off Time</th>
                                             <th>Self Drop Off</th>
-                                            <th>Drop Off Address</th>
-                                            <th>Drop Off Date</th>
-                                            <th>Drop Off Time</th>
+                                            <th>Pickup/Drop Off Address</th>
+                                            <th>Pickup/Drop Off Date</th>
+                                            <th>Pickup/Drop Off Time</th>
                                             <th>City</th>
                                             <th>Price (AED)</th>
                                             <th>Delivery Charge (AED)</th>
@@ -144,7 +144,7 @@
                                                 @if($booking->pickup_address)    
                                                     {{ $booking->pickup_address }}
                                                 @else
-                                                <span>--</span>
+                                                <span>{{ $contactAddress ?? '--' }}</span>
                                                 @endif
                                                 </td>
                                                 <td>
@@ -166,7 +166,7 @@
                                                     @if($booking->dropoff_address)
                                                     {{ $booking->dropoff_address }}
                                                     @else
-                                                    <span>--</span>
+                                                    <span>{{ $contactAddress ?? '--' }}</span>
                                                     @endif
                                                 </td>
                                                 <td>

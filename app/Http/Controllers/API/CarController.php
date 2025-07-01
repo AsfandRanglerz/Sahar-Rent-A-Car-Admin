@@ -24,11 +24,11 @@ class CarController extends Controller
     ->toArray();
 
     $bookedCarIds = DB::table('bookings')
-        ->whereIn('status', [3,0]) // Assuming 2 = ongoing, 3 = upcoming
+        ->whereIn('status', [0]) // Assuming 0 = ongoing, 3 = requested
         ->pluck('car_id')
         ->merge(
             DB::table('request_bookings')
-                ->whereIn('status', [3,0]) // 1 = completed
+                ->whereIn('status', [2,3,0]) // 1 = completed
                 ->pluck('car_id')
         )
         ->unique()

@@ -47,9 +47,9 @@
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th> --}}
                                             <th>Self Drop Off</th>
-                                            <th>Drop Off Address</th>
-                                            <th>Drop Off Date</th>
-                                            <th>Drop Off Time</th>
+                                            <th>Pickup Address</th>
+                                            <th>Pickup Date</th>
+                                            <th>Pickup Time</th>
                                             <th>City</th>
                                             <th>Price (AED)</th>
                                             <th>Delivery Charge (AED)</th>

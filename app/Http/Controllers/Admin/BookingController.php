@@ -70,9 +70,9 @@ class BookingController extends Controller
         // $requestIncome = $requestQuery->whereNotNull('price')->sum('price');
 
         $totalIncome = \DB::table('booking_totals')->sum('total_price');
-
+        $contactAddress = DB::table('contact_us')->value('address');
         
-        return view('admin.booking.index',compact('bookings', 'totalIncome'));
+        return view('admin.booking.index',compact('bookings', 'totalIncome', 'contactAddress'));
     }
 
     public function activeBookingsCounter()

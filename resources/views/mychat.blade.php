@@ -48,6 +48,8 @@
             padding: 10px;
             border-radius: 5px;
             max-width: 70%;
+            word-wrap: break-word;      /* ✅ Breaks long words */
+            white-space: normal; 
         }
 
         .message.sent {
@@ -90,6 +92,17 @@
             border-radius: 12px;
             font-size: 0.8rem;
         }
+
+        .last-message {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+        display: block;
+        font-size: 14px;
+        color: #555;
+    }
+
     </style>
     @php use Carbon\Carbon; @endphp
 
@@ -118,9 +131,9 @@
                                         <img src="{{ $image ? asset($image) : asset('/public/admin/assets/images/users/1746614348.png') }}"
                                             alt="" class="rounded-circle" style="width: 40px; height: 40px;">
                                     </div>
-                                    <div>
+                                    <div style="max-width: 200px;">
                                         <strong>{{ $name }}</strong>
-                                        <div>{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
+                                        <div class="last-message d-block">{{ $user['lastMessage'] ?? 'No messages yet' }}</div>
                                     </div>
                                 </div>
                                 <div>
