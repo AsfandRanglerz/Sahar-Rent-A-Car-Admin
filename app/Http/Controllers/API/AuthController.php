@@ -55,7 +55,7 @@ return response()->json([
     // 'status' => false,
     'message' => $validateUser->errors()->first(),
     // 'errors' => $validateUser->errors()->all(),
-],401);
+],405);
 }
 $emirate_id = null;
 $passport = null;
@@ -252,7 +252,7 @@ return response()->json([
                 // 'status' => false,
                 'message' => $validateUser->errors()->first(),
                 // 'errors' => $validateUser->errors()->all(),
-            ], 401);
+            ], 405);
         }
     
         // $customer = Customer::where('email', $request->email)->first();
@@ -279,7 +279,7 @@ return response()->json([
             return response()->json([
                 // 'status' => false,
                 'message' => 'Invalid password',
-            ], 401);
+            ], 402);
         }
    
     if ($customer->status == 0) {
@@ -335,7 +335,7 @@ return response()->json([
 
     // Check if OTP is valid
     if ($otpRecord->otp !== $request->otp) {
-        return response()->json(['message' => 'Invalid OTP'], 401);
+        return response()->json(['message' => 'Invalid OTP'], 402);
     }
 
     // Check if OTP has expired
@@ -468,7 +468,7 @@ public function forgotverifyOtp(Request $request)
 
     // Check if OTP is valid
     if ($otpRecord->otp !== $request->otp) {
-        return response()->json(['message' => 'Invalid OTP.'], 401);
+        return response()->json(['message' => 'Invalid OTP.'], 402);
     }
 
     // Check if OTP has expired
@@ -683,7 +683,7 @@ return response()->json([
 // 'status' => false,
 'message' => $validateUser->errors()->first(),
 // 'errors' => $validateUser->errors()->all(),
-],401);
+],403);
 }
 
 $driver = Driver::create([
@@ -763,7 +763,7 @@ public function driverlogin(Request $request){
             // 'status' => false,
             'message' => $validateUser->errors()->first(),
             // 'errors' => $validateUser->errors()->all(),
-        ], 401);
+        ], 403);
     }
 
     // $customer = Customer::where('email', $request->email)->first();
@@ -790,7 +790,7 @@ public function driverlogin(Request $request){
         return response()->json([
             // 'status' => false,
             'message' => 'Invalid password',
-        ], 401);
+        ], 402);
     }
     
      if ($driver->status == 0) {
@@ -1029,7 +1029,7 @@ public function driverforgotverifyOtp(Request $request)
 
     // Check if OTP is valid
     if ($otpRecord->otp !== $request->otp) {
-        return response()->json(['message' => 'Invalid OTP'], 401);
+        return response()->json(['message' => 'Invalid OTP'], 402);
     }
 
     // Check if OTP has expired
