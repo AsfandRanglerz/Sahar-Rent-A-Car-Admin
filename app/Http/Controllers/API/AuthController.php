@@ -1577,12 +1577,19 @@ public function socialLogin(Request $request)
             $user->login_type = $request->input('login_type', 'apple');
             $user->fcm_token = $data['fcm_token'] ?? $user->fcm_token;
             $user->save();
-   
+            
+             $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
             // Generate token
             $token = $user->createToken('auth_token')->plainTextToken;
    
             return response()->json([
-                'message' => 'Apple login successful!',
+                'message' => 'Logged in successfully',
                 'user' => $user,
                 'token' => $token,
             ], 200);
