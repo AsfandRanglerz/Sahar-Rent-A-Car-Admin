@@ -41,9 +41,7 @@
                                 <div class="tab-pane fade active show" id="settings" role="tabpanel" aria-labelledby="profile-tab2">
                                     <form method="post" action="{{url('admin/update-profile')}}" enctype="multipart/form-data">
                                         @csrf
-                                        <div class="card-header">
-                                            <h4>Edit Profile</h4>
-                                        </div>
+                                       
 {{--                                        @if(\Illuminate\Support\Facades\Session::has('errors'))--}}
 {{--                                            {{dd($errors)}}--}}
 {{--                                            @endif--}}

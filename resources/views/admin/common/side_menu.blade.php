@@ -252,6 +252,12 @@
                     <a href="#" class="menu-toggle nav-link has-dropdown">
                         <i data-feather="calendar"></i> <!-- Icon for header section -->
                         <span>Request Bookings</span>
+                        <div class="badge {{ request()->is('admin/requestbookings*') ? 'bg-white text-dark' : 'bg-primary text-white' }}"
+                        style="display: inline-flex; justify-content: center; align-items: center; 
+                        min-width: 22px; height: 22px; border-radius: 50%; 
+                        text-align: center; font-size: 12px; margin-left: 5px; margin-right:10px; padding: 3px;">
+                        {{ $totalCount }}
+                        </div>
                     </a>
                     <ul
                         class="dropdown-menu {{ request()->is('admin/requestbooking*') || request()->is('admin/dropoff*') ? 'show' : '' }}">

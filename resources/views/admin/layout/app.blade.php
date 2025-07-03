@@ -129,6 +129,8 @@
         updateActiveBookingCounter();
         setInterval(updateActiveBookingCounter, 10000); // Update every 10 seconds
     });
+
+    
 </script>
 
 <script>

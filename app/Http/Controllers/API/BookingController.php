@@ -503,6 +503,7 @@ public function getDriverBookings(Request $request)
     }, 'car' => function ($query) {
         $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [
@@ -534,6 +535,7 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
     }, 'car' => function ($query) {
         $query->select('car_id', 'pricing', 'sanitized', 'car_feature');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [
@@ -574,9 +576,12 @@ public function getDriverBookingRequests(Request $request)
     })
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 3)->where('driver_id', $driverId);
-    }, 'car' => function ($query) {
+    }, 
+    'user:id,image',
+    'car' => function ($query) {
         $query->select('car_id');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [
@@ -604,9 +609,12 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
     })
     ->with(['assign' => function ($query) use ($driverId) {
         $query->where('status', 3)->where('dropoff_driver_id', $driverId);
-    }, 'car' => function ($query) {
+    }, 
+    'user:id,image',
+    'car' => function ($query) {
         $query->select('car_id');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [
@@ -688,6 +696,17 @@ public function updateBookingStatus(Request $request)
             $requestBooking->dropoff_driver_id = $driverId;
             \Log::info("Dropoff driver accepted, dropoff_driver_id set to {$driverId}.");
         }
+
+        AssignedRequest::where('request_booking_id', $requestBooking->id)
+        ->where('id', '!=', $assignedId)
+        ->whereNotNull('driver_id')  // pickup
+        ->delete();
+
+        AssignedRequest::where('request_booking_id', $requestBooking->id)
+        ->where('id', '!=', $assignedId)
+        ->whereNotNull('dropoff_driver_id')  // dropoff
+        ->delete();
+
         
         $assignedDrivers = AssignedRequest::where('request_booking_id', $requestBooking->id)
     ->where('status', 0) // status 0 means accepted
@@ -820,6 +839,7 @@ public function DriverBookingHistory(Request $request)
     }, 'car' => function ($query) {
         $query->select('car_id');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [
@@ -849,6 +869,7 @@ $dropoffRequests = RequestBooking::whereHas('assign', function ($query) use ($dr
     }, 'car' => function ($query) {
         $query->select('car_id');
     }])
+    ->latest()
     ->get()
     ->map(function ($booking) {
         return [

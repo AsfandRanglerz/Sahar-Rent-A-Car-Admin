@@ -1,4 +1,7 @@
-﻿.cke_notification {
+﻿input[name="password"], input[name="confirmed"] {
+    padding-right: 2rem !important;
+}
+.cke_notification {
     display: none;
 }
 .m-l--125 {

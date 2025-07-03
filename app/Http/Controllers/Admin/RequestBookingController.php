@@ -8,6 +8,7 @@ use App\Models\Driver;
 use App\Models\Booking;
 use App\Models\CarDetails;
 use App\Models\SubAdminLog;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Jobs\NotificationJob;
 use App\Models\LoyaltyPoints;
@@ -29,8 +30,19 @@ class RequestBookingController extends Controller
          return response()->json(['count' => $orderCount]);
     }
 
+
     public function index(Request $request)
     {
+
+         $pickupCount = RequestBooking::whereNull('driver_id')
+        ->whereNotNull('pickup_address')
+        ->count();
+
+        $dropoffCount = RequestBooking::whereNull('dropoff_driver_id')
+        ->whereNotNull('dropoff_address')
+        ->count();
+
+        $totalCount = $pickupCount + $dropoffCount;
         
         // // $bookings = Booking::latest()->get();
         // $requestbookings = RequestBooking::with('assign')
@@ -81,7 +93,7 @@ class RequestBookingController extends Controller
                 }
             });
         }
-    
+        
         $requestbookings = $query->whereIn('status', [0, 2, 3, 1])->latest()->get();
         $drivers = Driver::all();
         return view('admin.RequestBooking.index',compact('requestbookings','drivers'));
@@ -91,6 +103,7 @@ public function edit(Request $request, $id)
 {
      
 $requestBooking = RequestBooking::with('assign')->findOrFail($id);
+
 
 if ($request->self_pickup === 'No') {
     $driver = Driver::where('id', $request->driver_id)

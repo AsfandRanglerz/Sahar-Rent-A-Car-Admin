@@ -1602,5 +1602,56 @@ public function socialLogin(Request $request)
         }
     }
 
+    public function driverappleLogin(Request $request)
+    {
+        try {
+            $data = $request->only(['social_id', 'fcm_token']);
+   
+            if (empty($data['social_id'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Apple ID (social_id) is required.',
+                ], 400);
+            }
+   
+            $socialColumn = 'apple_social_id';
+   
+            // Check if user already exists by Apple social ID
+            $user = Driver::where($socialColumn, $data['social_id'])->first();
+   
+            if (!$user) {
+                // Create new user since email is not provided
+                $user = new Driver();
+                $user->$socialColumn = $data['social_id'];
+            }
+   
+            // Update or set values
+            $user->login_type = $request->input('login_type', 'apple');
+            $user->fcm_token = $data['fcm_token'] ?? $user->fcm_token;
+            $user->save();
+            
+             $user->update([
+
+                'login_date' => Carbon::now(),
+
+                'availability' => 1,
+
+            ]);
+            // Generate token
+            $token = $user->createToken('auth_token')->plainTextToken;
+   
+            return response()->json([
+                'message' => 'Logged in successfully',
+                'user' => $user,
+                'token' => $token,
+            ], 200);
+           
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Apple login error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     
 }

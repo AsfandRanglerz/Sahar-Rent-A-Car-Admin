@@ -33,7 +33,7 @@ class BookingController extends Controller
             $query->whereDate('dropoff_date', '=', $request->end_date);
         }
     
-        $apiBookings = $query->orderBy('status', 'ASC')->get();
+        $apiBookings = $query->latest()->get();
         // $bookingIncome = $query->whereNotNull('price')->sum('price');
         $requestQuery = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
         ->whereIn('status', [1]);
@@ -45,7 +45,7 @@ class BookingController extends Controller
         if ($request->filled('end_date')) {
             $requestQuery->whereDate('dropoff_date', '=', $request->end_date);
         }
-        $requestBookings = $requestQuery->orderBy('status', 'ASC')->get();
+        $requestBookings = $requestQuery->latest()->get();
         $bookings = $apiBookings->merge($requestBookings);
         $bookings = $bookings->filter(function ($booking) use ($request) {
             $pickupDate = $booking->pickup_date ?? null;

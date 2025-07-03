@@ -75,27 +75,27 @@
                                                          // Determine booking status from all assigned drivers
                                                          $statusLabel = 'Unknown';
 
-if ($requestbooking->status == 2) {
-    $statusLabel = 'Pending';
-} elseif ($assignedDrivers->contains(function ($driver) {
-    return $driver->status == 1;
-})) {
-    $statusLabel = 'Completed';
-} elseif ($assignedDrivers->contains(function ($driver) {
-    return $driver->status == 0;
-})) {
-    $statusLabel = 'Active';
-} elseif ($assignedDrivers->contains(function ($driver) {
-    return $driver->status == 3;
-})) {
-    $statusLabel = $assignedDrivers->contains(function ($driver) {
-        return is_null($driver->driver_id);
-    }) ? 'Pending' : 'Requested';
-} elseif ($requestbooking->status == 0) {
-    $statusLabel = 'Active';
-} elseif ($requestbooking->status == 3 || $requestbooking->status == 1) {
-    $statusLabel = 'Pending';
-}
+                                                    if ($requestbooking->status == 2) {
+                                                        $statusLabel = 'Pending';
+                                                    } elseif ($assignedDrivers->contains(function ($driver) {
+                                                        return $driver->status == 1;
+                                                    })) {
+                                                        $statusLabel = 'Completed';
+                                                    } elseif ($assignedDrivers->contains(function ($driver) {
+                                                        return $driver->status == 0;
+                                                    })) {
+                                                        $statusLabel = 'Active';
+                                                    } elseif ($assignedDrivers->contains(function ($driver) {
+                                                        return $driver->status == 3;
+                                                    })) {
+                                                        $statusLabel = $assignedDrivers->contains(function ($driver) {
+                                                            return is_null($driver->driver_id);
+                                                        }) ? 'Pending' : 'Requested';
+                                                    } elseif ($requestbooking->status == 0) {
+                                                        $statusLabel = 'Active';
+                                                    } elseif ($requestbooking->status == 3 || $requestbooking->status == 1) {
+                                                        $statusLabel = 'Pending';
+                                                    }
 
                                                     @endphp
                                             <tr data-status="

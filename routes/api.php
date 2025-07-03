@@ -79,6 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sociallogin', [AuthController::class, 'socialLogin']);
 });
 Route::post('/applelogin',[AuthController::class,'appleLogin']);
+Route::post('/driverapplelogin',[AuthController::class,'driverappleLogin']);
 //#################  Bookings  ###########################
 Route::post('/bookings',[BookingController::class,'createBooking'])->middleware('auth:sanctum');
 Route::get('/getbookings',[BookingController::class,'getUserBookings'])->middleware('auth:sanctum');
