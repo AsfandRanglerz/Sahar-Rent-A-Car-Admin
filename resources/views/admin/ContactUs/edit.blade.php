@@ -67,7 +67,7 @@
             </div>
         </section>
     </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5VajG6zbWb_yIBiO-WkUDbPvDMVL-1TQ&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_KEY') }}&libraries=places"></script>
 <script>
     function initAutocomplete() {
         const input = document.getElementById('autocomplete');
