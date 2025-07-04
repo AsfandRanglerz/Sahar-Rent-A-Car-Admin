@@ -66,12 +66,23 @@
                                     </div>
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Emirate Id <span class="text-danger">*</span></label>
+                                            <label>Emirate Id (Front) <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Document"name="emirate_id" value="{{ old('emirate_id') }}"
                                                 class="form-control">
                                             @error('emirate_id')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Emirate Id (Back) <span class="text-danger">*</span></label>
+                                            <input type="file" placeholder="Enter Document"name="emirate_id_back" value="{{ old('emirate_id_back') }}"
+                                                class="form-control">
+                                            @error('emirate_id_back')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror   
                                         </div>
                                     </div>
 

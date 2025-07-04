@@ -31,6 +31,7 @@ class UserRequest extends FormRequest
                 'password' => 'required|string|min:8',
                 'image' => 'nullable|file|max:2048',
                 'emirate_id' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+                'emirate_id_back' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
                 'passport' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
                 'driving_license' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
         ];
@@ -59,6 +60,11 @@ class UserRequest extends FormRequest
     'emirate_id.file' => 'The Emirate ID must be a file.',
     'emirate_id.mimes' => 'The Emirate ID must be a file of type: jpeg, png, jpg, svg',
     'emirate_id.max' => 'The Emirate ID must not exceed size 2MB',
+
+    'emirate_id_back.required' => 'The Emirate ID Back is required',
+    'emirate_id_back.file' => 'The Emirate ID Back must be a file.',
+    'emirate_id_back.mimes' => 'The Emirate ID Back must be a file of type: jpeg, png, jpg, svg',
+    'emirate_id_back.max' => 'The Emirate ID Back must not exceed size 2MB',
 
     'passport.required' => 'The Passport is required',
     'passport.file' => 'The Passport must be a file.',

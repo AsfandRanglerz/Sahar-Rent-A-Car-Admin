@@ -54,6 +54,7 @@ class RequestBookingController extends Controller
         
         // $drivers = Driver::all();
         $status = $request->get('status');
+        $payment = $request->get('payment_method');
 
         // $query = RequestBooking::with('assign')->whereNotNull('pickup_address');
         $query = RequestBooking::with('assign')
@@ -93,6 +94,11 @@ class RequestBookingController extends Controller
                 }
             });
         }
+
+       if ($payment) {
+    $query = $query->where('payment_method', $payment);
+    }
+
         
         $requestbookings = $query->whereIn('status', [0, 2, 3, 1])->latest()->get();
         $drivers = Driver::all();

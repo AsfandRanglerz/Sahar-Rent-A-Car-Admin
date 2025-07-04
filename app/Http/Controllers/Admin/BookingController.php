@@ -22,7 +22,7 @@ class BookingController extends Controller
     {
         // $bookings = Booking::latest()->get();
         // $bookings = Booking::orderBy('status','ASC')->get();
-        
+        $payment = $request->get('payment_method');
         $query = Booking::whereIn('status', [1,0]);
         if ($request->filled('start_date')) {
             $query->whereDate('pickup_date', '=', $request->start_date);
@@ -32,7 +32,9 @@ class BookingController extends Controller
         if ($request->filled('end_date')) {
             $query->whereDate('dropoff_date', '=', $request->end_date);
         }
-    
+         if ($payment) {
+            $query =$query->where('payment_method', $payment);
+        }
         $apiBookings = $query->latest()->get();
         // $bookingIncome = $query->whereNotNull('price')->sum('price');
         $requestQuery = RequestBooking::with(['driver','booking', 'assign.pickupdriver', 'assign.dropoffdriver']) 
@@ -44,6 +46,9 @@ class BookingController extends Controller
         // Apply End Date Filter
         if ($request->filled('end_date')) {
             $requestQuery->whereDate('dropoff_date', '=', $request->end_date);
+        }
+        if ($payment) {
+        $requestQuery = $requestQuery->where('payment_method', $payment);
         }
         $requestBookings = $requestQuery->latest()->get();
         $bookings = $apiBookings->merge($requestBookings);
@@ -65,11 +70,26 @@ class BookingController extends Controller
         
             return true;
         });
+         
+
         $bookings = $bookings->sortBy('status');
         // $requestQuery = RequestBooking::whereIn('status', [2,1]);
         // $requestIncome = $requestQuery->whereNotNull('price')->sum('price');
+         if($payment){
+            // Get booking IDs with selected payment method
+            $bookingIds = \DB::table('bookings')->where('payment_method', $payment)->where('status', [0,1])->pluck('id')->toArray();
+            $requestBookingIds = \DB::table('request_bookings')->where('payment_method', $payment)->where('status', 1)->pluck('id')->toArray();
 
-        $totalIncome = \DB::table('booking_totals')->sum('total_price');
+            $totalIncome = \DB::table('booking_totals')
+                ->where(function($query) use ($bookingIds, $requestBookingIds) {
+                    $query->whereIn('booking_id', $bookingIds)
+                          ->orWhereIn('request_booking_id', $requestBookingIds);
+                })
+                ->sum('total_price');
+        }
+        else {
+            $totalIncome = \DB::table('booking_totals')->sum('total_price');
+        }
         $contactAddress = DB::table('contact_us')->value('address');
         
         return view('admin.booking.index',compact('bookings', 'totalIncome', 'contactAddress'));

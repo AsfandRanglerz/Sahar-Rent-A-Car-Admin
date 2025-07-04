@@ -8,20 +8,44 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <div class="col-12">
-                                    <form id="statusFilterForm" action="{{ route('requestbooking.index') }}" method="GET">
-                                        <div class="d-flex justify-content-between align-items-center w-100">
-                                            <h4>Dropoff Requests</h4>
-                                            <select name="status" id="statusFilter" class="form-control form-select w-auto rounded">
-                                                <option value="">All</option>
-                                                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                                <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
-                                            </select>
+                                <div class="col-12 px-0">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <h4>Dropoff Requests</h4>
+                                        <div class="d-flex align-items-center">
+
+                                            {{-- Wrap both filters inside a shared flex container --}}
+                                            <div class="d-flex align-items-center">
+
+                                                {{-- Status Filter --}}
+                                                <form id="statusFilterForm" action="{{ route('requestbooking.index') }}" method="GET" style="margin-right: 10px;">
+                                                    @if(request()->has('payment_method'))
+                                                        <input type="hidden" name="payment_method" value="{{ request('payment_method') }}">
+                                                    @endif
+                                                    <select name="status" id="statusFilter" class="form-control form-select rounded me-2">
+                                                        <option value="">All</option>
+                                                        <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                                        <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                        <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
+                                                    </select>
+                                                </form>
+
+                                                {{-- Payment Filter --}}
+                                                <form id="paymentFilterForm" action="{{ route('requestbooking.index') }}" method="GET">
+                                                    @if(request()->has('status'))
+                                                        <input type="hidden" name="status" value="{{ request('status') }}">
+                                                    @endif
+                                                    <select name="payment_method" id="paymentFilter" class="form-control form-select rounded" style="width: 200px;">
+                                                        <option disabled {{ request('payment_method') ? '' : 'selected' }} hidden>Payment Method</option>
+                                                        <option value="">All</option>
+                                                        <option value="Card" {{ request('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
+                                                        <option value="COD" {{ request('payment_method') == 'COD' ? 'selected' : '' }}>COD</option>
+                                                    </select>
+                                                </form>
+
+                                            </div>
                                         </div>
-                                    </form>
-                                    
-                                    
+                                    </div>
+
                                     
                                 </div>
                             </div>
@@ -50,7 +74,8 @@
                                             <th>Drop Off Date</th>
                                             <th>Drop Off Time</th>
                                             <th>City</th>
-                                            <th>Price (AED)</th>
+                                            <th>Payment Method</th>
+                                            <th>Total Price (AED)</th>
                                             <th>Delivery Charge (AED)</th>
                                             <th>Redeemed Points</th>
                                             <th>Total Days</th>
@@ -183,6 +208,13 @@
                                                 <td>
                                                     @if($requestbooking->city)
                                                         {{ $requestbooking->city }}
+                                                    @else
+                                                        <span>--</span>
+                                                    @endif
+                                                </td>
+                                                 <td>
+                                                    @if($requestbooking->payment_method)
+                                                        {{ $requestbooking->payment_method }}
                                                     @else
                                                         <span>--</span>
                                                     @endif
@@ -571,6 +603,10 @@
 <script>
     document.getElementById('statusFilter').addEventListener('change', function () {
         document.getElementById('statusFilterForm').submit();
+    });
+
+    document.getElementById('paymentFilter').addEventListener('change', function () {
+        document.getElementById('paymentFilterForm').submit();
     });
 </script>
 

@@ -40,6 +40,7 @@ class UserController extends Controller
 
         // $generatedPassword = random_int(10000000, 99999999);
         $emirate_id = null;
+        $emirate_id_back = null;
         $passport = null;
         $driving_license = null;
         $plainPassword = $request->password;
@@ -81,6 +82,13 @@ class UserController extends Controller
             $file->move(public_path('admin/assets/images/users'), $filename);
             $emirate_id = 'public/admin/assets/images/users/' . $filename;
         }
+
+        if ($request->hasFile('emirate_id_back')) {
+            $file = $request->file('emirate_id_back');
+            $filename = time() . '_emirate_id_back_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $emirate_id_back = 'public/admin/assets/images/users/' . $filename;
+        }
         
         if ($request->hasFile('passport')) {
             $file = $request->file('passport');
@@ -104,6 +112,7 @@ class UserController extends Controller
             // 'address' => $request->address,
             // 'document' => $request->documents,
             'emirate_id' => $emirate_id,
+            'emirate_id_back' => $emirate_id_back,
             'passport' => $passport,
             'driving_license' => $driving_license,
             'password' => Hash::make($plainPassword),
@@ -144,7 +153,8 @@ class UserController extends Controller
             // 'name' => 'required|string|max:255',
             // 'email' => 'required|email|unique:users,email,' . $id,
             // 'phone' => 'required|string|max:15',
-            'emirate_id' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+            'emirate_id' => 'required|file|mimes:jpeg,png,jpg,svg|max:2048',
+            'emirate_id_back' => 'required|file|mimes:jpeg,png,jpg,svg|max:2048',
             'passport' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
             'driving_license' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
         ],[
@@ -153,6 +163,10 @@ class UserController extends Controller
             'emirate_id.file' => 'Emirate ID must be a file',
             'emirate_id.mimes' => 'Emirate ID must be a file of type: jpeg, png, jpg, svg',
             'emirate_id.max' => 'Emirate ID must not exceed size 2MB',
+            'emirate_id_back.required' => 'Emirate ID Back is required',
+            'emirate_id_back.file' => 'Emirate ID Back must be a file',
+            'emirate_id_back.mimes' => 'Emirate ID Back must be a file of type: jpeg, png, jpg, svg',
+            'emirate_id_back.max' => 'Emirate ID Back must not exceed size 2MB',
             'passport.required' => 'Passport is required',
             'passport.file' => 'Passport must be a file',
             'passport.mimes' => 'Passport must be a file of type: jpeg, png, jpg, svg',
@@ -182,6 +196,7 @@ class UserController extends Controller
         }
 
         $emirate_id = $user->emirate_id;
+        $emirate_id_back = $user->emirate_id_back;
         $passport = $user->passport;
         $driving_license = $user->driving_license;
 
@@ -202,6 +217,13 @@ class UserController extends Controller
             $filename = time() . '_emirate_id_' . $file->getClientOriginalName();
             $file->move(public_path('admin/assets/images/users'), $filename);
             $emirate_id = 'public/admin/assets/images/users/' . $filename;
+        }
+
+        if ($request->hasFile('emirate_id_back')) {
+            $file = $request->file('emirate_id_back');
+            $filename = time() . '_emirate_id_back_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $emirate_id_back = 'public/admin/assets/images/users/' . $filename;
         }
         
         if ($request->hasFile('passport')) {
@@ -224,6 +246,7 @@ class UserController extends Controller
             'phone' => $request->phone,
             // 'document' => $request->document,
             'emirate_id' => $emirate_id,
+            'emirate_id_back' => $emirate_id_back,
             'passport' => $passport,
             'driving_license' => $driving_license,
             // 'address' => $request->address,

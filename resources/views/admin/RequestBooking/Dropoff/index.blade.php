@@ -8,18 +8,45 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <div class="col-12">
-                                    <form id="statusFilter" action="{{ route('dropoffs.index') }}" method="GET">
-                                        <div class="d-flex justify-content-between align-items-center w-100">
-                                            <h4>Pickup Requests</h4>
-                                            <select name="status" id="statusdropoffFilter" class="form-control form-select w-auto rounded">
-                                                <option value="">All</option>
-                                                <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                                <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
-                                            </select>
+                                <div class="col-12 px-0">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <h4>Pickup Requests</h4>
+                                        <div class="d-flex align-items-center">
+
+                                            {{-- Wrap both filters inside a shared flex container --}}
+                                            <div class="d-flex align-items-center">
+
+                                                {{-- Status Filter --}}
+                                                <form id="statusFilter" action="{{ route('dropoffs.index') }}" method="GET" style="margin-right: 10px;">
+                                                    @if(request()->has('payment_method'))
+                                                        <input type="hidden" name="payment_method" value="{{ request('payment_method') }}">
+                                                    @endif
+                                                    <select name="status" id="statusdropoffFilter" class="form-control form-select rounded me-2">
+                                                        <option value="">All</option>
+                                                        <option value="Active" {{ request('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                                                        <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                        <option value="Requested" {{ request('status') == 'Requested' ? 'selected' : '' }}>Requested</option>
+                                                    </select>
+                                                </form>
+
+                                                {{-- Payment Filter --}}
+                                                <form id="paymentFilter" action="{{ route('dropoffs.index') }}" method="GET">
+                                                    @if(request()->has('status'))
+                                                        <input type="hidden" name="status" value="{{ request('status') }}">
+                                                    @endif
+                                                    <select name="payment_method" id="paymentdropoffFilter" class="form-control form-select rounded" style="width: 200px;">
+                                                        <option disabled {{ request('payment_method') ? '' : 'selected' }} hidden>Payment Method</option>
+                                                        <option value="">All</option>
+                                                        <option value="Card" {{ request('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
+                                                        <option value="COD" {{ request('payment_method') == 'COD' ? 'selected' : '' }}>COD</option>
+                                                    </select>
+                                                </form>
+
+                                            </div>
                                         </div>
-                                    </form>
+                                    </div>
+
+              
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -51,7 +78,8 @@
                                             <th>Pickup Date</th>
                                             <th>Pickup Time</th>
                                             <th>City</th>
-                                            <th>Price (AED)</th>
+                                            <th>Payment Method</th>
+                                            <th>Total Price (AED)</th>
                                             <th>Delivery Charge (AED)</th>
                                             <th>Redeemed Points</th>
                                             <th>Total Days</th>
@@ -207,6 +235,13 @@ if ($dropoff->status == 2) {
                                                     <span>--</span>
                                                 @endif
                                             </td>
+                                                <td>
+                                                @if($dropoff->payment_method)
+                                                    {{ $dropoff->payment_method }}
+                                                @else
+                                                    <span>--</span>
+                                                @endif
+                                                </td>
                                             <td>
                                                 @if($dropoff->price)
                                                 {{ $dropoff->price }} 
@@ -567,6 +602,10 @@ document.getElementById('Filter').addEventListener('change', function() {
 <script>
     document.getElementById('statusdropoffFilter').addEventListener('change', function () {
         document.getElementById('statusFilter').submit();
+    });
+
+    document.getElementById('paymentdropoffFilter').addEventListener('change', function () {
+        document.getElementById('paymentFilter').submit();
     });
 </script>
 

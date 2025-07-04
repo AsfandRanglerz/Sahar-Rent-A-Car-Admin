@@ -99,11 +99,16 @@
                                                     @endif
                                                 </td>  --}}
                                                 <td>
-                                                    @if ($user->emirate_id || $user->passport || $user->driving_license)
+                                                    @if ($user->emirate_id || $user->emirate_id_back || $user->passport || $user->driving_license)
                                                         <ul>
                                                             @if ($user->emirate_id)
                                                                 <li>
-                                                                    <a href="{{ asset($user->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                    <a href="{{ asset($user->emirate_id) }}" target="_blank">Emirate ID (Front)</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->emirate_id_back)
+                                                                <li>
+                                                                    <a href="{{ asset($user->emirate_id_back) }}" target="_blank">Emirate ID (Back)</a>
                                                                 </li>
                                                             @endif
                                                             @if ($user->passport)
@@ -121,7 +126,12 @@
                                                         <ul>
                                                             @if ($user->documents->emirate_id)
                                                                 <li>
-                                                                    <a href="{{ asset($user->documents->emirate_id) }}" target="_blank">Emirate ID</a>
+                                                                    <a href="{{ asset($user->documents->emirate_id) }}" target="_blank">Emirate ID (Front)</a>
+                                                                </li>
+                                                            @endif
+                                                            @if ($user->documents->emirate_id_back)
+                                                                <li>
+                                                                    <a href="{{ asset($user->documents->emirate_id_back) }}" target="_blank">Emirate ID (Back)</a>
                                                                 </li>
                                                             @endif
                                                             @if ($user->documents->passport)

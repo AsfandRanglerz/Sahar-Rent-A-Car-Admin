@@ -32,7 +32,7 @@ class DropoffController extends Controller
         // ->get();
         // $drivers = Driver::all();
         $status = $request->get('status');
-
+        $payment = $request->get('payment_method');
         // $query = RequestBooking::with('assign')->whereNotNull('dropoff_address');
 
         $query = RequestBooking::with('assign')
@@ -72,6 +72,10 @@ class DropoffController extends Controller
                     });
                 }
             });
+        }
+
+        if ($payment) {
+        $query = $query->where('payment_method', $payment);
         }
     
         $dropoffs = $query->whereIn('status', [0, 2, 3, 1])->latest()->get();

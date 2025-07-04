@@ -90,18 +90,37 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Emirate Id <span class="text-danger">*</span></label>
+                                            <label>Emirate Id (Front)<span class="text-danger">*</span></label>
                                             <input type="file" name="emirate_id" id="emirate_id" class="form-control">
                                             
                                             @if ($user->emirate_id)
                                                 <p>Current File: 
                                                     <a href="{{ asset( $user->emirate_id) }}" target="_blank">
-                                                        View Emirate ID
+                                                        View Emirate ID (Front)
                                                     </a>
                                                 </p>
                                             @endif
                                     
                                             @error('emirate_id')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Emirate Id (Back)<span class="text-danger">*</span></label>
+                                            <input type="file" name="emirate_id_back" id="emirate_id_back" class="form-control">
+                                            
+                                            @if ($user->emirate_id_back)
+                                                <p>Current File: 
+                                                    <a href="{{ asset( $user->emirate_id_back) }}" target="_blank">
+                                                        View Emirate ID (Back)
+                                                    </a>
+                                                </p>
+                                            @endif
+                                    
+                                            @error('emirate_id_back')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

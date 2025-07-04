@@ -30,7 +30,16 @@
                                 
                                 <div class="text-end">
                                     <h5>Total Income: <span id="totalIncome">{{ number_format($totalIncome, 2) }}</span></h5>
-                                    <form method="GET" action="{{ route('booking.index') }}" class="d-flex mt-2 me-3">
+                                    <form method="GET" action="{{ route('booking.index') }}" class="d-flex mt-2 me-3" id="paymentfilterForm">
+                                         <select name="payment_method" id="paymentFilter"
+                                            class="form-control form-select"
+                                            style="width: 180px; border-radius: 5px; margin-right:10px; height: 37px; padding: 6px 12px; font-size: 14px;">
+                                            <option disabled {{ request('payment_method') ? '' : 'selected' }} hidden>Payment Method</option>
+                                            <option value="">All</option>
+                                            <option value="Card" {{ request('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
+                                            <option value="COD" {{ request('payment_method') == 'COD' ? 'selected' : '' }}>COD</option>
+                                        </select>
+
                                         <input id="startDate" name="start_date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;" value="{{ request('start_date') }}">
                                         <input id="endDate" name="end_date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" placeholder="End Date" style="border-radius: 5px; margin-right:25px; height:37px;" value="{{ request('end_date') }}">
                                         <button type="submit" class="btn btn-primary" style="margin-right:5px; margin-bottom:15px;">Apply</button>
@@ -40,6 +49,7 @@
                                     
                                 </div>
                             </div>
+                            
                             <div class="card-body table-striped table-bordered table-responsive">
                                  @php
                                 $isAdmin = $isAdmin ?? false;
@@ -70,7 +80,8 @@
                                             <th>Pickup/Drop Off Date</th>
                                             <th>Pickup/Drop Off Time</th>
                                             <th>City</th>
-                                            <th>Price (AED)</th>
+                                            <th>Payment Method</th>
+                                            <th>Total Price (AED)</th>
                                             <th>Delivery Charge (AED)</th>
                                             <th>Redeemend Points</th>
                                             <th>Total Days</th>
@@ -186,6 +197,13 @@
                                                 <td>
                                                 @if($booking->city)    
                                                     {{ $booking->city }}
+                                                    @else
+                                                    <span>--</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                @if($booking->payment_method)
+                                                    {{ $booking->payment_method }}
                                                     @else
                                                     <span>--</span>
                                                     @endif
@@ -473,6 +491,10 @@
             location.reload();
         }, 500); // give it half a second to fully redraw
     }
+
+     document.getElementById('paymentFilter').addEventListener('change', function () {
+        document.getElementById('paymentfilterForm').submit();
+    });
 </script>
 
 
