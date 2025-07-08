@@ -46,7 +46,7 @@ class NotificationController extends Controller
         });
         return response()->json([
             'notifications' => $formattedNotifications
-        ]);
+        ],200);
     }
 
     public function getDriverNotifications(Request $request)
@@ -81,7 +81,7 @@ class NotificationController extends Controller
         });
         return response()->json([
             'notifications' => $formattedNotifications
-        ]);
+        ], 200);
     }
 
     public function showNotification($id)
@@ -100,7 +100,7 @@ class NotificationController extends Controller
         return response()->json([
            'data' => $notification
             
-        ]);
+        ], 200);
     }
 
     public function clearAll()
@@ -114,7 +114,7 @@ class NotificationController extends Controller
 
     return response()->json([
         'message' => 'Notifications cleared successfully'
-    ]);
+    ], 200);
 }
 
 public function Driverclearall()
@@ -127,7 +127,7 @@ public function Driverclearall()
 
     return response()->json([
         'message' => 'Notifications cleared successfully'
-    ]);
+    ], 200);
 }
 
 public function sendNotification(Request $request)
@@ -168,7 +168,7 @@ public function sendNotification(Request $request)
             $data
         ));
 
-        return response()->json(['message' => 'Notification sent successfully']);
+        return response()->json(['message' => 'Notification sent successfully'], 200);
     }
 
     public function driversendNotification(Request $request)
@@ -209,6 +209,6 @@ public function sendNotification(Request $request)
             $data
         ));
 
-        return response()->json(['message' => 'Notification sent successfully']);
+        return response()->json(['message' => 'Notification sent successfully'], 200);
     }
 }
