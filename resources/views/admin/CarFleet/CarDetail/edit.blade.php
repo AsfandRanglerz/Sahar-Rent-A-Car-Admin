@@ -180,8 +180,11 @@
                                             <label>Car Type <span class="text-danger">*</span></label>
                                             <select name="car_type" class="form-control">
                                                 <option disabled selected>Select value</option>
-                                                <option value="Auto" {{ old('car_type', $CarDetail->car_type) == 'Auto' ? 'selected' : '' }}>Auto</option>
-                                                <option value="Manual" {{ old('car_type', $CarDetail->car_type) == 'Manual' ? 'selected' : '' }}>Manual</option>
+                                                <option value="HatchBack" {{ old('car_type', $CarDetail->car_type) == 'HatchBack' ? 'selected' : '' }}>HatchBack</option>
+                                                <option value="Sedan" {{ old('car_type', $CarDetail->car_type) == 'Sedan' ? 'selected' : '' }}>Sedan</option>
+                                                <option value="Crossover SUV" {{ old('car_type', $CarDetail->car_type) == 'Crossover SUV' ? 'selected' : '' }}>Crossover SUV</option>
+                                                <option value="Full Size SUV" {{ old('car_type', $CarDetail->car_type) == 'Full Size SUV' ? 'selected' : '' }}>Full Size SUV</option>
+                                                <option value="Luxury" {{ old('car_type', $CarDetail->car_type) == 'Luxury' ? 'selected' : '' }}>Luxury</option>
                                             </select>
                                             @error('car_type')
                                                 <div class="text-danger">{{ $message }}</div>

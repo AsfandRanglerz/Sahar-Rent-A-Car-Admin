@@ -118,7 +118,12 @@
                                                             @endif
                                                             @if ($user->driving_license)
                                                                 <li>
-                                                                    <a href="{{ asset($user->driving_license) }}" target="_blank">Driving License</a>
+                                                                    <a href="{{ asset($user->driving_license) }}" target="_blank">Driving License (Front)</a>
+                                                                </li>
+                                                            @endif
+                                                             @if ($user->driving_license_back)
+                                                                <li>
+                                                                    <a href="{{ asset($user->driving_license_back) }}" target="_blank">Driving License (Back)</a>
                                                                 </li>
                                                             @endif
                                                         </ul>
@@ -141,7 +146,12 @@
                                                             @endif
                                                             @if ($user->documents->driving_license)
                                                                 <li>
-                                                                    <a href="{{ asset($user->documents->driving_license) }}" target="_blank">Driving License</a>
+                                                                    <a href="{{ asset($user->documents->driving_license) }}" target="_blank">Driving License (Front)</a>
+                                                                </li>
+                                                            @endif
+                                                             @if ($user->documents->driving_license_back)
+                                                                <li>
+                                                                    <a href="{{ asset($user->documents->driving_license_back) }}" target="_blank">Driving License (Back)</a>
                                                                 </li>
                                                             @endif
                                                         </ul>

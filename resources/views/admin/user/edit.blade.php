@@ -164,6 +164,25 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Driving License (Back) <span class="text-danger">*</span></label>
+                                            <input type="file" name="driving_license_back" id="driving_license_back" class="form-control">
+                                            
+                                            @if ($user->driving_license_back)
+                                                <p>Current File: 
+                                                    <a href="{{ asset( $user->driving_license_back) }}" target="_blank">
+                                                        View Driving License (Back)
+                                                    </a>
+                                                </p>
+                                            @endif
+                                    
+                                            @error('driving_license_back')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
                                    
                                 </div>
 

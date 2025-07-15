@@ -34,6 +34,7 @@ class UserRequest extends FormRequest
                 'emirate_id_back' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
                 'passport' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
                 'driving_license' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+                'driving_license_back' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
         ];
     }
 
@@ -75,6 +76,11 @@ class UserRequest extends FormRequest
     'driving_license.file' => 'The Driving License must be a file.',
     'driving_license.mimes' => 'The Driving License must be a file of type: jpeg, png, jpg, svg',
     'driving_license.max' => 'The Driving License must not exceed size 2MB',
+
+    'driving_license_back.required' => 'The Driving License Back is required',
+    'driving_license_back.file' => 'The Driving License Back must be a file.',
+    'driving_license_back.mimes' => 'The Driving License Back must be a file of type: jpeg, png, jpg, svg',
+    'driving_license_back.max' => 'The Driving License Back must not exceed size 2MB',
         ];
     }
 }

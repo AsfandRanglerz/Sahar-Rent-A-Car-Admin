@@ -99,10 +99,21 @@
 
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Driving License <span class="text-danger">*</span></label>
+                                            <label>Driving License (Front) <span class="text-danger">*</span></label>
                                             <input type="file" placeholder="Enter Document"name="driving_license" value="{{ old('driving_license') }}"
                                                 class="form-control">
                                             @error('driving_license')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group mb-2">
+                                            <label>Driving License (Back) <span class="text-danger">*</span></label>
+                                            <input type="file" placeholder="Enter Document"name="driving_license_back" value="{{ old('driving_license_back') }}"
+                                                class="form-control">
+                                            @error('driving_license_back')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

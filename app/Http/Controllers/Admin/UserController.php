@@ -43,6 +43,7 @@ class UserController extends Controller
         $emirate_id_back = null;
         $passport = null;
         $driving_license = null;
+        $driving_license_back = null;
         $plainPassword = $request->password;
 
         if ($request->hasFile('image')) {
@@ -104,6 +105,13 @@ class UserController extends Controller
             $driving_license = 'public/admin/assets/images/users/' . $filename;
         }
 
+         if ($request->hasFile('driving_license_back')) {
+            $file = $request->file('driving_license_back');
+            $filename = time() . '_driving_license_back_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license_back = 'public/admin/assets/images/users/' . $filename;
+        }
+
         // Create the user
         $user = User::create([
             'name' => $request->name,
@@ -115,6 +123,7 @@ class UserController extends Controller
             'emirate_id_back' => $emirate_id_back,
             'passport' => $passport,
             'driving_license' => $driving_license,
+            'driving_license_back' => $driving_license_back,
             'password' => Hash::make($plainPassword),
             'image' => $image,
             'status' => $status,
@@ -157,6 +166,7 @@ class UserController extends Controller
             'emirate_id_back' => 'required|file|mimes:jpeg,png,jpg,svg|max:2048',
             'passport' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
             'driving_license' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
+            'driving_license_back' => 'required|file|mimes:jpeg,png,jpg, svg|max:2048',
         ],[
             
             'emirate_id.required' => 'Emirate ID is required',
@@ -175,6 +185,10 @@ class UserController extends Controller
             'driving_license.file' => 'Driving License must be a file',
             'driving_license.mimes' => 'Driving License must be a file of type: jpeg, png, jpg, svg',
             'driving_license.max' => 'Driving License must not exceed size 2MB',
+            'driving_license_back.required' => 'Driving License Back is required',
+            'driving_license_back.file' => 'Driving License Back must be a file',
+            'driving_license_back.mimes' => 'Driving License Back must be a file of type: jpeg, png, jpg, svg',
+            'driving_license_back.max' => 'Driving License Back must not exceed size 2MB',
         ]);
         // $validatedData = $request->validated();
 
@@ -199,6 +213,7 @@ class UserController extends Controller
         $emirate_id_back = $user->emirate_id_back;
         $passport = $user->passport;
         $driving_license = $user->driving_license;
+        $driving_license_back = $user->driving_license_back;
 
         // if ($request->hasFile('emirate_id')) {
         //     $emirate_id = $request->file('emirate_id')->store("documents/", 'public');
@@ -239,6 +254,13 @@ class UserController extends Controller
             $file->move(public_path('admin/assets/images/users'), $filename);
             $driving_license = 'public/admin/assets/images/users/' . $filename;
         }
+
+        if ($request->hasFile('driving_license_back')) {
+            $file = $request->file('driving_license_back');
+            $filename = time() . '_driving_license_back_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license_back = 'public/admin/assets/images/users/' . $filename;
+        }
         // Update user details
         $user->update([
             'name' => $request->name,
@@ -249,6 +271,7 @@ class UserController extends Controller
             'emirate_id_back' => $emirate_id_back,
             'passport' => $passport,
             'driving_license' => $driving_license,
+            'driving_license_back' => $driving_license_back,
             // 'address' => $request->address,
             'image' => $image,
         ]);

@@ -61,6 +61,7 @@ $emirate_id = null;
 $emirate_id_back = null;
 $passport = null;
 $driving_license = null;
+$driving_license_back = null;
 $plainPassword = $request->password;
 // if ($request->hasFile('emirate_id')) {
 //     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
@@ -102,6 +103,13 @@ if ($request->hasFile('driving_license')) {
     $driving_license = 'public/admin/assets/images/users/' . $filename;
 }
 
+if ($request->hasFile('driving_license_back')) {
+    $file = $request->file('driving_license_back');
+    $filename = time() . '_driving_license_back' . $file->getClientOriginalName();
+    $file->move(public_path('admin/assets/images/users'), $filename);
+    $driving_license_back = 'public/admin/assets/images/users/' . $filename;
+}
+
 $customer = User::create([
     'name' => $request->name,
     'email' => $request->email,
@@ -111,6 +119,7 @@ $customer = User::create([
     'emirate_id_back' => $emirate_id_back, 
     'passport' => $passport,
     'driving_license' => $driving_license,
+    'driving_license_back' => $driving_license_back,
 ]);
 
 if ($request->hasFile('image')) {
@@ -319,8 +328,10 @@ return response()->json([
                 'email' => $customer->email,
                 'phone' => $customer->phone,
                 'emirate_id' => $customer->emirate_id,
+                'emirate_id_back' => $customer->emirate_id_back,
                 'passport' => $customer->passport,
                 'driving_license' => $customer->driving_license,
+                'driving_license_back' => $customer->driving_license_back,
             ],
             // 'token_type' => 'Bearer',
         ], 200);
@@ -375,8 +386,10 @@ return response()->json([
         'phone' => $customer->phone,
         'image' => $customer->image, // Assuming there's a profile image field
         'emarate_id' => $customer->emirate_id,
+        'emarate_id_back' => $customer->emirate_id_back,
         'passport' => $customer->passport,
         'driving_license' => $customer->driving_license,
+        'driving_license_back' => $customer->driving_license_back,
        
     ]
     ], 200);
@@ -564,6 +577,7 @@ public function getProfile(Request $request)
                 'emirate_id_back' => $customer->emirate_id_back,
                 'passport' => $customer->passport,
                 'driving_license' => $customer->driving_license,
+                'driving_license_back' => $customer->driving_license_back,
             ],
         ], 200);
     }
@@ -1260,6 +1274,7 @@ return response()->json([
         $emirate_id_back = null;
         $passport = null;
         $driving_license = null;
+        $driving_license_back = null;
         
         // if ($request->hasFile('emirate_id')) {
         //     $emirate_id = $request->file('emirate_id')->store("documents/emirate_id", 'public');
@@ -1308,6 +1323,15 @@ return response()->json([
 
             $customer->driving_license = $driving_license;
         }
+
+        if ($request->hasFile('driving_license_back')) {
+            $file = $request->file('driving_license_back');
+            $filename = time() . '_driving_license_back_' . $file->getClientOriginalName();
+            $file->move(public_path('admin/assets/images/users'), $filename);
+            $driving_license_back = 'public/admin/assets/images/users/' . $filename;
+
+            $customer->driving_license_back = $driving_license_back;
+        }
         
         // Handle profile image upload
         // if ($request->hasFile('image')) {
@@ -1333,6 +1357,7 @@ return response()->json([
                 'emirate_id_back' => $emirate_id_back,
                 'passport' => $passport,
                 'driving_license' => $driving_license,
+                'driving_license_back' => $driving_license_back,
 
             ],
         ], 200);
