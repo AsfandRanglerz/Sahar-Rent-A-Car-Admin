@@ -199,8 +199,8 @@ body .form-control[type=number]::-webkit-outer-spin-button {
     background-color: var(--theme-color);
 }
 .main-sidebar .sidebar-brand a .header-logo {
-    width: 158px;
-    height: unset;
+    width: 150px;
+    height: auto;
 }
 .main-sidebar .sidebar-brand {
     height: 100%;
@@ -243,4 +243,8 @@ table.dataTable {
 .theme-white .swal-button.swal-button--confirm {
     background-color: #bb374c!important;
     border-color: #bb374c!important;
+}
+.header-logo{
+    max-width: 100%;
+    height: auto;
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\FirebaseService;
+use Log;
 use App\Models\User;
 use App\Models\Driver;
+use Illuminate\Http\Request;
+use App\Services\FirebaseService;
 
 class ChatController extends Controller
 {
@@ -42,12 +43,14 @@ $exists = false;
     if ($user['usertype'] === 'driver') {
         $exists = \App\Models\Driver::where('id', $user['id'])->exists();
     }
-
     // ❌ If user not found in DB, delete their chat from Firebase
-    if (!$exists) {
-        app(\App\Services\FirebaseService::class)->deleteChat($user['id']);
-    }
+    // if (!$exists) {
+    //     app(\App\Services\FirebaseService::class)->deleteChat($user['id']);
+    // }
 
+     if (!$exists && !empty($chat[0]['mytype']) && $chat[0]['mytype'] !== 'admin') {
+    app(\App\Services\FirebaseService::class)->deleteChat($userId);
+    }
     return $exists;
 });
 

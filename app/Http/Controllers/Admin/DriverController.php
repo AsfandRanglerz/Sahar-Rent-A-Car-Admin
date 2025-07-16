@@ -82,7 +82,7 @@ class DriverController extends Controller
                 'message' => 'Added driver ' . $driver->name,
             ]);
         }
-        Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
+        // Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));
         
         return redirect()->route('driver.index')->with(['message' => 'Driver Created Successfully']);
     }
@@ -231,7 +231,7 @@ if ($editedBy) {
         try {
             // Send an email based on `sendCredentials`
             
-            Mail::to($data->email)->send(new DriverActivated($message));
+            // Mail::to($data->email)->send(new DriverActivated($message));
             
 
             return redirect()->route('driver.index')->with([
@@ -267,7 +267,7 @@ if ($editedBy) {
 
         try {
             
-            Mail::to($data->email)->send(new DriverDeActivated($message));
+            // Mail::to($data->email)->send(new DriverDeActivated($message));
             
             return redirect()->route('driver.index')->with(['message' => 'Driver Deactivated Successfully']);
         } catch (\throwable $th) {

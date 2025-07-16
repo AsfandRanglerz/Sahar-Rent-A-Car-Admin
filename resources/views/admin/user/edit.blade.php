@@ -147,7 +147,7 @@
                                     
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group mb-2">
-                                            <label>Driving License <span class="text-danger">*</span></label>
+                                            <label>Driving License (Front) <span class="text-danger">*</span></label>
                                             <input type="file" name="driving_license" id="driving_license" class="form-control">
                                             
                                             @if ($user->driving_license)

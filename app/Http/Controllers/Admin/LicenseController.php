@@ -7,6 +7,7 @@ use Log;
 use App\Models\Driver;
 use App\Models\SubAdminLog;
 use Illuminate\Http\Request;
+use App\Models\DriverDocument;
 use App\Models\LicenseApproval;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -158,6 +159,8 @@ class LicenseController extends Controller
     {
         $LicenseApproval = LicenseApproval::find($id);
         $LicenseApprovalName = $LicenseApproval->name;
+        $driverId = $licenseApproval->driver_id;
+         DriverDocument::where('driver_id', $driverId)->delete();
         if (Auth::guard('subadmin')->check()) {
             $subadmin = Auth::guard('subadmin')->user();
             $subadminName = $subadmin->name;
@@ -204,7 +207,7 @@ class LicenseController extends Controller
             ]);
         }
         try {
-            Mail::to($data->email)->send(new LicenseApprovalActivated($message));
+            // Mail::to($data->email)->send(new LicenseApprovalActivated($message));
 
             return redirect()->route('license.index')->with([
                 'action' => true,
@@ -254,7 +257,7 @@ class LicenseController extends Controller
         ]);
     }
     try {
-        Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
+        // Mail::to($data->email)->send(new LicenseApprovalDeActivated($message));
 
         return redirect()->route('license.index')->with([
             'action' => true,

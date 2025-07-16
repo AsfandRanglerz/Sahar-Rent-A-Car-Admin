@@ -140,7 +140,7 @@ class UserController extends Controller
         }
 
         
-        Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
+        // Mail::to($user->email)->send(new UserCredentials($user->name, $user->email, $user->phone, $plainPassword));
         
         return redirect()->route('user.index')->with(['message' => 'Customer Created Successfully']);
     }
@@ -363,7 +363,7 @@ if ($editedBy) {
         try {
             // Send an email based on `sendCredentials`
             
-            Mail::to($data->email)->send(new UserActivated($message));
+            // Mail::to($data->email)->send(new UserActivated($message));
             
 
             return redirect()->route('user.index')->with([
@@ -399,7 +399,7 @@ if ($editedBy) {
 
         try {
             
-            Mail::to($data->email)->send(new UserDeActivated($message));
+            // Mail::to($data->email)->send(new UserDeActivated($message));
             
             return redirect()->route('user.index')->with(['message' => 'Customer Deactivated Successfully']);
         } catch (\throwable $th) {

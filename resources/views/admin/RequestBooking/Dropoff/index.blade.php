@@ -39,6 +39,7 @@
                                                         <option value="">All</option>
                                                         <option value="Card" {{ request('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
                                                         <option value="COD" {{ request('payment_method') == 'COD' ? 'selected' : '' }}>COD</option>
+                                                        <option value="Cash in wallet" {{ request('payment_method') == 'Cash in wallet' ? 'selected' : '' }}>Cash in wallet</option>
                                                     </select>
                                                 </form>
 

@@ -182,7 +182,7 @@ if ($request->filled('referral_code')) {
     }
 }
 // $document->save();
-Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
+// Mail::to($customer->email)->send(new UserCredentials($customer->name, $customer->email, $customer->phone, $plainPassword));
 
 return response()->json([
     // 'status' => true,
@@ -465,7 +465,7 @@ public function forgotPassword(Request $request)
 
     // Send OTP via email (or SMS)
     // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        Mail::to($request->email)->send(new ForgotOTPMail($otp));
+        // Mail::to($request->email)->send(new ForgotOTPMail($otp));
     // }
 
     return response()->json([
@@ -753,7 +753,7 @@ if ($request->hasFile('image')) {
 // }
        
 // $document->save();
-Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));     
+// Mail::to($driver->email)->send(new DriverCredentials($driver->name, $driver->email, $driver->phone, $plainPassword));     
 
 return response()->json([
 // 'status' => true,
@@ -904,33 +904,56 @@ public function driverlogin(Request $request){
         //     'driving_license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         // ]);
 
-        $driver = $request->user();
+    $driver = $request->user();
 
-        $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
+    // Find or create the driver's document record
+    $document = DriverDocument::firstOrCreate(['driver_id' => $driver->id]);
 
-        if ($request->hasFile('license')) {
-            $file = $request->file('license');
-            $filename = time() . '_license_' . $file->getClientOriginalName();
-            $file->move(public_path('admin/assets/images/users'), $filename);
-            $licensePath = 'public/admin/assets/images/users/' . $filename;
+    $licensePath = null;
+    $licenseBackPath = null;
 
-            $driver->license = $licensePath;
-        
+    // Handle license front upload
+    if ($request->hasFile('license')) {
+        $file = $request->file('license');
+        $filename = time() . '_license_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $licensePath = 'public/admin/assets/images/users/' . $filename;
+
+        // Save to driver and driver_documents
+        $driver->license = $licensePath;
         $document->license = $licensePath;
-        $document->save();
+    }
 
-       LicenseApproval::updateOrCreate(
-    ['driver_id' => $driver->id], // Search condition
-    [
-        'email' => $driver->email,
-        'name' => $driver->name,
-        'image' => $licensePath,
-    ]
-);
+    // Handle license back upload
+    if ($request->hasFile('license_back')) {
+        $file = $request->file('license_back');
+        $filename = time() . '_license_back_' . $file->getClientOriginalName();
+        $file->move(public_path('admin/assets/images/users'), $filename);
+        $licenseBackPath = 'public/admin/assets/images/users/' . $filename;
 
-        }
+        $document->license_back = $licenseBackPath;
+    }
 
-        return response()->json(['message' => 'Document uploaded successfully', 'data' => $document], 200);
+    // Save updated document
+    $document->save();
+
+    // Only update license_approvals if at least license or license_back is uploaded
+    if ($licensePath || $licenseBackPath) {
+        LicenseApproval::updateOrCreate(
+            ['driver_id' => $driver->id],
+            [
+                'email' => $driver->email,
+                'name' => $driver->name,
+                'image' => $licensePath, // fallback to existing
+                'license_back' => $licenseBackPath,
+            ]
+        );
+    }
+
+    return response()->json([
+        'message' => 'Document uploaded successfully',
+        'data' => $document
+    ], 200);
     }
 
     public function getLicenseStatus()
@@ -938,7 +961,7 @@ public function driverlogin(Request $request){
     $driverId = Auth::id(); // Get the authenticated driver ID
 
     $license = DriverDocument::where('driver_id', $driverId)
-        ->select('id', 'driver_id', 'license')
+        ->select('id', 'driver_id', 'license', 'license_back')
         ->with(['licenseApproval' => function ($query) use ($driverId) {
             $query->where('driver_id', $driverId)->select('driver_id', 'status');
         }])
@@ -970,7 +993,9 @@ public function driverlogin(Request $request){
         'id'            => $license->id,
         'driver_id'     => $license->driver_id,
         'license'       => $license->license,
+        'license_back' => $license->license_back,
         'license_name'  => basename($license->license),
+        'license_back_name' => basename($license->license_back),
         'status'        => $statusText,
     ]
     ], 200);
@@ -1028,7 +1053,7 @@ public function driverforgotPassword(Request $request)
 
     // Send OTP via email (or SMS)
     // if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
-        Mail::to($request->email)->send(new ForgotOTPMail($otp));
+        // Mail::to($request->email)->send(new ForgotOTPMail($otp));
     // }
 
     return response()->json([

@@ -256,9 +256,9 @@ public function filterCars(Request $request)
         $query->where('location', 'LIKE', '%' . $location . '%');
     }
 
-    // if (!empty($vehicleType)) {
-    //     $query->where('car_type', $vehicleType);
-    // }
+    if (!empty($vehicleType)) {
+        $query->where('car_type', $vehicleType);
+    }
 
     // if (!empty($minPrice) && !empty($maxPrice)) {
     //     $query->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice]);

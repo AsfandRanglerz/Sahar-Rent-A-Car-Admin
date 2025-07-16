@@ -38,6 +38,7 @@
                                             <option value="">All</option>
                                             <option value="Card" {{ request('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
                                             <option value="COD" {{ request('payment_method') == 'COD' ? 'selected' : '' }}>COD</option>
+                                            <option value="Cash in wallet" {{ request('payment_method') == 'Cash in wallet' ? 'selected' : '' }}>Cash in wallet</option>
                                         </select>
 
                                         <input id="startDate" name="start_date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" placeholder="Start Date" style="border-radius: 5px; margin-right:10px; height:37px;" value="{{ request('start_date') }}">

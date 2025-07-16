@@ -200,11 +200,11 @@
                                     $text = $msg['text'] ?? '[No Message]';
                                     $createdAt = $msg['createdAt'] ?? now();
                                     $isSent = $sendBy == (auth()->user()->id ?? 'Admin');
-                                @endphp
-                                <div
-                                    class="message {{ $isSent ? 'sent' : 'received' }}">
+                                    @endphp
+                                    <div class="message {{ $isSent ? 'sent' : 'received' }}">
                                     <strong>{{ $sendBy }}</strong>: {{ $text }}
-                                <div><small>{{ Carbon::parse($createdAt)->format('d M Y, h:i A') }}</small></div>
+                                    <div><small>{{ Carbon::parse($createdAt)->format('d M Y, h:i A') }}</small></div>
+                                    
                                 </div>
                             @endforeach
                         </div>
@@ -292,7 +292,7 @@
                 );
 
                 if (response.ok) {
-                    loadMessages(); // Reload the chat messages and header dynamically
+                    await loadMessages(true); // Reload the chat messages and header dynamically
                     loadUsers(); // Reload the users dynamically
                 } else {
                     console.error('Failed to send message');
@@ -302,7 +302,13 @@
             }
         });
         document.addEventListener('DOMContentLoaded', () => {
-            scrollToBottom(); // Scroll to the latest message when the chat opens
+            // scrollToBottom(); // Scroll to the latest message when the chat opens
+        (async () => {
+        await loadMessages(true);
+        })();
+        setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+         }, 100);
 
             // Listen for the "Enter" key press in the message input
             messageInput.addEventListener('keydown', (e) => {
@@ -320,8 +326,17 @@
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+    function scrollToBottomIfNeeded() {
+    const threshold = 100; // px from bottom
+    const isNearBottom = chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < threshold;
 
-        async function loadMessages() {
+    if (isNearBottom) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+
+        async function loadMessages(shouldScroll = false) {
             const response = await fetch('{{ route('chat.index', ['id' => $currentChatId]) }}');
             const html = await response.text();
             const parser = new DOMParser();
@@ -330,8 +345,14 @@
             // Update chat messages
             const newMessages = doc.getElementById('chat-messages').innerHTML;
             chatMessages.innerHTML = newMessages;
-            scrollToBottom(); // Scroll to the latest message after loading messages
-
+            // scrollToBottom(); // Scroll to the latest message after loading messages
+             if (shouldScroll) {
+                setTimeout(() => {
+                    scrollToBottom();
+                }, 50); // slight delay ensures DOM is updated
+            } else {
+                scrollToBottomIfNeeded();
+            }
             // Update chat header
             const newChatHeader = doc.querySelector('.chat-header');
             if (newChatHeader) {
@@ -374,7 +395,7 @@
             // console.log('Polling for new messages and users...');
             loadMessages();
             loadUsers();
-        }, 2000);
+        }, 10000);
     </script>
     <script>
         const users = @json($users); // Pass the users variable as JSON

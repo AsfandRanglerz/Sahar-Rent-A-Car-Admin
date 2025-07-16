@@ -28,7 +28,7 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             {{-- <th>Phone</th> --}}
-                                            <th>License</th>
+                                            <th>License (Front/Back)</th>
                                             {{-- <th>Availability</th> --}}
                                             <th>Status</th>
                                             <th>Actions</th>
@@ -53,15 +53,30 @@
                                                 <td>
                                                     {{-- <img src="{{ asset($LicenseApproval->image) }}" alt="" height="45"
                                                         width="50" class="image" style="cursor: pointer;" data-toggle="modal" data-target="#imageModal" data-image="{{ asset($LicenseApproval->image) }}"> --}}
+                                                        @if ($LicenseApproval->image || $LicenseApproval->license_back)
+
+                                                        {{-- Show front license image if available --}}
                                                         @if ($LicenseApproval->image)
-                                                        <img src="{{ asset($LicenseApproval->image) }}" 
-                                                            alt="License Image" height="45" width="50" class="image"
-                                                            style="cursor: pointer;" data-toggle="modal" 
-                                                            data-target="#imageModal" 
-                                                            data-image="{{ asset($LicenseApproval->image) }}">
+                                                            <img src="{{ asset($LicenseApproval->image) }}" 
+                                                                alt="License Image" height="45" width="50" class="image"
+                                                                style="cursor: pointer;" data-toggle="modal" 
+                                                                data-target="#imageModal" 
+                                                                data-image="{{ asset($LicenseApproval->image) }}">
+                                                        @endif
+
+                                                        {{-- Show back license image if available --}}
+                                                        @if ($LicenseApproval->license_back)
+                                                            <img src="{{ asset($LicenseApproval->license_back) }}" 
+                                                                alt="License Back Image" height="45" width="50" class="image"
+                                                                style="cursor: pointer;" data-toggle="modal" 
+                                                                data-target="#imageModal" 
+                                                                data-image="{{ asset($LicenseApproval->license_back) }}">
+                                                        @endif
+
                                                     @else
                                                         N/A
                                                     @endif
+
                                                     </td>
                                                 {{-- <td>
                                                     <div class="badge {{ $LicenseApproval->status == 0 ? 'badge-success' : 'badge-danger' }} badge-shadow">
