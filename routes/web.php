@@ -57,6 +57,9 @@ Route::get('/terms-conditions', function () {
     $data = TermCondition::first();
     return view('terms_and_condition.termsConditions', compact('data'));
 });
+Route::get('/contactUs', function () {
+    return view('Contact.contact');
+});
 
 Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->group(function () {
     
