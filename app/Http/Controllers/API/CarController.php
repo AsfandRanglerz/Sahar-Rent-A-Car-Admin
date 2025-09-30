@@ -24,18 +24,18 @@ class CarController extends Controller
     ->toArray();
 
     $bookedCarIds = DB::table('bookings')
-        ->whereIn('status', [0]) // Assuming 0 = ongoing, 3 = requested
+        // ->whereIn('status', [0]) // Assuming 0 = ongoing, 3 = requested
         ->pluck('car_id')
         ->merge(
             DB::table('request_bookings')
-                ->whereIn('status', [2,3,0]) // 1 = completed
+                // ->whereIn('status', [2,3,0]) // 1 = completed
                 ->pluck('car_id')
         )
         ->unique()
         ->toArray();
         // Fetch cars belonging to the authenticated user
         $cars = CarDetails::where('status', 0)
-        ->whereNotIn('car_id', $bookedCarIds)
+        // ->whereNotIn('car_id', $bookedCarIds)
         ->orderBy('id', 'desc')
      // 'user_id' column exists in 'car_details'
         ->select(['id','car_id', 'car_name','call_number', 'price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month', 'passengers', 'luggage', 'doors', 'car_type','feature','image'])
@@ -238,11 +238,22 @@ public function filterCars(Request $request)
     $userId = Auth::id(); // Get logged-in user ID
     // $user = User::find($userId); // Fetch user details
 
-    
+    //  $bookedCarIds = DB::table('bookings')
+    //     ->whereIn('status', [0]) // 0 = ongoing
+    //     ->pluck('car_id')
+    //     ->merge(
+    //         DB::table('request_bookings')
+    //             ->whereIn('status', [0, 2, 3]) // exclude active + pending + cancelled
+    //             ->pluck('car_id')
+    //     )
+    //     ->unique()
+    //     ->toArray();
+
     $query = CarDetails::select([
         'id', 'car_id', 'car_name','call_number','price_per_day','price_per_week','price_per_two_week','price_per_three_week','price_per_month', 'passengers', 'luggage', 
         'doors', 'car_type','feature', 'image'
     ]);
+    // ->whereNotIn('car_id', $bookedCarIds)
 
     // Get input from FormData
     $location = $request->input('location');
@@ -256,6 +267,7 @@ public function filterCars(Request $request)
         $query->where('location', 'LIKE', '%' . $location . '%');
     }
 
+    
     if (!empty($vehicleType)) {
         $query->where('car_type', $vehicleType);
     }
@@ -263,14 +275,16 @@ public function filterCars(Request $request)
     // if (!empty($minPrice) && !empty($maxPrice)) {
     //     $query->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice]);
     // }
-    
-    if (!empty($minPrice) && !empty($maxPrice)) {
-        $query->whereRaw(
-            'LEAST(price_per_day, price_per_week, price_per_two_week, price_per_three_week, price_per_month) BETWEEN ? AND ?',
-            [(int)$minPrice, (int)$maxPrice]
-        );
-    }
-    
+if (!empty($minPrice) && !empty($maxPrice)) {
+    $query->where(function ($q) use ($minPrice, $maxPrice) {
+        $q->whereBetween('price_per_day', [(int)$minPrice, (int)$maxPrice])
+          ->orWhereBetween('price_per_week', [(int)$minPrice, (int)$maxPrice])
+          ->orWhereBetween('price_per_two_week', [(int)$minPrice, (int)$maxPrice])
+          ->orWhereBetween('price_per_three_week', [(int)$minPrice, (int)$maxPrice])
+          ->orWhereBetween('price_per_month', [(int)$minPrice, (int)$maxPrice]);
+    });
+}
+
 
     // Fetch filtered cars
     $cars = $query->get();
@@ -291,6 +305,8 @@ public function filterCars(Request $request)
     $cars = $cars->sortBy('display_price')->values();
 
     }
+
+    
     
     return response()->json([
         'success' => true,

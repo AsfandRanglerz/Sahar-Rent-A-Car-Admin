@@ -34,18 +34,12 @@
                                             <th>Price Per Two Weeks (AED)</th>
                                             <th>Price Per Three Weeks (AED)</th>
                                             <th>Price Per Month (AED)</th>
-                                            {{-- <th>Durations</th> --}}
                                             <th>Phone</th>
-                                            {{-- <th>Whatsapp Number</th> --}}
                                             <th>Passengers</th>
                                             <th>Luggage</th>
                                             <th>Doors</th>
                                             <th>Car Type</th>
                                             <th>Features</th>
-                                            {{--<th>Car Feature</th>
-                                            <th>Delivery</th>
-                                            <th>PickUp</th>
-                                            <th>Travel Distance</th> --}}
                                             <th>Status</th>
                                             <th>Image</th>
                                             <th scope="col">Actions</th>

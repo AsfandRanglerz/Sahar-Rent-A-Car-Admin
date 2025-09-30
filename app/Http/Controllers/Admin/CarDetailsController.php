@@ -46,7 +46,7 @@ class CarDetailsController extends Controller
         }
 
         do {
-            $carId = mt_rand(1000, 9999); //  Can be replaced this with a custom logic for 4-digit IDs
+            $carId = mt_rand(1000, 9999); 
         } while (CarDetails::where('car_id', $carId)->exists());
 
         $status = 1;
@@ -101,20 +101,7 @@ class CarDetailsController extends Controller
     {
         $validatedData = $request->validated();
 
-        // Validate the incoming request    
-        // $request->validate([
-        //     'car_name' => 'required|string|max:255',
-        //     'sanitized' => 'required|numeric',
-        //     'car_feature' => 'required|numeric',
-        //     'passengers' => 'required|numeric|max:10',
-        //     'luggage' => 'required|numeric|max:255',
-        //     'doors' => 'required|numeric|max:10',
-        //     'car_type' => 'required|string|max:255',
-        //     // 'email' => 'required|email|unique:drivers,email',
-        //     'call_number' => 'required|numeric|min:11',
-        //     'whatsapp_number' => 'required|numeric|min:11',
-        //     'pricing' => ['required','regex:/^\d+(\.\d{1,2})?$/'],
-        // ]);
+        
 
         $CarDetail = CarDetails::findOrFail($id);
        // Handle image upload

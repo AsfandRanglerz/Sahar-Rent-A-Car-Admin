@@ -305,22 +305,26 @@ public function lastLoyaltyTransaction(Request $request)
         ]);
     }
 
-    $carId = $latest->car_id;
-    $price = $latest->price;
+//     $carId = $latest->car_id;
+//     $price = $latest->price;
 
-   $car = DB::table('car_details')->where('car_id', $latest->car_id)->first();
-    $carDetailsId = $car ? $car->id : null;
+//    $car = DB::table('car_details')->where('car_id', $latest->car_id)->first();
+//     $carDetailsId = $car ? $car->id : null;
 
-    $points = 0;
-    if ($carDetailsId) {
-        $points = DB::table('loyalty_points')
-                    ->where('car_id', $carDetailsId)
-                    ->value('on_car') ?? 0;
-    }
+//     $points = 0;
+//     if ($carDetailsId) {
+//         $points = DB::table('loyalty_points')
+//                     ->where('car_id', $carDetailsId)
+//                     ->value('on_car') ?? 0;
+//     }
+
+  $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)
+                        ->orderBy('created_at', 'desc')
+                        ->first();
 
     return response()->json([
-        'total_purchase' => $price,
-        'earned_points' => $points,
+        'total_purchase' => $latest->price,
+        'earned_points'  => $userLoyalty ? $userLoyalty->earned_points : 0,
     ]);
 }
 

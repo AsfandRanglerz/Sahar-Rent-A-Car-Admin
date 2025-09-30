@@ -217,6 +217,7 @@ public function assignLoyaltyPoints($userId, $carId)
                     'type' => 'loyalty_points',
                     'points' => $loyaltyPoints->on_car,
                     'car' => $carDetails->car_name,
+                    'user_id' => $userId,
                 ];
 
                 dispatch(new NotificationJob($user->fcm_token, $title, $description, $data));
