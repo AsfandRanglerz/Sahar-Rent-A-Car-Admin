@@ -61,6 +61,12 @@ Route::get('/contactUs', function () {
     return view('Contact.contact');
 });
 
+// Driver webview links
+Route::get('/driverPrivacyPolicy', function () {
+    $data = PrivacyPolicy::first();
+    return view('privacyPolicy.privacy', compact('data'));
+});
+
 Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->group(function () {
     
     Route::get('dashboard', [AdminController::class, 'getdashboard']);
