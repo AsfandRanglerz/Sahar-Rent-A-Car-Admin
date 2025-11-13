@@ -11,6 +11,7 @@ use App\Http\Controllers\API\FavoriteController;
 use App\Http\Controllers\API\ContactUsController;
 use App\Http\Controllers\API\LoyaltyPointController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\CCAvenueCallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +138,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorite', [FavoriteController::class, 'toggleFavorite']);
     Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 });
+
+//#################  CCAvenue routes ##########################
+Route::post('/ccavenue/callback/success', [CCAvenueCallbackController::class, 'success']);
+Route::post('/ccavenue/callback/cancel', [CCAvenueCallbackController::class, 'cancel']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
