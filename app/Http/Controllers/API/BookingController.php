@@ -24,168 +24,131 @@ class BookingController extends Controller
 {
     public function createBooking(Request $request)
     {
-        // Validate request data
-        // $validateUser = Validator::make(
-        //     $request->all(),[
-        //     'full_name' => 'required|string|max:255',
-        //     'email' => 'required|email|max:255',
-        //     'phone' => 'required|string|max:15',
-        //     'pickup_address' => 'required|string|max:255',
-        //     'pickup_date' => 'required|date',
-        //     'pickup_time' => 'required|date_format:H:i',
-        //     'dropoff_address' => 'nullable|string|max:255',
-        //     'dropoff_date' => 'nullable|date',
-        //     'dropoff_time' => 'nullable|date_format:H:i',
-        //     'driver_required' => 'required|boolean',
-        // ]);
+       
+        $userId = Auth::id();
 
-        // Create the booking
-    //     $booking = RequestBooking::create([
-    //         'full_name' => $request->full_name,
-    //         'email' => $request->email,
-    //         'phone' => $request->phone,
-    //         'self_pickup' => $request->self_pickup,
-    //         'pickup_address' => $request->pickup_address,
-    //         'pickup_date' => $request->pickup_date,
-    //         'pickup_time' => $request->pickup_time,
-    //         'self_dropoff' => $request->self_dropoff,
-    //         'dropoff_address' => $request->dropoff_address,
-    //         'dropoff_date' => $request->dropoff_date,
-    //         'dropoff_time' => $request->dropoff_time,
-    //         // 'driver_required' => filter_var($request->driver_required, FILTER_VALIDATE_BOOLEAN),
-    //         'driver_required' => $request->driver_required,
-    //     ]);
+        $redeemedPoints = $request->input('redeemed_points', 0);
 
-    //     // Return a JSON response
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'Booking created successfully',
-    //         'data' => $booking,
-    //     ], 200);
-    // }
-$userId = Auth::id();
+            // Optional: booking input validation here
 
-$redeemedPoints = $request->input('redeemed_points', 0);
+            // 🔽 Deduct Loyalty Points only if redeeming
+            if ($redeemedPoints > 0) {
+                $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
 
-    // Optional: booking input validation here
+                if (!$userLoyalty || $userLoyalty->total_points < $redeemedPoints) {
+                    return response()->json(['message' => 'Invalid or insufficient loyalty points.'], 400);
+                }
 
-    // 🔽 Deduct Loyalty Points only if redeeming
-    if ($redeemedPoints > 0) {
-        $userLoyalty = UserLoyaltyEarning::where('user_id', $userId)->first();
+                $userLoyalty->total_points -= $redeemedPoints;
+                $userLoyalty->save();
 
-        if (!$userLoyalty || $userLoyalty->total_points < $redeemedPoints) {
-            return response()->json(['message' => 'Invalid or insufficient loyalty points.'], 400);
-        }
+                LoyaltyRedemption::create([
+                    'user_id' => $userId,
+                    'redeemed_points' => $redeemedPoints,
+                ]);
+            }
 
-        $userLoyalty->total_points -= $redeemedPoints;
-        $userLoyalty->save();
+            $availableBalance = Transaction::where('user_id', $userId)
+                ->where('status', 'approved')
+                ->sum('amount');
 
-        LoyaltyRedemption::create([
-            'user_id' => $userId,
-            'redeemed_points' => $redeemedPoints,
-        ]);
-    }
+            if ($availableBalance < $request->price) {
+                return response()->json(['message' => 'Insufficient wallet balance.'], 400);
+            }
+            
+            if ($request->self_pickup === "Yes" && $request->self_dropoff === "Yes") {
+                $booking = Booking::create([
+                'user_id' => $userId,
+                    'full_name' => $request->full_name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'self_pickup' => $request->self_pickup,
+                    'pickup_address' => $request->pickup_address,
+                    'pickup_date' => $request->pickup_date,
+                    'pickup_time' => $request->pickup_time,
+                    'self_dropoff' => $request->self_dropoff,
+                    'dropoff_address' => $request->dropoff_address,
+                    'dropoff_date' => $request->dropoff_date,
+                    'dropoff_time' => $request->dropoff_time,
+                    'driver_required' => $request->driver_required,
+                    'car_id' => $request->car_id,
+                    'status' => 0, // Directly set to Active
+                    'payment_method' => $request->payment_method,
+                    'price' => $request->price,
+                    'transfer_charge' => $request->transfer_charge,
+                    'city' => $request->city,
+                    'total_days' => $request->total_days,   
+                    'vat' => 5, 
+                    'redeemed_points' => $redeemedPoints,
+                    // 'price_per_week' => $request->price_per_week,
+                    // 'price_per_two_week' => $request->price_per_two_week,
+                    // 'price_per_three_week' => $request->price_per_three_week,
+                    // 'price_per_day' => $request->price_per_day,
+                    // 'price_per_month' => $request->price_per_month,
+                ]);
+                \DB::table('booking_totals')->insert([
+                    'booking_id' => $booking->id,
+                    'price' => $request->price,
+                    'total_price' => $request->price,
 
-    $availableBalance = Transaction::where('user_id', $userId)
-        ->where('status', 'approved')
-        ->sum('amount');
-
-    if ($availableBalance < $request->price) {
-        return response()->json(['message' => 'Insufficient wallet balance.'], 400);
-    }
-    
-    if ($request->self_pickup === "Yes" && $request->self_dropoff === "Yes") {
-        $booking = Booking::create([
-        'user_id' => $userId,
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'self_pickup' => $request->self_pickup,
-            'pickup_address' => $request->pickup_address,
-            'pickup_date' => $request->pickup_date,
-            'pickup_time' => $request->pickup_time,
-            'self_dropoff' => $request->self_dropoff,
-            'dropoff_address' => $request->dropoff_address,
-            'dropoff_date' => $request->dropoff_date,
-            'dropoff_time' => $request->dropoff_time,
-            'driver_required' => $request->driver_required,
-            'car_id' => $request->car_id,
-            'status' => 0, // Directly set to Active
-            'payment_method' => $request->payment_method,
-            'price' => $request->price,
-            'transfer_charge' => $request->transfer_charge,
-            'city' => $request->city,
-            'total_days' => $request->total_days,   
-            'vat' => 5, 
-            'redeemed_points' => $redeemedPoints,
-            // 'price_per_week' => $request->price_per_week,
-            // 'price_per_two_week' => $request->price_per_two_week,
-            // 'price_per_three_week' => $request->price_per_three_week,
-            // 'price_per_day' => $request->price_per_day,
-            // 'price_per_month' => $request->price_per_month,
-        ]);
-        \DB::table('booking_totals')->insert([
-            'booking_id' => $booking->id,
-            'price' => $request->price,
-            'total_price' => $request->price,
-
-        ]);
-        
-        Transaction::create([
-            'user_id' => $userId,
-            'amount' => -$request->price,
-            'status' => 'approved',
-        ]);
+                ]);
+                
+                Transaction::create([
+                    'user_id' => $userId,
+                    'amount' => -$request->price,
+                    'status' => 'approved',
+                ]);
 
 
-        return response()->json([
-            // 'status' => true,
-            'message' => 'Booking created successfully',
-            'data' => $booking,
-        ], 200);
-    } 
-    else {
-        // Otherwise, create a request booking
-        $requestBooking = RequestBooking::create([
-            'user_id' => $userId,
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'self_pickup' => $request->self_pickup,
-            'pickup_address' => $request->pickup_address,
-            'pickup_date' => $request->pickup_date,
-            'pickup_time' => $request->pickup_time,
-            'self_dropoff' => $request->self_dropoff,
-            'dropoff_address' => $request->dropoff_address,
-            'dropoff_date' => $request->dropoff_date,
-            'dropoff_time' => $request->dropoff_time,
-            'driver_required' => $request->driver_required,
-            'car_id' => $request->car_id,
-            'payment_method' => $request->payment_method,
-            'price' => $request->price,
-            'transfer_charge' => $request->transfer_charge,
-            'city' => $request->city,
-            'total_days' => $request->total_days,   
-            'vat' => 5,
-            'redeemed_points' => $redeemedPoints, 
-            // 'price_per_week' => $request->price_per_week,
-            // 'price_per_two_week' => $request->price_per_two_week,
-            // 'price_per_three_week' => $request->price_per_three_week,
-            // 'price_per_day' => $request->price_per_day,
-            // 'price_per_month' => $request->price_per_month,
-        ]);
-        \DB::table('booking_totals')->insert([
-            'request_booking_id' => $requestBooking->id,
-            'price' => $request->price,
-            'total_price' => $request->price,
-           
-        ]);
-        
-         Transaction::create([
-            'user_id' => $userId,
-            'amount' => -$request->price,
-            'status' => 'approved',
-        ]);
+                return response()->json([
+                    // 'status' => true,
+                    'message' => 'Booking created successfully',
+                    'data' => $booking,
+                ], 200);
+            } 
+            else {
+                // Otherwise, create a request booking
+                $requestBooking = RequestBooking::create([
+                    'user_id' => $userId,
+                    'full_name' => $request->full_name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'self_pickup' => $request->self_pickup,
+                    'pickup_address' => $request->pickup_address,
+                    'pickup_date' => $request->pickup_date,
+                    'pickup_time' => $request->pickup_time,
+                    'self_dropoff' => $request->self_dropoff,
+                    'dropoff_address' => $request->dropoff_address,
+                    'dropoff_date' => $request->dropoff_date,
+                    'dropoff_time' => $request->dropoff_time,
+                    'driver_required' => $request->driver_required,
+                    'car_id' => $request->car_id,
+                    'payment_method' => $request->payment_method,
+                    'price' => $request->price,
+                    'transfer_charge' => $request->transfer_charge,
+                    'city' => $request->city,
+                    'total_days' => $request->total_days,   
+                    'vat' => 5,
+                    'redeemed_points' => $redeemedPoints, 
+                    // 'price_per_week' => $request->price_per_week,
+                    // 'price_per_two_week' => $request->price_per_two_week,
+                    // 'price_per_three_week' => $request->price_per_three_week,
+                    // 'price_per_day' => $request->price_per_day,
+                    // 'price_per_month' => $request->price_per_month,
+                ]);
+            
+                \DB::table('booking_totals')->insert([
+                    'request_booking_id' => $requestBooking->id,
+                    'price' => $request->price,
+                    'total_price' => $request->price,
+                
+                ]);
+                
+                Transaction::create([
+                    'user_id' => $userId,
+                    'amount' => -$request->price,
+                    'status' => 'approved',
+                ]);
 // Assign loyalty points if available for this car
     // $loyaltyPoints = LoyaltyPoints::where('car_id', $request->car_id)->first();
     // if ($loyaltyPoints) {
@@ -235,7 +198,6 @@ $redeemedPoints = $request->input('redeemed_points', 0);
 // }
 
         return response()->json([
-            // 'status' => true,
             'message' => 'Booking request sent successfully',
             'data' => $requestBooking,
         ], 200);
