@@ -11,7 +11,7 @@ class NotificationHelper
     {
         try {
             $client = new Client();
-            $client->setAuthConfig(storage_path('app/sahar-rent-a-car-firebase-adminsdk-fbsvc-3aea8d156d.json')); //
+            $client->setAuthConfig(storage_path('app/sahar-rent-a-car-firebase-adminsdk-fbsvc-8225a2c602.json')); //
             $client->addScope('https://www.googleapis.com/auth/cloud-platform');
             $accessToken = $client->fetchAccessTokenWithAssertion();
             Log::info('Access Token Retrieved Successfully.');
