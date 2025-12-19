@@ -45,19 +45,19 @@ Route::get('/change_password/{id}', [AdminController::class, 'change_password'])
 Route::post('/admin-reset-password', [AdminController::class, 'ResetPassword']);
 
 // webview links
-Route::get('/aboutUs', function () {
+Route::get('/about_Us', function () {
     $data = About::first();
     return view('aboutUs.aboutUs', compact('data'));
 });
-Route::get('/privacyPolicy', function () {
+Route::get('/privacy_Policy', function () {
     $data = PrivacyPolicy::first();
     return view('privacyPolicy.privacy', compact('data'));
 });
-Route::get('/terms-conditions', function () {
+Route::get('/terms_conditions', function () {
     $data = TermCondition::first();
     return view('terms_and_condition.termsConditions', compact('data'));
 });
-Route::get('/contactUs', function () {
+Route::get('/contact_Us', function () {
     return view('Contact.contact');
 });
 
