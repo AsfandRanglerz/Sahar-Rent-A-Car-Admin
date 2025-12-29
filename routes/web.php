@@ -62,9 +62,9 @@ Route::get('/contact_Us', function () {
 });
 
 // Driver webview links
-Route::get('/driverprivacyPolicy', function () {
-    // $data = PrivacyPolicy::first();
-    return view('privacyPolicy.driverprivacy');
+Route::get('/driverprivacy-Policy', function () {
+    $data = PrivacyPolicy::first();
+    return view('privacyPolicy.driverprivacy', compact('data'));
 });
 
 Route::get('/driverContactUs', function () {
@@ -72,8 +72,8 @@ Route::get('/driverContactUs', function () {
 });
 
 Route::get('/driverterms-conditions', function () {
-    // $data = TermCondition::first();
-    return view('terms_and_condition.drivertermsConditions');
+    $data = TermCondition::first();
+    return view('terms_and_condition.drivertermsConditions', compact('data'));
 });
 
 Route::prefix('admin')->middleware(['admin', 'adminOrSubadmin:dashboard'])->group(function () {
