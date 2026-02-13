@@ -3,201 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&amp;family=Nunito:wght@600;700;800&amp;family=Pacifico&amp;display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
 * {
-font-family: "Heebo", sans-serif;
+    box-sizing: border-box;
+    font-family: "Heebo", sans-serif;
 }
- 
+
 body {
-margin: 0;
-font-size: 16px;
+    margin: 0;
+    font-size: 16px;
+    background-color: #ffffff;
 }
- 
-.banner {
-background: linear-gradient(115deg, rgba(102, 125, 255, 1) 0%, rgba(122, 140, 255, 1) 89%);
-padding: 60px 0;
-display: flex;
-justify-content: center;
-align-items: center;
-color: black;
-margin-bottom: 20px;
-animation: slideFromTop 1s ease-out;
+
+/* Top Section */
+.header-section {
+    background: linear-gradient(115deg, rgba(102,125,255,1) 0%, rgba(122,140,255,1) 89%);
+    padding: 80px 20px 120px;
+    text-align: center;
+    color: white;
 }
- 
-.banner h1 {
-font-size: 80px;
-color: white;
-text-shadow: 0 2px 6px rgba(0, 0, 0, .459);
+
+.header-section h1 {
+    margin: 0;
+    font-size: 48px;
 }
- 
+
+.header-section p {
+    margin-top: 10px;
+    font-weight: 400;
+}
+
+/* Form Card */
+.form-wrapper {
+    max-width: 750px;
+    margin: -80px auto 60px;
+    padding: 0 20px;
+}
+
 .container {
-padding: 0 20px;
-animation: slideFrombottom 1s ease-out;
-max-width: 800px;
-margin: auto;
+    background-color: #f2f2f2;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
- 
-@keyframes  slideFromTop {
-from {
-transform: translateY(-100px);
-opacity: 0;
-}
-to {
-transform: translateY(0);
-opacity: 1;
-}
-}
- 
-@keyframes  slideFrombottom {
-from {
-transform: translateY(100px);
-opacity: 0;
-}
-to {
-transform: translateY(0);
-opacity: 1;
-}
-}
- 
-@media (max-width: 991.5px) and (min-width: 400px) {
-.banner h1 {
-font-size: 40px;
-}
- 
-.banner {
-padding: 32px 0;
-}
- 
-.container {
-padding: 0 15px;
-}
- 
-body {
-font-size: 14px;
-}
-}
- 
-@media (max-width: 399px) {
-.banner h1 {
-font-size: 30px;
-}
- 
-.banner {
-padding: 30px 0;
-}
- 
-.container {
-padding: 0 7px;
-}
- 
-body {
-font-size: 14px;
-}
-}
- 
-body {
-font-family: Arial, Helvetica, sans-serif;
-}
- 
-* {
-box-sizing: border-box;
-}
- 
-input[type=text], input[type=email], select, textarea {
-width: 100%;
-padding: 12px;
-border: 1px solid #ccc;
-border-radius: 4px;
-box-sizing: border-box;
-margin-top: 6px;
-margin-bottom: 16px;
-resize: vertical;
-}
- 
-input[type=submit] {
-background-color: #121331;
-color: white;
-padding: 12px 20px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-}
- 
-input[type=submit]:hover {
-background-color: #121331;
-}
- 
-.container {
-border-radius: 5px;
-background-color: #f2f2f2;
-padding: 20px;
-display: flex;
-flex-direction: column;
-align-items: center;
-}
- 
+
+/* Form Layout */
 form {
-width: 100%;
-display: flex;
-flex-direction: column;
+    width: 100%;
 }
- 
-.form-group {
-display: flex;
-flex-direction: column;
-width: 100%;
+
+.form-row {
+    display: flex;
+    gap: 20px;
 }
- 
-@media (min-width: 600px) {
-.form-group {
-flex-direction: row;
-justify-content: space-between;
+
+.form-row > div {
+    flex: 1;
 }
- 
-.form-group > div {
-flex: 1;
-margin-right: 10px;
+
+/* Inputs */
+label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
 }
- 
-.form-group > div:last-child {
-margin-right: 0;
+
+input[type=text],
+input[type=email],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    transition: 0.3s ease;
 }
+
+input:focus,
+textarea:focus {
+    border-color: #667dff;
+    box-shadow: 0 0 0 2px rgba(102,125,255,0.2);
+    outline: none;
+}
+
+textarea {
+    resize: none;
+    height: 150px;
+}
+
+/* Button */
+input[type=submit] {
+    background-color: #121331;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s ease;
+}
+
+input[type=submit]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .header-section h1 {
+        font-size: 32px;
+    }
+
+    .container {
+        padding: 25px;
+    }
 }
 </style>
 </head>
+
 <body>
-<div class="banner">
-<h1>Contact Us</h1>
+
+<div class="header-section">
+    <h1>Contact Us</h1>
 </div>
- 
-<h3 style="text-align: center;">Contact Form</h3>
- 
-<div class="container">
-<form  enctype="multipart/form-data">
-<input type="hidden" name="_token" value="xXUwz1tq0mdpa27upFsvsbfVKy9MASgs9eeAWxZG">        <div class="form-group">
-<div>
-<label for="name">Name</label>
-<input type="text" class="form-control" name="name" id="name" placeholder="Your Name" required>
+
+<div class="form-wrapper">
+    <div class="container">
+        <form enctype="multipart/form-data">
+            <input type="hidden" name="_token" value="xXUwz1tq0mdpa27upFsvsbfVKy9MASgs9eeAWxZG">
+
+            <div class="form-row">
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" placeholder="Your Name" required>
+                </div>
+
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Your Email" required>
+                </div>
+            </div>
+
+            <label for="subject">Subject</label>
+            <input type="text" name="subject" id="subject" placeholder="Subject" required>
+
+            <label for="message">Message</label>
+            <textarea name="message" id="message" placeholder="Leave a message here" required></textarea>
+
+            <input type="submit" value="Send Message">
+        </form>
+    </div>
 </div>
-<div>
-<label for="email">Email</label>
-<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-</div>
-</div>
- 
-<div>
-<label for="subject">Subject</label>
-<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-</div>
- 
-<div>
-<label for="message">Message</label>
-<textarea class="form-control" name="message" id="message" placeholder="Leave a message here" style="height: 150px" required></textarea>
-</div>
- 
-<input type="submit" value="Submit">
-</form>
-</div>
+
 </body>
 </html>

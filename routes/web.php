@@ -67,7 +67,7 @@ Route::get('/driverprivacy-Policy', function () {
     return view('privacyPolicy.driverprivacy', compact('data'));
 });
 
-Route::get('/driverContactUs', function () {
+Route::get('/driver/contact', function () {
     return view('Contact.contact');
 });
 
